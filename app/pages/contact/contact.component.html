@@ -1,0 +1,92 @@
+<div class="uk-container uk-container-xsmall uk-section uk-section-default uk-section-small">
+  <div uk-grid>
+    <h1 class="uk-align-center uk-padding-remove">Contact</h1>
+    <h6 class="uk-text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h6>
+    <form  class="uk-width-1-1 uk-form-stacked" [formGroup]="contactForm" uk-grid>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="name">Name* </label>
+        <div class="uk-form-controls">
+          <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('name')}" id="name"
+                 type="text" formControlName="name">
+        </div>
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="surname">Surname* </label>
+        <div class="uk-form-controls">
+          <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('surname')}" id="surname"
+                 type="text" formControlName="surname">
+        </div>
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="email">Email* </label>
+        <div class="uk-form-controls">
+          <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('email')}" id="email"
+                 type="text" formControlName="email">
+        </div>
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="affiliation">Affiliation </label>
+        <div class="uk-form-controls">
+          <input class="uk-input" id="affiliation" type="text" formControlName="affiliation">
+        </div>
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="subject">Subject </label>
+        <div class="uk-form-controls">
+          <input class="uk-input" id="subject" type="text" formControlName="subject">
+        </div>
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label" for="about">Contact about* </label>
+        <div class="uk-form-controls">
+          <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('about')}" id="about"
+                  formControlName="about">
+            <option>Dashboard improvement</option>
+            <option>Country data</option>
+            <option>Survey improvements</option>
+          </select>
+        </div>
+      </div>
+      <div class="uk-width-1-2" *ngIf="contactForm.get('country').enabled">
+        <label class="uk-form-label" for="about">Country* </label>
+        <div class="uk-form-controls">
+          <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}" id="country"
+                  formControlName="country">
+            <option>list</option>
+            <option>of</option>
+            <option>countries</option>
+            <option>to</option>
+            <option>be</option>
+            <option>added</option>
+            <option>here</option>
+          </select>
+        </div>
+      </div>
+      <div class="uk-width-1-1">
+        <label class="uk-form-label" for="message">Message* </label>
+        <div class="uk-form-controls">
+          <textarea class="uk-textarea" [ngClass]="{'uk-form-danger': formFieldInvalid('message')}"
+                    id="message" type="text" rows="4" formControlName="message"></textarea>
+        </div>
+      </div>
+      <div class="uk-width-1-1 uk-flex uk-flex-middle">
+        <label for="termsAndConditions" [ngClass]="{'uk-form-danger': formFieldInvalid('termsAndConditions')}">
+          <input class="uk-checkbox"  id="termsAndConditions" type="checkbox" formControlName="termsAndConditions">
+          I have read and agreed to the <a href="" target="_blank">Terms & conditions</a>*
+        </label>
+      </div>
+    </form>
+    <div class="uk-width-1-2">
+      <button class="uk-button uk-button-primary" [disabled]="recaptchaForm.get('recaptcha').invalid"
+              (click)="sendMessage()">Send message</button>
+    </div>
+    <div [formGroup]="recaptchaForm" class="uk-width-1-2">
+      <re-captcha formControlName="recaptcha"
+        (resolved)="resolved('Reactive form mode resolved', $event)">
+      </re-captcha>
+    </div>
+  </div>
+
+  <pre>{{contactForm.value | json}}</pre>
+</div>
+
