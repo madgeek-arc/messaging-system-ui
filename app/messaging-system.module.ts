@@ -4,13 +4,15 @@ import {MessagingSystemRoutingModule} from "./messaging-system-routing.module";
 import {CommonModule} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings} from "ng-recaptcha";
+import {MessagesComponent} from "./pages/messages/messages.component";
 
 
 const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
 @NgModule({
   declarations:[
-    ContactComponent
+    ContactComponent,
+    MessagesComponent
   ],
   providers: [
     {
