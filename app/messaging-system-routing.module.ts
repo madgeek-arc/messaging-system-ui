@@ -9,8 +9,13 @@ const messagingSystemRoutes: Routes = [
     component: ContactComponent
   },
   {
-    path: 'messages',
-    component: MessagesComponent
+    path: '',
+    children: [
+      {
+        path: 'messages',
+        component: MessagesComponent
+      }
+    ]
   }
 ]
 

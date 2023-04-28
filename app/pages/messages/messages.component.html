@@ -1,10 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<div class="uk-section-default uk-container uk-container-large">
+  <h1>Messages</h1>
 
-</body>
-</html>
+  <div class="uk-flex uk-flex-right">
+    <button class="uk-button uk-button-action uk-flex uk-flex-middle">
+      <span class="material-icons md-18 uk-margin-small-right">edit</span>New Message
+    </button>
+  </div>
+
+  <ul uk-tab>
+    <li class="uk-active"><a href="#"><span class="material-icons md-18">inbox</span>Inbox</a></li>
+    <li><a href="#"><span class="material-icons md-18">send</span>Sent</a></li>
+  </ul>
+
+  <ul class="uk-switcher">
+    <li>
+      <table class="uk-table uk-table-divider">
+        <thead>
+        <tr>
+          <th><input class="uk-checkbox" type="checkbox"></th>
+          <th><a class="uk-flex uk-flex-middle"><span class="material-icons">refresh</span>Refresh</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+          <td>Table Data</td>
+          <td>Table Data</td>
+        </tr>
+        <tr>
+          <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
+          <td>Table Data</td>
+          <td>Table Data</td>
+        </tr>
+        </tbody>
+      </table>
+    </li>
+    <li>Test2</li>
+  </ul>
+
+</div>
