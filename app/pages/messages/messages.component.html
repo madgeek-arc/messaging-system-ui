@@ -2,7 +2,7 @@
   <h1>Messages</h1>
 
   <div class="uk-flex uk-flex-right">
-    <button class="uk-button uk-button-action uk-flex uk-flex-middle">
+    <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
       <span class="material-icons md-18 uk-margin-small-right">edit</span>New Message
     </button>
   </div>
@@ -13,28 +13,44 @@
   </ul>
 
   <div class="uk-padding-small uk-padding-remove-horizontal uk-flex uk-flex-right">
-    <input type="text" class="uk-input" placeholder="Search..." name="keyword">
+    <div class="uk-inline">
+      <span class="uk-form-icon" uk-icon="icon: search"></span>
+      <input type="text" class="uk-input uk-form-width-medium" placeholder="Search..." name="keyword">
+    </div>
   </div>
 
   <ul class="uk-switcher">
-    <li>
-      <table class="uk-table uk-table-divider uk-table-hover uk-background-default uk-border-rounded">
+    <li *ngIf="topics">
+      <table class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th><input class="uk-checkbox" type="checkbox"></th>
-          <th><a class="uk-flex uk-flex-middle"><span class="material-icons">refresh</span>Refresh</a></th>
+          <th>
+            <a class="uk-flex uk-flex-middle" (click)="getTopics()">
+              <span class="material-icons">refresh</span>Refresh
+            </a>
+          </th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-          <td>Table Data</td>
-          <td>Table Data</td>
-        </tr>
-        <tr>
-          <td><input class="uk-checkbox" type="checkbox" aria-label="Checkbox"></td>
-          <td>Table Data</td>
-          <td>Table Data</td>
+        <tr *ngFor="let topic of topics">
+          <td>
+            <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
+                   [checked]="topicIsSelected(topic) > 0">
+          </td>
+          <td>
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[0].metadata.read}">{{topic.from.name}}</div>
+            <div class="uk-text-meta">{{topic.updated | date}}</div>
+          </td>
+          <td>
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[0].metadata.read}">{{topic.subject}}</div>
+            <div class="uk-text-meta">{{topic.messages[0].message.body}}</div>
+          </td>
+          <td>
+            <span *ngFor="let tag of topic.tags; let i=index"  [ngClass]="{'uk-margin-small-left': i!==0}">
+              <span class="uk-badge">{{tag}}</span>
+            </span>
+          </td>
         </tr>
         </tbody>
       </table>
