@@ -1,0 +1,48 @@
+<div *ngIf="thread" class="uk-section-default uk-container uk-container-large uk-padding">
+
+  <div class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
+    <h5 class="uk-margin-medium-bottom uk-flex uk-flex-middle uk-margin-remove">
+      <a [routerLink]="['../']" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
+        <span class="material-icons">keyboard_backspace</span>
+      </a>
+      <span>Message {{thread.subject}}</span>
+    </h5>
+    <div class="uk-flex uk-flex-middle uk-flex-right">
+      <span class="">
+        <span *ngFor="let tag of thread.tags" class="uk-badge uk-margin-small-left">{{tag}}</span>
+      </span>
+    </div>
+  </div>
+
+  <div *ngFor="let message of thread?.messages">
+    <div class="uk-card uk-card-default uk-margin-bottom">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <div class="uk-width-auto user_actions">
+            <svg height="60" width="60">
+              <circle cx="30" cy="30" r="20" stroke-width="1" fill="#008792"></circle>
+              <text dy=".4em" font-size="16" text-anchor="middle" x="50%" y="50%" class="">
+                {{firstLetters(message.message.from.name)}}
+              </text>
+            </svg>
+          </div>
+          <div class="uk-width-expand">
+            <div class="uk-flex">
+              <h6 class="uk-card-title uk-margin-remove-bottom">{{message.message.from.name}}</h6>
+              <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">(email placeholder)</span>
+                <a class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+                  <span class="material-icons">reply</span>
+                </a>
+            </div>
+            <p class="uk-text-meta uk-margin-remove-top"><time>{{message.message.date | date: 'medium'}}</time></p>
+          </div>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p [innerHtml]="message.message.body"></p>
+        {{message.id}}
+      </div>
+    </div>
+  </div>
+
+</div>

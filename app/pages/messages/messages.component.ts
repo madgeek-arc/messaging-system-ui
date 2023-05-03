@@ -1,11 +1,10 @@
 import {Component, OnInit} from "@angular/core";
-import {MessagingSystemService} from "../services/messaging-system.service";
+import {MessagingSystemService} from "../../services/messaging-system.service";
 import {TopicThread} from "../../domain/messaging";
 
 @Component({
   selector: 'app-messages',
-  templateUrl: 'messages.component.html',
-  providers: [MessagingSystemService]
+  templateUrl: 'messages.component.html'
 })
 
 export class MessagesComponent implements OnInit {
@@ -28,13 +27,17 @@ export class MessagesComponent implements OnInit {
   }
 
   toggleCheck(event, topic: TopicThread) {
-    console.log(event.target.checked);
     if (event.target.checked) {
       this.selectedTopics.push(topic);
+    } else {
+      const index = this.selectedTopics.indexOf(topic);
+      if (index > -1)
+        this.selectedTopics.splice(index, 1);
     }
   }
 
   topicIsSelected(topic) {
     return this.selectedTopics.findIndex((x) => x === topic);
   }
+
 }

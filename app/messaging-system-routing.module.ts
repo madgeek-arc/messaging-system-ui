@@ -2,6 +2,7 @@ import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {ContactComponent} from "./pages/contact/contact.component";
 import {MessagesComponent} from "./pages/messages/messages.component";
+import {ThreadComponent} from "./pages/tread/thread.component";
 
 const messagingSystemRoutes: Routes = [
   {
@@ -14,6 +15,10 @@ const messagingSystemRoutes: Routes = [
       {
         path: 'messages',
         component: MessagesComponent
+      },
+      {
+        path: 'messages/:threadId',
+        component: ThreadComponent
       }
     ]
   }

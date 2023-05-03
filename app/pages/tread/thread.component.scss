@@ -1,0 +1,11 @@
+
+.user_actions circle, .user_actions svg {
+  stroke: var(--eosc-observatory-primary-color);
+  fill: var(--eosc-observatory-primary-color);
+}
+
+.user_actions text {
+  /*stroke: #707070;*/
+  stroke: white;
+  fill: white;
+}
