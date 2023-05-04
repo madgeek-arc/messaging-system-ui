@@ -30,7 +30,7 @@ export class ThreadComponent implements OnInit {
   }
 
   firstLetters(name: string) {
-  return name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+    return name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
   }
 
 }

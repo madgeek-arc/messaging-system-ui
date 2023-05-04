@@ -39,12 +39,16 @@
                    [checked]="topicIsSelected(topic) > 0">
           </td>
           <td [routerLink]="[topic.id]" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].metadata.read}">{{topic.from.name}}</div>
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].metadata?.read}">
+              {{topic.from.name}}
+            </div>
             <div class="uk-text-meta">{{topic.updated | date}}</div>
           </td>
           <td [routerLink]="[topic.id]" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].metadata.read}">{{topic.subject}}</div>
-            <div class="uk-text-meta">{{topic.messages[topic.messages.length-1].message.body}}</div>
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].metadata?.read}">
+              {{topic.subject}}
+            </div>
+            <div class="uk-text-meta">{{topic.messages[topic.messages.length-1].message?.body}}</div>
           </td>
           <td>
             <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">

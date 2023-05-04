@@ -13,9 +13,8 @@
       </span>
     </div>
   </div>
-
   <div *ngFor="let message of thread?.messages">
-    <div class="uk-card uk-card-default uk-margin-bottom">
+    <div class="" [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}">
       <div class="uk-card-header">
         <div class="uk-grid-small uk-flex-middle" uk-grid>
           <div class="uk-width-auto user_actions">
@@ -30,17 +29,19 @@
             <div class="uk-flex">
               <h6 class="uk-card-title uk-margin-remove-bottom">{{message.message.from.name}}</h6>
               <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">(email placeholder)</span>
-                <a class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-                  <span class="material-icons">reply</span>
-                </a>
+                <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+                  <a class="material-icons">reply</a>
+                </span>
             </div>
-            <p class="uk-text-meta uk-margin-remove-top"><time>{{message.message.date | date: 'medium'}}</time></p>
+            <p class="uk-text-meta uk-margin-remove-top">
+              <span>{{message.message.date | date: 'medium'}}</span>
+            </p>
           </div>
         </div>
       </div>
+      <div *ngIf="thread.messages.length === 1" style="border-top: 1px solid #e5e5e5"></div>
       <div class="uk-card-body">
         <p [innerHtml]="message.message.body"></p>
-        {{message.id}}
       </div>
     </div>
   </div>
