@@ -22,7 +22,14 @@ export class ThreadComponent implements OnInit {
       params => {
         this.threadId = params['threadId'];
         this.messagingService.getThread(this.threadId).subscribe(
-          res => { this.thread = res},
+          res => {
+            this.thread = res
+            this.thread.messages.forEach(message => {
+              // message.read = true;
+              this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
+            });
+            this.thread.messages.reverse();
+          },
           error => {console.error(error)}
         );
       }

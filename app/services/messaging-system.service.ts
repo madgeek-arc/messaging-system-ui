@@ -19,7 +19,7 @@ export class MessagingSystemService {
     return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`);
   }
 
-  getMessage(threadId: string, messageId: string, read: boolean) {
+  setMessageReadParam(threadId: string, messageId: string, read: boolean) {
     let params = new HttpParams();
     params = params.append('read', read);
     return this.httpClient.patch(this.apiEndpoint+`/threads/${threadId}/messages/${messageId}`, null, {params: params});

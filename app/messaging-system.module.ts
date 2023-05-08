@@ -8,6 +8,7 @@ import {MessagesComponent} from "./pages/messages/messages.component";
 import {ThreadComponent} from "./pages/tread/thread.component";
 import {RouterModule} from "@angular/router";
 import {MessagingSystemService} from "./services/messaging-system.service";
+import {EmailComposeComponent} from "./pages/emailCompose/email-compose.component";
 
 
 const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
@@ -16,7 +17,8 @@ const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
   declarations:[
     ContactComponent,
     MessagesComponent,
-    ThreadComponent
+    ThreadComponent,
+    EmailComposeComponent
   ],
   providers: [
     {

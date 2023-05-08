@@ -1,25 +1,17 @@
 export class Correspondent {
   name:	string;
+  email:	string;
+  groupId:	string;
 }
 
-export class Message{
+export class Message {
+  id: string;
   from:	Correspondent;
   to: Correspondent;
   body:	string;
   date:	string;
-}
-
-export class Metadata {
-  sentBy: User;
-  anonymousSender:	boolean;
-  read:	boolean;
-  readDate:	string;
-}
-
-export class StoredMessage {
-  id:	string;
-  message:	Message;
-  metadata:	Metadata;
+  read: boolean;
+  readDate: string;
 }
 
 export class TopicThread {
@@ -28,12 +20,7 @@ export class TopicThread {
   tags:	string[];
   from:	Correspondent;
   to:	Correspondent;
-  messages:	StoredMessage[];
+  messages:	Message[];
   created:	string;
   updated:	string;
-}
-
-export class User {
-  name:	string;
-  email:	string;
 }
