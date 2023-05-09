@@ -2,7 +2,7 @@
   <h3>Messages</h3>
 
   <div class="uk-flex uk-flex-right">
-    <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
+    <button class="uk-button uk-button-secondary uk-flex uk-flex-middle" uk-toggle="target: #emailCompose">
       <span class="material-icons md-18 uk-margin-small-right">edit</span>New Message
     </button>
   </div>
@@ -65,3 +65,5 @@
   </ul>
 
 </div>
+
+<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal [message]="null"></app-email-compose>

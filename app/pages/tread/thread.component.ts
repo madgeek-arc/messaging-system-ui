@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MessagingSystemService} from "../../services/messaging-system.service";
-import {TopicThread} from "../../domain/messaging";
+import {Message, TopicThread} from "../../domain/messaging";
 
 @Component({
   selector: 'app-thread',
@@ -13,6 +13,7 @@ export class ThreadComponent implements OnInit {
 
   threadId: string = null;
   thread: TopicThread = null;
+  message: Message = null;
 
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
@@ -38,6 +39,10 @@ export class ThreadComponent implements OnInit {
 
   firstLetters(name: string) {
     return name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+  }
+
+  reply(message: Message) {
+    this.message = message;
   }
 
 }

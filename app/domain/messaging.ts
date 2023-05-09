@@ -12,6 +12,17 @@ export class Message {
   date:	string;
   read: boolean;
   readDate: string;
+
+
+  constructor() {
+    this.id = null;
+    this.from = null;
+    this.to = null;
+    this.body = null;
+    this.date = null;
+    this.read = null;
+    this.readDate = null;
+  }
 }
 
 export class TopicThread {

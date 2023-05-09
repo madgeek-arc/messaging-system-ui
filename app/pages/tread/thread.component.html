@@ -32,7 +32,7 @@
                 ({{message.from.email ? message.from.email : message.from.groupId}})
               </span>
                 <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-                  <a class="material-icons">reply</a>
+                  <a href="#emailCompose" uk-toggle class="material-icons" (click)="reply(message)">reply</a>
                 </span>
             </div>
             <p class="uk-text-meta uk-margin-remove-top">
@@ -49,3 +49,5 @@
   </div>
 
 </div>
+
+<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal [message]="message"></app-email-compose>

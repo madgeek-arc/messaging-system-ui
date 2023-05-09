@@ -1,1 +1,38 @@
-Compose Email here
+<div class="uk-modal-dialog">
+  <button class="uk-modal-close-default" type="button" uk-close></button>
+  <div class="uk-modal-header">
+    <h2 class="uk-modal-title">Title</h2>
+
+    <form [formGroup]="newMessage">
+      <div class="uk-inline uk-width-expand">
+        <span class="uk-form-icon">From: </span>
+        <input class="uk-input uk-form-blank" type="text" [value]="message?.from.name" disabled>
+      </div>
+      <div>
+        <div class="uk-inline uk-width-expand">
+          <span class="uk-form-icon uk-flex uk-flex-left">To: </span>
+          <input class="uk-input uk-form-blank" type="text">
+        </div>
+      </div>
+      <hr>
+      <div>
+        <input class="uk-input uk-form-blank" type="text" placeholder="Subject">
+      </div>
+    </form>
+  </div>
+  <form class="uk-modal-body" [formGroup]="newMessage">
+    <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+  </form>
+  <div class="uk-modal-footer uk-flex uk-flex-middle">
+    <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
+      <span class="material-icons uk-margin-small-right">send</span>Send
+    </button>
+    <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+      <label class="uk-checkbox-label"><input class="uk-checkbox" type="checkbox"> Don't show my name as sender</label>
+      <a class="material-icons uk-margin-left">delete_outline</a>
+    </div>
+  </div>
+
+<!--  <pre>{{newMessage.value | json}}</pre>-->
+</div>
+
