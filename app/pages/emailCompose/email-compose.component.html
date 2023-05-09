@@ -1,36 +1,46 @@
 <div class="uk-modal-dialog">
-  <button class="uk-modal-close-default" type="button" uk-close></button>
+
   <div class="uk-modal-header">
-    <h2 class="uk-modal-title">Title</h2>
+    <h6 class="uk-modal-title uk-margin-remove">Title</h6>
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+  </div>
+
+  <div class="uk-modal-body">
 
     <form [formGroup]="newMessage">
-      <div class="uk-inline uk-width-expand">
-        <span class="uk-form-icon">From: </span>
-        <input class="uk-input uk-form-blank" type="text" [value]="message?.from.name" disabled>
-      </div>
-      <div>
-        <div class="uk-inline uk-width-expand">
-          <span class="uk-form-icon uk-flex uk-flex-left">To: </span>
-          <input class="uk-input uk-form-blank" type="text">
+      <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
+        <div class="" for="form-horizontal-text">From:</div>
+        <div class="uk-form-controls uk-margin-left">
+          <div class="uk-flex uk-flex-middle" style="height: 40px;"><span class="uk-text-bold">John Doe</span><span class="uk-margin-small-left uk-text-muted">(doe@gmail.com)</span></div>
         </div>
       </div>
-      <hr>
-      <div>
-        <input class="uk-input uk-form-blank" type="text" placeholder="Subject">
+      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
+        <div class="" for="form-horizontal-text">To:</div>
+        <div class="uk-form-controls uk-margin-left uk-width-expand">
+          <input class="uk-input uk-form-blank" id="form-horizontal-text" type="text">
+        </div>
+      </div>
+      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
+        <div class="" for="form-horizontal-text">Subject:</div>
+        <div class="uk-form-controls uk-margin-left uk-width-expand">
+          <input class="uk-input uk-form-blank" id="form-horizontal-subject" type="text">
+        </div>
       </div>
     </form>
-  </div>
-  <form class="uk-modal-body" [formGroup]="newMessage">
-    <ckeditor [editor]="editor" formControlName="body"></ckeditor>
-  </form>
-  <div class="uk-modal-footer uk-flex uk-flex-middle">
-    <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
-      <span class="material-icons uk-margin-small-right">send</span>Send
-    </button>
-    <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-      <label class="uk-checkbox-label"><input class="uk-checkbox" type="checkbox"> Don't show my name as sender</label>
-      <a class="material-icons uk-margin-left">delete_outline</a>
+
+    <form [formGroup]="newMessage" class="uk-margin-medium-top">
+      <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+    </form>
+
+    <div class="uk-margin-top uk-flex uk-flex-middle">
+      <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
+        <span class="material-icons uk-margin-small-right">send</span>Send
+      </button>
+      <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+        <label class="uk-checkbox-label"><input class="uk-checkbox" type="checkbox"> Don't show my name as sender</label>
+      </div>
     </div>
+
   </div>
 
 <!--  <pre>{{newMessage.value | json}}</pre>-->

@@ -1,3 +1,18 @@
+.uk-modal-header {
+  background-color: rgba(0,135,146,0.04);
+  border-bottom: none;
+  padding: 20px 30px;
+}
+
+[class*="uk-modal-close-"] {
+  top: 20px;
+  right: 20px;
+}
+
+.uk-modal-body {
+  background-color: var(--white) !important;
+}
+
 .uk-form-blank {
   border-color: transparent !important;
 }
