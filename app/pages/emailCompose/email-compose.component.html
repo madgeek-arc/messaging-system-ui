@@ -7,23 +7,27 @@
 
   <div class="uk-modal-body">
 
-    <form [formGroup]="newMessage">
+    <form *ngIf="newMessage" [formGroup]="newMessage">
       <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="" for="form-horizontal-text">From:</div>
-        <div class="uk-form-controls uk-margin-left">
-          <div class="uk-flex uk-flex-middle" style="height: 40px;"><span class="uk-text-bold">John Doe</span><span class="uk-margin-small-left uk-text-muted">(doe@gmail.com)</span></div>
+        <div class="">From:</div>
+        <div *ngIf="userInfo" class="uk-form-controls uk-margin-left">
+          <div class="uk-flex uk-flex-middle" style="height: 40px;">
+            <span class="uk-text-bold">{{userInfo.user.fullname}}</span>
+            <span class="uk-margin-small-left uk-text-muted">({{userInfo.user.email}})</span>
+          </div>
+        </div>
+      </div>
+      <div class="uk-margin-top uk-flex uk-flex-middle" formGroupName="to" style="border-bottom: 1px solid #ddd">
+        <div class="">To:</div>
+        <div class="uk-form-controls uk-margin-left uk-width-expand">
+          <input class="uk-input uk-form-blank" type="text" [disabled]="true"
+                 [value]="(message?.from.email ? message?.from.email : message?.from.groupId)+( message?.from.name ? ' (' + message.from.name +')':'')">
         </div>
       </div>
       <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="" for="form-horizontal-text">To:</div>
+        <div class="">Subject:</div>
         <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" id="form-horizontal-text" type="text">
-        </div>
-      </div>
-      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="" for="form-horizontal-text">Subject:</div>
-        <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" id="form-horizontal-subject" type="text">
+          <input class="uk-input uk-form-blank" type="text" [value]="subject" [disabled]="subject">
         </div>
       </div>
     </form>
@@ -43,6 +47,6 @@
 
   </div>
 
-<!--  <pre>{{newMessage.value | json}}</pre>-->
+  <pre>{{newMessage.value | json}}</pre>
 </div>
 

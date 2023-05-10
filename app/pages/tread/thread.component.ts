@@ -3,6 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {MessagingSystemService} from "../../services/messaging-system.service";
 import {Message, TopicThread} from "../../domain/messaging";
 
+import UIkit from "uikit";
+
 @Component({
   selector: 'app-thread',
   templateUrl: 'thread.component.html',
@@ -14,6 +16,7 @@ export class ThreadComponent implements OnInit {
   threadId: string = null;
   thread: TopicThread = null;
   message: Message = null;
+  subject: string = null;
 
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
@@ -26,15 +29,18 @@ export class ThreadComponent implements OnInit {
           res => {
             this.thread = res
             this.thread.messages.forEach(message => {
-              // message.read = true;
               this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
             });
-            this.thread.messages.reverse();
+            // this.thread.messages.reverse();
           },
-          error => {console.error(error)}
+          error => {console.error(error)},
+          ()=> {
+            UIkit.scroll('#scrollToBottom').scrollTo('#'+(this.thread.messages.length-1));
+          }
         );
       }
     );
+
   }
 
   firstLetters(name: string) {
@@ -43,6 +49,7 @@ export class ThreadComponent implements OnInit {
 
   reply(message: Message) {
     this.message = message;
+    this.subject = this.thread.subject;
   }
 
 }

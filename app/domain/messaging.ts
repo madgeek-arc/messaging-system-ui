@@ -2,6 +2,12 @@ export class Correspondent {
   name:	string;
   email:	string;
   groupId:	string;
+
+  constructor() {
+    this.name = null;
+    this.email = null;
+    this.groupId = null;
+  }
 }
 
 export class Message {

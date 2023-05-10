@@ -13,8 +13,8 @@
       </span>
     </div>
   </div>
-  <div *ngFor="let message of thread?.messages">
-    <div class="" [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}">
+  <div *ngFor="let message of thread?.messages; let i=index">
+    <div id="{{i}}" [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}">
       <div class="uk-card-header">
         <div class="uk-grid-small uk-flex-middle" uk-grid>
           <div class="uk-width-auto user_actions">
@@ -50,4 +50,8 @@
 
 </div>
 
-<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal [message]="message"></app-email-compose>
+<a class="uk-display-none" id="scrollToBottom" href="{{'#'+(thread.messages.length-1)}}" uk-scroll></a>
+
+<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal
+                   [message]="message" [subject]="subject">
+</app-email-compose>
