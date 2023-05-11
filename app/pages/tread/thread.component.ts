@@ -1,9 +1,12 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MessagingSystemService} from "../../services/messaging-system.service";
-import {Message, TopicThread} from "../../domain/messaging";
+import {Correspondent, Message, TopicThread} from "../../domain/messaging";
+import {ViewportScroller} from "@angular/common";
+import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import UIkit from "uikit";
 
 @Component({
   selector: 'app-thread',
@@ -17,8 +20,17 @@ export class ThreadComponent implements OnInit {
   thread: TopicThread = null;
   message: Message = null;
   subject: string = null;
+  userInfo: UserInfo = null;
+  newMessage: FormGroup = this.fb.group(new Message());
+  showReply: boolean = false;
 
-  constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
+  public editor = ClassicEditor;
+
+  constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
+              private viewportScroller: ViewportScroller, private fb: FormBuilder) {
+
+    this.newMessage.setControl('to', this.fb.group(new Correspondent()));
+    this.newMessage.setControl('from', this.fb.group(new Correspondent()));
   }
 
   ngOnInit() {
@@ -31,15 +43,20 @@ export class ThreadComponent implements OnInit {
             this.thread.messages.forEach(message => {
               this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
             });
-            // this.thread.messages.reverse();
           },
           error => {console.error(error)},
           ()=> {
-            UIkit.scroll('#scrollToBottom').scrollTo('#'+(this.thread.messages.length-1));
+            this.route.fragment.subscribe(fragment => {
+              setTimeout( timeout => {this.viewportScroller.scrollToAnchor(fragment);}, 0)
+            });
           }
         );
       }
     );
+
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
 
   }
 
@@ -49,7 +66,10 @@ export class ThreadComponent implements OnInit {
 
   reply(message: Message) {
     this.message = message;
+    this.newMessage.get('to').patchValue(this.message.from);
     this.subject = this.thread.subject;
+    this.showReply = true;
+    setTimeout( timeout => {this.viewportScroller.scrollToAnchor('response')}, 0);
   }
 
 }

@@ -13,8 +13,9 @@
       </span>
     </div>
   </div>
-  <div *ngFor="let message of thread?.messages; let i=index">
-    <div id="{{i}}" [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}">
+
+  <div *ngFor="let message of thread?.messages; let i=index" [attr.id]="'message'+i">
+    <div [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}">
       <div class="uk-card-header">
         <div class="uk-grid-small uk-flex-middle" uk-grid>
           <div class="uk-width-auto user_actions">
@@ -32,7 +33,7 @@
                 ({{message.from.email ? message.from.email : message.from.groupId}})
               </span>
                 <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-                  <a href="#emailCompose" uk-toggle class="material-icons" (click)="reply(message)">reply</a>
+                  <a class="material-icons" (click)="reply(message)">reply</a>
                 </span>
             </div>
             <p class="uk-text-meta uk-margin-remove-top">
@@ -48,10 +49,63 @@
     </div>
   </div>
 
+  <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-display-none': !showReply}">
+    <div class="uk-card uk-card-default">
+<!--      <div class="uk-card-header">-->
+<!--        <h6 class="uk-modal-title uk-margin-remove">Title</h6>-->
+
+<!--      </div>-->
+      <div class="uk-card-body">
+        <button class="uk-modal-close-default" type="button" (click)="showReply = false;" uk-close></button>
+        <form [formGroup]="newMessage" class="">
+
+          <!--          <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">-->
+          <!--            <div class="">From:</div>-->
+          <!--            <div *ngIf="userInfo" class="uk-form-controls uk-margin-left">-->
+          <!--              <div class="uk-flex uk-flex-middle" style="height: 40px;">-->
+          <!--                <span class="uk-text-bold">{{userInfo.user.fullname}}</span>-->
+          <!--                <span class="uk-margin-small-left uk-text-muted">({{userInfo.user.email}})</span>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <div class="uk-flex uk-flex-middle uk-margin-bottom" formGroupName="to">
+            <div class="uk-flex uk-flex-middle"><span class="material-icons">reply</span>To:</div>
+            <div class="uk-form-controls uk-margin-left uk-width-expand">
+              <span class="uk-text-bold">{{message?.from.name ? ' (' + message.from.name +')':''}}</span>
+              <span class="uk-margin-small-left uk-text-muted">({{message?.from.email ? message?.from.email : message?.from.groupId}})</span>
+<!--              <input class="uk-input uk-form-blank" type="text" [disabled]="true"-->
+<!--                     [value]="(message?.from.email ? message?.from.email : message?.from.groupId)+( message?.from.name ? ' (' + message.from.name +')':'')">-->
+            </div>
+          </div>
+          <!--          <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">-->
+          <!--            <div class="">Subject:</div>-->
+          <!--            <div class="uk-form-controls uk-margin-left uk-width-expand">-->
+          <!--              <input class="uk-input uk-form-blank" type="text" [value]="subject" [disabled]="subject">-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+        </form>
+
+        <div class="uk-margin-top uk-flex uk-flex-middle">
+          <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
+            <span class="material-icons uk-margin-small-right">send</span>Send
+          </button>
+          <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+            <label class="uk-checkbox-label">
+              <input class="uk-checkbox" type="checkbox"> Don't show my name as sender
+            </label>
+          </div>
+        </div>
+      </div>
+<!--      <pre>{{newMessage.value | json}}</pre>-->
+    </div>
+  </div>
+
 </div>
 
-<a class="uk-display-none" id="scrollToBottom" href="{{'#'+(thread.messages.length-1)}}" uk-scroll></a>
 
-<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal
-                   [message]="message" [subject]="subject">
-</app-email-compose>
+
+<!--<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal-->
+<!--                   [message]="message" [subject]="subject">-->
+<!--</app-email-compose>-->

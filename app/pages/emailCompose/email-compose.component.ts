@@ -33,14 +33,7 @@ export class EmailComposeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['message'].currentValue) {
-      console.log(changes);
       this.newMessage.get('to').patchValue(this.message.from);
-      // if (this.message.from.email)
-      //   this.newMessage.get('to').get('email').setValue(this.message.from.email);
-      // if (this.message.from.name)
-      //   this.newMessage.get('to').get('name').setValue(this.message.from.name);
-      // if (this.message.from.groupId)
-      //   this.newMessage.get('to').get('groupId').setValue(this.message.from.groupId);
     }
   }
 

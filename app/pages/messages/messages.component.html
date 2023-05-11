@@ -1,4 +1,4 @@
-<div class="uk-section-default uk-container uk-container-large uk-padding">
+<div class="uk-section-default uk-container uk-container-large uk-padding"  style="min-height: calc(100svh - var(--header-height))">
   <h3>Messages</h3>
 
   <div class="uk-flex uk-flex-right">
@@ -38,13 +38,13 @@
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
                    [checked]="topicIsSelected(topic) > 0">
           </td>
-          <td [routerLink]="[topic.id]" style="cursor: pointer">
+          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.from.name}}
             </div>
             <div class="uk-text-meta">{{topic.updated | date}}</div>
           </td>
-          <td [routerLink]="[topic.id]" style="cursor: pointer">
+          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.subject}}
             </div>

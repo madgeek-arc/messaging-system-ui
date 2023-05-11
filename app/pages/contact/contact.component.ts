@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha";
+import {TopicThread} from "../../domain/messaging";
 
 @Component({
   selector: 'app-contact',
@@ -8,6 +9,8 @@ import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha";
 })
 
 export class ContactComponent implements OnInit {
+
+  newThread: TopicThread = null;
 
   contactForm: FormGroup = new FormGroup({
     name: new FormControl(null, Validators.required),
@@ -48,6 +51,7 @@ export class ContactComponent implements OnInit {
       return;
     } else {
       console.log('Sending message');
+      // this.newThread.messages[0].body =
     }
   }
 
