@@ -1,5 +1,5 @@
 <div class="uk-container uk-container-xsmall uk-section uk-section-default uk-section-small">
-  <div uk-grid>
+  <div *ngIf="!sendSuccess; else messageSent" uk-grid>
     <h1 class="uk-align-center uk-padding-remove">Contact</h1>
     <h6 class="uk-text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h6>
     <form  class="uk-width-1-1 uk-form-stacked" [formGroup]="contactForm" uk-grid>
@@ -31,9 +31,10 @@
         </div>
       </div>
       <div class="uk-width-1-2">
-        <label class="uk-form-label" for="subject">Subject </label>
+        <label class="uk-form-label" for="subject">Subject* </label>
         <div class="uk-form-controls">
-          <input class="uk-input" id="subject" type="text" formControlName="subject">
+          <input class="uk-input" id="subject" [ngClass]="{'uk-form-danger': formFieldInvalid('subject')}"
+                 type="text"  formControlName="subject">
         </div>
       </div>
       <div class="uk-width-1-2">
@@ -86,7 +87,20 @@
       </re-captcha>
     </div>
   </div>
+  <ng-template #messageSent>
+    <div class="uk-margin-xlarge-top" uk-grid>
+      <span class="uk-width-1-1 uk-flex uk-flex-center material-icons md-48" style="color: #00B929">task_alt</span>
+      <h4 class="uk-width-1-1 uk-flex uk-flex-center">Your message has been sent successfully!</h4>
+      <span class="uk-width-1-1 uk-flex uk-flex-center uk-text-muted">
+        You will be redirected in &nbsp;<span style="color: var(--primary-color)">{{display + ' seconds'}}</span>
+      </span>
+      <div class="uk-width-1-1 uk-flex uk-flex-center">
+        <button class="uk-button uk-button-primary" type="button" [routerLink]="['/home']">Back to home</button>
+      </div>
+    </div>
+  </ng-template>
 
 <!--  <pre>{{contactForm.value | json}}</pre>-->
+<!--  <pre>{{newThread | json}}</pre>-->
 </div>
 

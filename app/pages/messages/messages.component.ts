@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {MessagingSystemService} from "../../services/messaging-system.service";
+import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {TopicThread} from "../../domain/messaging";
 
 @Component({

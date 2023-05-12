@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
-import {TopicThread} from "../domain/messaging";
+import {environment} from "../../environments/environment";
+import {Message, TopicThread} from "../app/domain/messaging";
 
 @Injectable()
 
@@ -23,6 +23,16 @@ export class MessagingSystemService {
     let params = new HttpParams();
     params = params.append('read', read);
     return this.httpClient.patch(this.apiEndpoint+`/threads/${threadId}/messages/${messageId}`, null, {params: params});
+  }
+
+  postThread(thread: TopicThread) {
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + '/threads', thread);
+  }
+
+  postMessage(threadId: string, message: Message, anonymous: boolean) {
+    let params = new HttpParams();
+    params = params.append('anonymous', anonymous);
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params});
   }
 
 }

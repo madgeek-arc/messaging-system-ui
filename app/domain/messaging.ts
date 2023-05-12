@@ -13,7 +13,7 @@ export class Correspondent {
 export class Message {
   id: string;
   from:	Correspondent;
-  to: Correspondent;
+  to: [Correspondent];
   body:	string;
   date:	string;
   read: boolean;
@@ -36,8 +36,21 @@ export class TopicThread {
   subject:	string;
   tags:	string[];
   from:	Correspondent;
-  to:	Correspondent;
+  to:	[Correspondent];
   messages:	Message[];
   created:	string;
   updated:	string;
+
+  constructor() {
+    this.id = null;
+    this.subject = null;
+    this.tags = [];
+    this.from = new Correspondent();
+    this.to = [new Correspondent()];
+    this.messages = [new Message()];
+    this.messages[0].from = new Correspondent();
+    this.messages[0].to = [new Correspondent()];
+    this.created = null;
+    this.updated = null;
+  }
 }

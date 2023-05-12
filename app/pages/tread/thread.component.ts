@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {MessagingSystemService} from "../../services/messaging-system.service";
+import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
 import {ViewportScroller} from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
@@ -22,6 +22,7 @@ export class ThreadComponent implements OnInit {
   subject: string = null;
   userInfo: UserInfo = null;
   newMessage: FormGroup = this.fb.group(new Message());
+  anonymous: boolean = false;
   showReply: boolean = false;
 
   public editor = ClassicEditor;
@@ -29,7 +30,7 @@ export class ThreadComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
               private viewportScroller: ViewportScroller, private fb: FormBuilder) {
 
-    this.newMessage.setControl('to', this.fb.group(new Correspondent()));
+    this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
   }
 
@@ -66,10 +67,20 @@ export class ThreadComponent implements OnInit {
 
   reply(message: Message) {
     this.message = message;
-    this.newMessage.get('to').patchValue(this.message.from);
+    this.newMessage.controls['to'].get('0').patchValue(this.message.from);
     this.subject = this.thread.subject;
     this.showReply = true;
     setTimeout( timeout => {this.viewportScroller.scrollToAnchor('response')}, 0);
+  }
+
+  sendMessage() {
+    this.messagingService.postMessage(this.threadId, this.newMessage.value, this.anonymous).subscribe(
+      res=> {
+        this.thread = res;
+        this.showReply = false;
+      },
+      error => {console.error(error)}
+    );
   }
 
 }
