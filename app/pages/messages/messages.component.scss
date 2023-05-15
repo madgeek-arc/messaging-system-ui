@@ -1,0 +1,14 @@
+.flex-parent {
+  display: flex;
+  align-items: center;
+}
+
+.truncated-innerHTML {
+   flex: 1;
+   min-width: 0; /* or some value */
+   p {
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+   }
+ }

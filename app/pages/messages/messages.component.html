@@ -42,13 +42,16 @@
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.from.name}}
             </div>
-            <div class="uk-text-meta">{{topic.updated | date}}</div>
+            <div class="uk-text-muted">{{topic.updated | date}}</div>
           </td>
           <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.subject}}
             </div>
-            <div class="uk-text-meta">{{topic.messages[topic.messages.length-1].body}}</div>
+            <div class="flex-parent">
+              <div class="uk-text-muted truncated-innerHTML" [innerHtml]="topic.messages[topic.messages.length-1].body">
+              </div>
+            </div>
           </td>
           <td>
             <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">

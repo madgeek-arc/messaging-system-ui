@@ -4,7 +4,8 @@ import {TopicThread} from "../../domain/messaging";
 
 @Component({
   selector: 'app-messages',
-  templateUrl: 'messages.component.html'
+  templateUrl: 'messages.component.html',
+  styleUrls: ['messages.component.scss']
 })
 
 export class MessagesComponent implements OnInit {
