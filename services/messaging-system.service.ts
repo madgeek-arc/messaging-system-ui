@@ -15,6 +15,19 @@ export class MessagingSystemService {
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/threads');
   }
 
+  getInbox(groupId: string){
+    let params = new HttpParams();
+    params = params.append('groupId', groupId);
+    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/inbox/threads/search', {params: params});
+  }
+
+  getOutbox(groupId: string, email: string) {
+    let params = new HttpParams();
+    params = params.append('groupId', groupId);
+    params = params.append('email', email);
+    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params});
+  }
+
   getThread(id: string) {
     return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`);
   }

@@ -7,33 +7,33 @@
 
   <div class="uk-modal-body">
 
-    <form *ngIf="newMessage" [formGroup]="newMessage">
-      <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="">From:</div>
-        <div *ngIf="userInfo" class="uk-form-controls uk-margin-left">
-          <div class="uk-flex uk-flex-middle" style="height: 40px;">
-            <span class="uk-text-bold">{{userInfo.user.fullname}}</span>
-            <span class="uk-margin-small-left uk-text-muted">({{userInfo.user.email}})</span>
-          </div>
-        </div>
-      </div>
-      <div class="uk-margin-top uk-flex uk-flex-middle" formGroupName="to" style="border-bottom: 1px solid #ddd">
+    <form *ngIf="newThread" [formGroup]="newThread">
+<!--      <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">-->
+<!--        <div class="">From:</div>-->
+<!--        <div *ngIf="userInfo" class="uk-form-controls uk-margin-left">-->
+<!--          <div class="uk-flex uk-flex-middle" style="height: 40px;">-->
+<!--            <span class="uk-text-bold">{{userInfo.user.fullname}}</span>-->
+<!--            <span class="uk-margin-small-left uk-text-muted">({{userInfo.user.email}})</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
         <div class="">To:</div>
         <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" type="text" [disabled]="true"
-                 [value]="(message?.from.email ? message?.from.email : message?.from.groupId)+( message?.from.name ? ' (' + message.from.name +')':'')">
+          <input class="uk-input uk-form-blank" type="text">
         </div>
       </div>
       <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
         <div class="">Subject:</div>
         <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" type="text" [value]="subject" [disabled]="subject">
+          <input class="uk-input uk-form-blank" type="text">
         </div>
       </div>
-    </form>
 
-    <form [formGroup]="newMessage" class="uk-margin-medium-top">
-      <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+      <div class="uk-margin-medium-top">
+        <ckeditor [editor]="editor"></ckeditor>
+      </div>
+
     </form>
 
     <div class="uk-margin-top uk-flex uk-flex-middle">
@@ -47,6 +47,6 @@
 
   </div>
 
-  <pre>{{newMessage.value | json}}</pre>
+  <pre>{{newThread.value | json}}</pre>
 </div>
 

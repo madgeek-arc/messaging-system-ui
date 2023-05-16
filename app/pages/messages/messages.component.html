@@ -8,8 +8,8 @@
   </div>
 
   <ul uk-tab>
-    <li class="uk-active"><a href="#"><span class="material-icons md-18">inbox</span>Inbox</a></li>
-    <li><a href="#"><span class="material-icons md-18">send</span>Sent</a></li>
+    <li class="uk-active" (click)="refreshInbox()"><a href="#"><span class="material-icons md-18">inbox</span>Inbox</a></li>
+    <li (click)="refreshOutbox()"><a href="#"><span class="material-icons md-18">send</span>Sent</a></li>
   </ul>
 
   <div class="uk-padding-small uk-padding-remove-horizontal uk-flex uk-flex-right">
@@ -20,20 +20,20 @@
   </div>
 
   <ul class="uk-switcher">
-    <li *ngIf="topics" class="uk-animation-fade">
+    <li *ngIf="inbox" class="uk-animation-fade">
       <table class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th><input class="uk-checkbox" type="checkbox"></th>
           <th>
-            <a class="uk-flex uk-flex-middle" (click)="getTopics()">
+            <a class="uk-flex uk-flex-middle" (click)="refreshInbox()">
               <span class="material-icons">refresh</span>Refresh
             </a>
           </th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let topic of topics">
+        <tr *ngFor="let topic of inbox">
           <td>
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
                    [checked]="topicIsSelected(topic) > 0">
@@ -63,10 +63,51 @@
       </table>
     </li>
 
-    <li>Test2</li>
+    <li *ngIf="sent" class="uk-animation-fade">
+      <table class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
+        <thead>
+        <tr>
+          <th><input class="uk-checkbox" type="checkbox"></th>
+          <th>
+            <a class="uk-flex uk-flex-middle" (click)="refreshOutbox()">
+              <span class="material-icons">refresh</span>Refresh
+            </a>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let topic of sent">
+          <td>
+            <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
+                   [checked]="topicIsSelected(topic) > 0">
+          </td>
+          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
+              {{topic.from.name}}
+            </div>
+            <div class="uk-text-muted">{{topic.updated | date}}</div>
+          </td>
+          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+            <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
+              {{topic.subject}}
+            </div>
+            <div class="flex-parent">
+              <div class="uk-text-muted truncated-innerHTML" [innerHtml]="topic.messages[topic.messages.length-1].body">
+              </div>
+            </div>
+          </td>
+          <td>
+            <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">
+              <span class="uk-badge">{{tag}}</span>
+            </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </li>
 
   </ul>
 
 </div>
 
-<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal [message]="null" s></app-email-compose>
+<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal></app-email-compose>

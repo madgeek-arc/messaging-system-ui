@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {Correspondent, Message} from "../../domain/messaging";
+import {Correspondent, Message, TopicThread} from "../../domain/messaging";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 
@@ -10,31 +10,32 @@ import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
   styleUrls: ['email-compose.component.scss']
 })
 
-export class EmailComposeComponent implements OnInit, OnChanges {
-
-  @Input() message: Message = null;
-  @Input() subject: string = null;
+export class EmailComposeComponent implements OnInit {
 
   userInfo: UserInfo = null;
-  newMessage: FormGroup = this.fb.group(new Message());
+  thread: TopicThread = new TopicThread();
+  newThread: FormGroup = TopicThread.toFormGroup(this.fb);
+  recipients: string = null;
 
   public editor = ClassicEditor;
 
-  constructor(private fb: FormBuilder) {
-    this.newMessage.setControl('to', this.fb.group(new Correspondent()));
-    this.newMessage.setControl('from', this.fb.group(new Correspondent()));
+  constructor(public fb: FormBuilder) {
+    // this.newThread.setControl('to', this.fb.array([new Correspondent()]));
+    // this.newThread.setControl('from', this.fb.group(new Correspondent()));
   }
 
   ngOnInit() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-    this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
-    this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
+    // for (let controlsKey in this.newThread.controls) {
+    //   console.log(controlsKey);
+    //   console.log(this.newThread.controls[controlsKey]);
+    // }
+    this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
+    this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['message'].currentValue) {
-      this.newMessage.get('to').patchValue(this.message.from);
-    }
-  }
 
+  protected readonly FormGroup = FormGroup;
 }

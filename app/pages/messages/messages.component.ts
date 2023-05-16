@@ -1,6 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {TopicThread} from "../../domain/messaging";
+import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-messages',
@@ -10,19 +12,33 @@ import {TopicThread} from "../../domain/messaging";
 
 export class MessagesComponent implements OnInit {
 
-  topics: TopicThread[] = null;
+  inbox: TopicThread[] = null;
+  sent: TopicThread[] = null;
+  groupId: string = null;
+  user: UserInfo = null;
   selectedTopics: TopicThread[] = []
 
-  constructor(private messagingService: MessagingSystemService) {
+  constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
 
   ngOnInit() {
-   this.getTopics();
+    this.user = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.route.params.subscribe(params=> this.groupId = params['id']);
+
+    this.refreshInbox();
+    // this.refreshOutbox();
   }
 
-  getTopics() {
-    this.messagingService.getThreads().subscribe(
-      res => {this.topics = res},
+  refreshInbox() {
+    this.messagingService.getInbox(this.groupId).subscribe(
+      res => {this.inbox = res},
+      error => {console.error(error)}
+    );
+  }
+
+  refreshOutbox() {
+    this.messagingService.getOutbox(this.groupId, this.user.user.email).subscribe(
+      res => {this.sent = res},
       error => {console.error(error)}
     );
   }

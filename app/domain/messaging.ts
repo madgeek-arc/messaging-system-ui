@@ -1,3 +1,5 @@
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
 export class Correspondent {
   name:	string;
   email:	string;
@@ -22,12 +24,20 @@ export class Message {
 
   constructor() {
     this.id = null;
-    this.from = null;
-    this.to = null;
+    this.from = new Correspondent();
+    this.to = [new Correspondent()];
     this.body = null;
     this.date = null;
     this.read = null;
     this.readDate = null;
+  }
+
+  public static toFormGroup(fb: FormBuilder) {
+    const message: FormGroup = fb.group(new Message())
+    message.setControl('from', fb.group(new Correspondent()));
+    message.setControl('to', fb.array([fb.group(new Correspondent())]));
+
+    return message;
   }
 }
 
@@ -52,5 +62,15 @@ export class TopicThread {
     this.messages[0].to = [new Correspondent()];
     this.created = null;
     this.updated = null;
+  }
+
+  public static toFormGroup(fb: FormBuilder) {
+    const thread: FormGroup = fb.group(new TopicThread());
+    thread.setControl('from', fb.group(new Correspondent()));
+    thread.setControl('to', fb.array([new Correspondent()]));
+    thread.setControl('messages', fb.array([Message.toFormGroup(fb)]));
+
+    return thread;
+
   }
 }
