@@ -1,9 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha";
+import {Router} from "@angular/router";
 import {TopicThread} from "../../domain/messaging";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-contact',
@@ -65,8 +64,8 @@ export class ContactComponent implements OnInit {
       this.newThread.from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.from.email = this.contactForm.get('email').value;
       if (this.contactForm.get('about').value === 'Country data') {
-        this.newThread.to[0].groupId = this.contactForm.get('country').value;
-        this.newThread.messages[0].to[0].groupId = this.contactForm.get('country').value;
+        this.newThread.to[0].groupId = 'sh-country-' + this.contactForm.get('country').value;
+        this.newThread.messages[0].to[0].groupId = 'sh-country-' + this.contactForm.get('country').value;
       } else {
         this.newThread.to[0].groupId = this.contactForm.get('about').value;
         this.newThread.messages[0].to[0].groupId = this.contactForm.get('about').value;

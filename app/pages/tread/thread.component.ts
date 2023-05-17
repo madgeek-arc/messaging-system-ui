@@ -17,6 +17,7 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 export class ThreadComponent implements OnInit {
 
   threadId: string = null;
+  groupId: string = null;
   thread: TopicThread = null;
   message: Message = null;
   subject: string = null;
@@ -38,6 +39,7 @@ export class ThreadComponent implements OnInit {
     this.route.params.subscribe(
       params => {
         this.threadId = params['threadId'];
+        this.groupId = params['id'];
         this.messagingService.getThread(this.threadId).subscribe(
           res => {
             this.thread = res
@@ -58,6 +60,7 @@ export class ThreadComponent implements OnInit {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
+    this.newMessage.get('from').get('groupId').setValue(this.groupId);
 
   }
 

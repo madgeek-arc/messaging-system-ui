@@ -1,10 +1,12 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Message, TopicThread} from "../app/domain/messaging";
+import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
+
+let headers= new HttpHeaders();
 
 @Injectable()
-
 export class MessagingSystemService {
 
   private apiEndpoint: string = environment.MESSAGING_ENDPOINT;
@@ -16,16 +18,18 @@ export class MessagingSystemService {
   }
 
   getInbox(groupId: string){
+    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
-    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/inbox/threads/search', {params: params});
+    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/inbox/threads/search', {params: params, headers: headers});
   }
 
   getOutbox(groupId: string, email: string) {
+    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
     params = params.append('email', email);
-    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params});
+    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params, headers: headers});
   }
 
   getThread(id: string) {
@@ -43,9 +47,13 @@ export class MessagingSystemService {
   }
 
   postMessage(threadId: string, message: Message, anonymous: boolean) {
+    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('anonymous', anonymous);
-    return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params});
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params, headers: headers});
   }
 
+  setAuthorizationHeaders() {
+    headers = headers.set('Authorization', 'Bearer ' + getCookie('AccessToken'));
+  }
 }

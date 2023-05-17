@@ -67,7 +67,7 @@ export class TopicThread {
   public static toFormGroup(fb: FormBuilder) {
     const thread: FormGroup = fb.group(new TopicThread());
     thread.setControl('from', fb.group(new Correspondent()));
-    thread.setControl('to', fb.array([new Correspondent()]));
+    thread.setControl('to', fb.array([fb.group(new Correspondent())]));
     thread.setControl('messages', fb.array([Message.toFormGroup(fb)]));
 
     return thread;

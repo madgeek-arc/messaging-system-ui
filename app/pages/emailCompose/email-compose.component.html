@@ -7,46 +7,41 @@
 
   <div class="uk-modal-body">
 
-    <form *ngIf="newThread" [formGroup]="newThread">
-<!--      <div class="uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">-->
-<!--        <div class="">From:</div>-->
-<!--        <div *ngIf="userInfo" class="uk-form-controls uk-margin-left">-->
-<!--          <div class="uk-flex uk-flex-middle" style="height: 40px;">-->
-<!--            <span class="uk-text-bold">{{userInfo.user.fullname}}</span>-->
-<!--            <span class="uk-margin-small-left uk-text-muted">({{userInfo.user.email}})</span>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="">To:</div>
-        <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" type="text">
-        </div>
+
+    <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
+      <div class="">To:</div>
+      <div class="uk-form-controls uk-margin-left uk-width-expand">
+        <input class="uk-input uk-form-blank" type="text" [(ngModel)]="recipients">
       </div>
+    </div>
+    <form *ngIf="newThread" [formGroup]="newThread">
       <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
         <div class="">Subject:</div>
         <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" type="text">
+          <input class="uk-input uk-form-blank" type="text" formControlName="subject">
         </div>
       </div>
 
-      <div class="uk-margin-medium-top">
-        <ckeditor [editor]="editor"></ckeditor>
+      <div class="uk-margin-medium-top" [formGroup]="messageBody()">
+        <ckeditor [editor]="editor" formControlName="body"></ckeditor>
       </div>
 
     </form>
 
     <div class="uk-margin-top uk-flex uk-flex-middle">
-      <button class="uk-button uk-button-secondary uk-flex uk-flex-middle">
+      <button class="uk-button uk-button-secondary uk-flex uk-flex-middle" (click)="createTread()">
         <span class="material-icons uk-margin-small-right">send</span>Send
       </button>
-      <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-        <label class="uk-checkbox-label"><input class="uk-checkbox" type="checkbox"> Don't show my name as sender</label>
-      </div>
+<!--      <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">-->
+<!--        <label class="uk-checkbox-label">-->
+<!--          <input class="uk-checkbox" type="checkbox"> Don't show my name as sender-->
+<!--        </label>-->
+<!--      </div>-->
     </div>
 
   </div>
 
+<!--  <pre>{{recipients}}</pre>-->
   <pre>{{newThread.value | json}}</pre>
 </div>
 

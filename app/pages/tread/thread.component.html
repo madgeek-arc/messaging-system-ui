@@ -22,19 +22,22 @@
             <svg height="60" width="60">
               <circle cx="30" cy="30" r="20" stroke-width="1" fill="#008792"></circle>
               <text dy=".4em" font-size="16" text-anchor="middle" x="50%" y="50%" class="">
-                {{firstLetters(message.from.name)}}
+                {{(message.from.name && message.from.name !== '') ? firstLetters(message.from.name) : firstLetters(message.from.groupId)}}
               </text>
             </svg>
           </div>
           <div class="uk-width-expand">
             <div class="uk-flex">
-              <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
-              <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">
-                ({{message.from.email ? message.from.email : message.from.groupId}})
+              <div *ngIf="message.from.name && message.from.name !== ''; else elseClause">
+                <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
+                <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>
+              </div>
+              <ng-template #elseClause>
+                <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.groupId}}</h6>
+              </ng-template>
+              <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+                <a class="material-icons" (click)="reply(message)">reply</a>
               </span>
-                <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-                  <a class="material-icons" (click)="reply(message)">reply</a>
-                </span>
             </div>
             <p class="uk-text-meta uk-margin-remove-top">
               <span>{{message.date | date: 'medium'}}</span>
