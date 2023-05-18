@@ -53,6 +53,10 @@ export class MessagingSystemService {
     return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params, headers: headers});
   }
 
+  getGroupList() {
+    return this.httpClient.get(this.apiEndpoint + '/groups');
+  }
+
   setAuthorizationHeaders() {
     headers = headers.set('Authorization', 'Bearer ' + getCookie('AccessToken'));
   }

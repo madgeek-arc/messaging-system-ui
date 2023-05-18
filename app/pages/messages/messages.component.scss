@@ -4,11 +4,5 @@
 }
 
 .truncated-innerHTML {
-   flex: 1;
-   min-width: 0; /* or some value */
-   p {
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-   }
- }
+  margin: 0 !important;
+}

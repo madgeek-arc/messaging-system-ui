@@ -34,26 +34,26 @@
         </thead>
         <tbody>
         <tr *ngFor="let topic of inbox">
-          <td>
+          <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
                    [checked]="topicIsSelected(topic) > 0">
           </td>
-          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+          <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.from.name}}
             </div>
             <div class="uk-text-muted">{{topic.updated | date}}</div>
           </td>
-          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+          <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.subject}}
             </div>
-            <div class="flex-parent">
-              <div class="uk-text-muted truncated-innerHTML" [innerHtml]="topic.messages[topic.messages.length-1].body">
+            <div>
+              <div class="uk-text-muted" [innerHtml]="topic.messages[topic.messages.length-1].body">
               </div>
             </div>
           </td>
-          <td>
+          <td class="uk-width-1-6 uk-text-right">
             <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">
               <span class="uk-badge">{{tag}}</span>
             </span>
@@ -77,26 +77,26 @@
         </thead>
         <tbody>
         <tr *ngFor="let topic of sent">
-          <td>
+          <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)"
                    [checked]="topicIsSelected(topic) > 0">
           </td>
-          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+          <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.from.name}}
             </div>
             <div class="uk-text-muted">{{topic.updated | date}}</div>
           </td>
-          <td [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
+          <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
             <div [ngClass]="{'uk-text-bolder': !topic.messages[topic.messages.length-1].read}">
               {{topic.subject}}
             </div>
-            <div class="flex-parent">
-              <div class="uk-text-muted truncated-innerHTML" [innerHtml]="topic.messages[topic.messages.length-1].body">
+            <div>
+              <div class="uk-text-muted" [innerHtml]="topic.messages[topic.messages.length-1].body">
               </div>
             </div>
           </td>
-          <td>
+          <td class="uk-width-1-6 uk-text-right">
             <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">
               <span class="uk-badge">{{tag}}</span>
             </span>

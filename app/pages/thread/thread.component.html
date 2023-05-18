@@ -47,7 +47,7 @@
       </div>
       <div *ngIf="thread.messages.length === 1" style="border-top: 1px solid #e5e5e5"></div>
       <div class="uk-card-body">
-        <p [innerHtml]="message.body"></p>
+        <p class="uk-text-break" [innerHtml]="message.body"></p>
       </div>
     </div>
   </div>

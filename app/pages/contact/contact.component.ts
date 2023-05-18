@@ -21,6 +21,7 @@ export class ContactComponent implements OnInit {
     subject: new FormControl(null, Validators.required),
     about: new FormControl(null, Validators.required),
     country: new FormControl(null, Validators.required),
+    coordinator: new FormControl(null, Validators.required),
     message: new FormControl(null, Validators.required),
     termsAndConditions: new FormControl(null, Validators.requiredTrue)
   });
@@ -29,20 +30,32 @@ export class ContactComponent implements OnInit {
     recaptcha: new FormControl(null, Validators.required),
   });
 
+  groups: {} = null;
   sendSuccess: boolean = null;
   display: number = 0;
-  public timerInterval: any;
+  timerInterval: any;
 
   constructor(private messagingService: MessagingSystemService, private router: Router) {
   }
 
   ngOnInit() {
+    this.messagingService.getGroupList().subscribe(
+      res=> {this.groups = res;},
+      error => {console.error(error)}
+    );
+
     this.contactForm.get('country').disable();
+    this.contactForm.get('coordinator').disable();
     this.contactForm.get('about').valueChanges.subscribe(
       value => {
-        if (value === 'Country data') {
+        if (value === 'Country Data') {
           this.contactForm.get('country').enable();
+          this.contactForm.get('coordinator').disable();
+        } else if (value === 'Survey Improvements') {
+          this.contactForm.get('coordinator').enable();
+          this.contactForm.get('country').disable();
         } else {
+          this.contactForm.get('coordinator').disable();
           this.contactForm.get('country').disable();
         }
       }
@@ -63,9 +76,12 @@ export class ContactComponent implements OnInit {
       this.newThread.subject = this.contactForm.get('subject').value;
       this.newThread.from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.from.email = this.contactForm.get('email').value;
-      if (this.contactForm.get('about').value === 'Country data') {
-        this.newThread.to[0].groupId = 'sh-country-' + this.contactForm.get('country').value;
-        this.newThread.messages[0].to[0].groupId = 'sh-country-' + this.contactForm.get('country').value;
+      if (this.contactForm.get('about').value === 'Country Data') {
+        this.newThread.to[0].groupId = this.contactForm.get('country').value;
+        this.newThread.messages[0].to[0].groupId = this.contactForm.get('country').value;
+      } else if (this.contactForm.get('about').value === 'Survey Improvements') {
+        this.newThread.to[0].groupId = this.contactForm.get('coordinator').value;
+        this.newThread.messages[0].to[0].groupId = this.contactForm.get('coordinator').value;
       } else {
         this.newThread.to[0].groupId = this.contactForm.get('about').value;
         this.newThread.messages[0].to[0].groupId = this.contactForm.get('about').value;

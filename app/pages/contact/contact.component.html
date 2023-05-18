@@ -42,25 +42,27 @@
         <div class="uk-form-controls">
           <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('about')}" id="about"
                   formControlName="about">
-            <option>Dashboard improvement</option>
-            <option>Country data</option>
-            <option>Survey improvements</option>
+            <option *ngFor="let group of groups | keyvalue" [value]="group.key">{{group.key}}</option>
           </select>
         </div>
       </div>
-      <div class="uk-width-1-2" *ngIf="contactForm.get('country').enabled">
+      <div class="uk-width-1-2 uk-animation-scale-up" *ngIf="contactForm.get('country').enabled">
         <label class="uk-form-label" for="about">Country* </label>
         <div class="uk-form-controls">
           <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}" id="country"
                   formControlName="country">
-            <option>list</option>
-            <option>of</option>
-            <option>countries</option>
-            <option>to</option>
-            <option>be</option>
-            <option>added</option>
-            <option>here</option>
-            <option>GR</option>
+            <option *ngFor="let country of groups['Country Data']" [value]="country.id">{{country.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="uk-width-1-2 uk-animation-scale-up" *ngIf="contactForm.get('coordinator').enabled">
+        <label class="uk-form-label" for="about">Coordinator* </label>
+        <div class="uk-form-controls">
+          <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}"
+                  id="coordinator" formControlName="coordinator">
+            <option *ngFor="let coordinator of groups['Survey Improvements']" [value]="coordinator.id">
+              {{coordinator.name}}
+            </option>
           </select>
         </div>
       </div>

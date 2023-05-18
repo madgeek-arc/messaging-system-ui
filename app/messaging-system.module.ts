@@ -5,7 +5,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings} from "ng-recaptcha";
 import {MessagesComponent} from "./pages/messages/messages.component";
-import {ThreadComponent} from "./pages/tread/thread.component";
+import {ThreadComponent} from "./pages/thread/thread.component";
 import {RouterModule} from "@angular/router";
 import {MessagingSystemService} from "../services/messaging-system.service";
 import {EmailComposeComponent} from "./pages/emailCompose/email-compose.component";
