@@ -54,12 +54,10 @@
 
   <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-display-none': !showReply}">
     <div class="uk-card uk-card-default">
-<!--      <div class="uk-card-header">-->
-<!--        <h6 class="uk-modal-title uk-margin-remove">Title</h6>-->
-
-<!--      </div>-->
       <div class="uk-card-body">
-        <button class="uk-modal-close-default" type="button" (click)="showReply = false;" uk-close></button>
+        <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset()"
+                type="button" uk-close>
+        </button>
         <form [formGroup]="newMessage" class="">
 
           <div class="uk-flex uk-flex-middle uk-margin-bottom" formArrayName="to">
@@ -86,14 +84,8 @@
           </div>
         </div>
       </div>
-<!--      <pre>{{newMessage.value | json}}</pre>-->
     </div>
   </div>
 
+<!--  <pre>{{newMessage.value | json}}</pre>-->
 </div>
-
-
-
-<!--<app-email-compose id="emailCompose" class="uk-modal-container" uk-modal-->
-<!--                   [message]="message" [subject]="subject">-->
-<!--</app-email-compose>-->

@@ -81,6 +81,7 @@ export class ThreadComponent implements OnInit {
       res=> {
         this.thread = res;
         this.showReply = false;
+        this.newMessage.reset();
       },
       error => {console.error(error)}
     );
