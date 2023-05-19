@@ -6,13 +6,19 @@
   </div>
 
   <div class="uk-modal-body">
+    <div class="">To:</div>
+    <ng-select *ngIf="flatGroups.length > 0" [items]="flatGroups"
+               [addTag]="addTagPromise"
+               bindLabel="name"
+               [multiple]="true"
+               [loading]="loading"
+               [(ngModel)]="recipients">
 
-    <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-      <div class="">To:</div>
-      <div class="uk-form-controls uk-margin-left uk-width-expand">
-        <input class="uk-input uk-form-blank" type="text" [(ngModel)]="recipients">
-      </div>
-    </div>
+      <ng-template ng-tag-tmp let-search="searchTerm">
+        <b>Add recipient</b>: {{search}}
+      </ng-template>
+    </ng-select>
+
     <form *ngIf="newThread" [formGroup]="newThread">
       <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
         <div class="">Subject:</div>

@@ -10,6 +10,7 @@ import {RouterModule} from "@angular/router";
 import {MessagingSystemService} from "../services/messaging-system.service";
 import {EmailComposeComponent} from "./pages/emailCompose/email-compose.component";
 import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 
 const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
@@ -38,7 +39,8 @@ const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
     RecaptchaFormsModule,
     RouterModule,
     CKEditorModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule
   ],
   exports: []
 })

@@ -28,7 +28,7 @@
           </div>
           <div class="uk-width-expand">
             <div class="uk-flex">
-              <div *ngIf="message.from.name && message.from.name !== ''; else elseClause">
+              <div class="uk-flex" *ngIf="message.from.name && message.from.name !== ''; else elseClause">
                 <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
                 <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>
               </div>
@@ -39,9 +39,9 @@
                 <a class="material-icons" (click)="reply(message)">reply</a>
               </span>
             </div>
-            <p class="uk-text-meta uk-margin-remove-top">
+            <span class="uk-text-muted">
               <span>{{message.date | date: 'medium'}}</span>
-            </p>
+            </span>
           </div>
         </div>
       </div>

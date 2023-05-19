@@ -16,7 +16,7 @@ export class MessagesComponent implements OnInit {
   sent: TopicThread[] = null;
   groupId: string = null;
   user: UserInfo = null;
-  selectedTopics: TopicThread[] = []
+  selectedTopics: TopicThread[] = [];
 
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
