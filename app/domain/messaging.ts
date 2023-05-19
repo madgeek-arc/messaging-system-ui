@@ -50,6 +50,7 @@ export class TopicThread {
   messages:	Message[];
   created:	string;
   updated:	string;
+  unread: number;
 
   constructor() {
     this.id = null;

@@ -26,21 +26,44 @@ export class MessagesComponent implements OnInit {
     this.route.params.subscribe(params=> this.groupId = params['id']);
 
     this.refreshInbox();
-    // this.refreshOutbox();
   }
 
   refreshInbox() {
     this.messagingService.getInbox(this.groupId).subscribe(
-      res => {this.inbox = res},
+      res => {
+        this.inbox = res;
+        this.sent = [];
+      },
       error => {console.error(error)}
     );
   }
 
   refreshOutbox() {
     this.messagingService.getOutbox(this.groupId, this.user.user.email).subscribe(
-      res => {this.sent = res},
+      res => {
+        this.sent = res;
+        this.inbox = [];
+      },
       error => {console.error(error)}
     );
+  }
+
+  markAsReadUnread(thread: TopicThread, read: boolean) {
+    thread.messages.forEach(message => {
+      this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
+        res=> {
+          thread.unread = res.unread;
+        }
+      );
+    });
+
+  }
+
+  batchAction(read: boolean) {
+    console.log(this.selectedTopics);
+    this.selectedTopics.forEach(thread => {
+      this.markAsReadUnread(thread, read);
+    });
   }
 
   toggleCheck(event, topic: TopicThread) {
@@ -53,8 +76,19 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  topicIsSelected(topic) {
-    return this.selectedTopics.findIndex((x) => x === topic);
+  toggle(source) {
+    let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== source.target.checked)
+        checkboxes[i]['checked'] = source.target.checked;
+    }
+    if (source.target.checked) {
+      if (this.inbox.length > 0) {
+        this.selectedTopics = [...this.inbox];
+      } else {
+        this.selectedTopics = [...this.sent];
+      }
+    } else
+      this.selectedTopics = [];
   }
-
 }
