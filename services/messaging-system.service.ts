@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Message, TopicThread} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
+import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
 
 let headers= new HttpHeaders();
 
@@ -17,18 +18,30 @@ export class MessagingSystemService {
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/threads');
   }
 
-  getInbox(groupId: string){
+  getInbox(groupId: string, urlParams?: URLParameter[]){
     this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
+    if (urlParams){
+      for (let urlParam of urlParams) {
+        for (const value of urlParam.values)
+          params = params.append(urlParam.key, value);
+      }
+    }
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/inbox/threads/search', {params: params, headers: headers});
   }
 
-  getOutbox(groupId: string, email: string) {
+  getOutbox(groupId: string, email: string, urlParams?: URLParameter[]) {
     this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
     params = params.append('email', email);
+    if (urlParams){
+      for (let urlParam of urlParams) {
+        for (const value of urlParam.values)
+          params = params.append(urlParam.key, value);
+      }
+    }
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params, headers: headers});
   }
 

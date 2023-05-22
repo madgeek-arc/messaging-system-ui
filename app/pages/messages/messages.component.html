@@ -7,24 +7,38 @@
     </button>
   </div>
 
-  <ul uk-tab>
-    <li class="uk-active" (click)="refreshInbox(); selectedTopics = []">
-      <a href="#"><span class="material-icons md-18">inbox</span>Inbox</a>
+  <ul id="tab" uk-tab>
+    <li class="uk-active" (click)="refreshInbox(); selectedTopics = []; searchTerm = null; order = null">
+      <a href="#" [routerLink]='"."' [fragment]="'inbox'"><span class="material-icons md-18">inbox</span>Inbox</a>
     </li>
-    <li (click)="refreshOutbox(); selectedTopics = []">
-      <a href="#"><span class="material-icons md-18">send</span>Sent</a>
+    <li (click)="refreshOutbox(); selectedTopics = []; searchTerm = null; order = null">
+      <a href="#" [routerLink]='"."' [fragment]="'sent'"><span class="material-icons md-18">send</span>Sent</a>
     </li>
   </ul>
 
-  <div class="uk-padding-small uk-padding-remove-horizontal uk-flex uk-flex-right">
-    <div class="uk-inline">
-      <span class="uk-form-icon" uk-icon="icon: search"></span>
-      <a class="uk-form-icon uk-form-icon-flip" uk-icon="icon: close; ratio: 0.6"></a>
-      <input type="text" class="uk-input uk-form-width-medium" placeholder="Search..." name="keyword">
+  <div class="uk-margin-remove" uk-grid>
+    <div class="uk-width-1-6 uk-padding-small uk-padding-remove-horizontal">
+      <ng-select id="order" clearAllText="Clear" placeholder="Order by date" [(ngModel)]="order"
+                 (change)="changeOrder(order)">
+        <ng-option [value]="'DESC'">Descending</ng-option>
+        <ng-option [value]="'ASC'">Ascending</ng-option>
+      </ng-select>
+    </div>
+
+    <div class="uk-width-expand uk-flex uk-flex-right">
+    <div class="uk-padding-small uk-padding-remove-horizontal">
+      <div class="uk-inline">
+        <span class="uk-form-icon" uk-icon="icon: search"></span>
+<!--        <a class="uk-form-icon uk-form-icon-flip" uk-icon="icon: close; ratio: 0.6"-->
+<!--           (click)="updateUrlParams('regex', null); searchTerm = null"></a>-->
+        <input type="text" #searchInput class="uk-input uk-form-width-medium" placeholder="Search..."
+               [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
+      </div>
+    </div>
     </div>
   </div>
 
-  <ul class="uk-switcher">
+  <ul id="messages" class="uk-switcher">
     <li class="uk-animation-fade">
       <table *ngIf="inbox?.length > 0" class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
         <thead>
@@ -71,9 +85,6 @@
             </div>
           </td>
           <td class="uk-width-auto uk-text-right">
-<!--            <span *ngFor="let tag of topic.tags" class="uk-margin-small-left">-->
-<!--              <span class="uk-badge">{{tag}}</span>-->
-<!--            </span>-->
             <a class="material-icons uk-margin-right">more_horiz</a>
             <ul class="uk-card uk-card-body uk-card-default uk-list uk-padding-small" style="width: auto !important;"
                 uk-drop="mode: hover; animation: reveal-top; animate-out: true; pos: left-top; offset: 0; duration: 500">
@@ -102,14 +113,18 @@
         <thead>
         <tr>
           <th>
-            <input id="selectAllSent" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
+            <input id="selectAllOutbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
                    [checked]="selectedTopics.length === inbox.length && inbox.length > 0">
           </th>
           <th class="uk-flex uk-flex-middle">
             <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread">mark_as_unread</a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read">mark_email_read</a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Move to archive">archive</a>
+            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
+               (click)="batchAction(false)">mark_as_unread</a>
+            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
+               (click)="batchAction(true)">mark_email_read
+            </a>
+            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Move to archive">archive
+            </a>
           </th>
         </tr>
         </thead>
@@ -132,11 +147,13 @@
               <div class="uk-text-muted" [innerHtml]="topic.messages[topic.messages.length-1].body">
               </div>
             </div>
+            <div class="uk-text-right">
+              <span *ngFor="let tag of topic.tags" class="uk-margin-small-left">
+                <span class="uk-badge">{{tag}}</span>
+              </span>
+            </div>
           </td>
           <td class="uk-width-1-6 uk-text-right">
-<!--            <span *ngFor="let tag of topic.tags; let i=index" [ngClass]="{'uk-margin-small-left': i!==0}">-->
-<!--              <span class="uk-badge">{{tag}}</span>-->
-<!--            </span>-->
             <a class="material-icons uk-margin-right">more_horiz</a>
             <ul class="uk-card uk-card-body uk-card-default uk-list uk-padding-small" style="width: auto !important;"
                 uk-drop="mode: hover; animation: reveal-top; animate-out: true; pos: left-top; offset: 0; duration: 500">

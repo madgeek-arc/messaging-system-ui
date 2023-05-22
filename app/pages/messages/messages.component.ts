@@ -1,8 +1,12 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {TopicThread} from "../../domain/messaging";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {ActivatedRoute} from "@angular/router";
+import {fromEvent} from "rxjs";
+import {debounceTime, distinctUntilChanged, map} from "rxjs/operators";
+import UIkit from "uikit";
+import {URLParameter} from "../../../../survey-tool/catalogue-ui/domain/url-parameter";
 
 @Component({
   selector: 'app-messages',
@@ -12,24 +16,62 @@ import {ActivatedRoute} from "@angular/router";
 
 export class MessagesComponent implements OnInit {
 
+  @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
+
   inbox: TopicThread[] = null;
   sent: TopicThread[] = null;
   groupId: string = null;
+  fragment: string = null;
   user: UserInfo = null;
   selectedTopics: TopicThread[] = [];
+  searchTerm: string = null;
+  order: string = null;
+  urlParameters: URLParameter[] = [];
 
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
 
   ngOnInit() {
     this.user = JSON.parse(sessionStorage.getItem('userInfo'));
-    this.route.params.subscribe(params=> this.groupId = params['id']);
+    this.route.params.subscribe(
+      params=> {
+        this.groupId = params['id'];
+        this.route.fragment.subscribe(fragment=> {
+          this.fragment = fragment;
+          if (fragment === 'sent') {
+            this.refreshOutbox();
+            UIkit.tab('#tab').show(1);
+          }
+          else {
+            this.refreshInbox();
+            UIkit.tab('#tab').show(0);
+          }
+        });
+      }
+    );
 
-    this.refreshInbox();
+    fromEvent(this.searchInput.nativeElement, 'keyup').pipe(
+      map((event: any) => { // get value
+        return event.target.value;
+      })
+      // , filter(res => res.length > 2) // if character length greater then 2
+      , debounceTime(500) // Time in milliseconds between key events
+      , distinctUntilChanged() // If previous query is different from current
+    ).subscribe((text: string) => {
+        if (this.inbox.length > 0) {
+          this.updateUrlParams('regex', text);
+          this.refreshInbox(this.urlParameters);
+        }
+        else if (this.sent.length > 0) {
+          this.updateUrlParams('regex', text);
+          this.refreshOutbox(this.urlParameters)
+        }
+      }
+    );
   }
 
-  refreshInbox() {
-    this.messagingService.getInbox(this.groupId).subscribe(
+  refreshInbox(urlParams?: URLParameter[]) {
+    this.messagingService.getInbox(this.groupId, urlParams).subscribe(
       res => {
         this.inbox = res;
         this.sent = [];
@@ -38,8 +80,8 @@ export class MessagesComponent implements OnInit {
     );
   }
 
-  refreshOutbox() {
-    this.messagingService.getOutbox(this.groupId, this.user.user.email).subscribe(
+  refreshOutbox(urlParams?: URLParameter[]) {
+    this.messagingService.getOutbox(this.groupId, this.user.user.email, urlParams).subscribe(
       res => {
         this.sent = res;
         this.inbox = [];
@@ -91,4 +133,47 @@ export class MessagesComponent implements OnInit {
     } else
       this.selectedTopics = [];
   }
+
+  updateUrlParams(key: string, value: string | string[]) {
+    let found = false;
+    for (const urlParameter of this.urlParameters) {
+      if (urlParameter.key === key) {
+        found = true;
+        urlParameter.values = [];
+        if (value instanceof Array) {
+          if (value.length === 0)
+            this.urlParameters.splice(this.urlParameters.indexOf(urlParameter), 1);
+          else
+            urlParameter.values = value;
+        } else {
+          if (value === '' || value === null)
+            this.urlParameters.splice(this.urlParameters.indexOf(urlParameter), 1);
+          else
+            urlParameter.values.push(value);
+        }
+        break;
+      }
+    }
+    if (!found) {
+      if (value === null || value === '' || value?.length === 0) {
+        return;
+      }
+      const newFromParameter: URLParameter = {
+        key: key,
+        values: value instanceof Array ? value : [value]
+      };
+      this.urlParameters.push(newFromParameter);
+    }
+
+  }
+
+  changeOrder(order: string) {
+    this.updateUrlParams('sortBy', 'created');
+    this.updateUrlParams('direction', order);
+    if (this.fragment === 'sent')
+      this.refreshOutbox(this.urlParameters);
+    else
+      this.refreshInbox(this.urlParameters);
+  }
+
 }
