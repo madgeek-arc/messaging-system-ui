@@ -8,10 +8,10 @@
   </div>
 
   <ul id="tab" uk-tab>
-    <li class="uk-active" (click)="refreshInbox(); selectedTopics = []; searchTerm = null; order = null">
+    <li class="uk-active" (click)="selectedTopics = []; searchTerm = null; order = null">
       <a href="#" [routerLink]='"."' [fragment]="'inbox'"><span class="material-icons md-18">inbox</span>Inbox</a>
     </li>
-    <li (click)="refreshOutbox(); selectedTopics = []; searchTerm = null; order = null">
+    <li (click)="selectedTopics = []; searchTerm = null; order = null">
       <a href="#" [routerLink]='"."' [fragment]="'sent'"><span class="material-icons md-18">send</span>Sent</a>
     </li>
   </ul>
