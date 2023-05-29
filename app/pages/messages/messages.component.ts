@@ -102,7 +102,7 @@ export class MessagesComponent implements OnInit {
   }
 
   batchAction(read: boolean) {
-    console.log(this.selectedTopics);
+    // console.log(this.selectedTopics);
     this.selectedTopics.forEach(thread => {
       this.markAsReadUnread(thread, read);
     });

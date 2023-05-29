@@ -49,12 +49,13 @@
           </th>
           <th class="uk-flex uk-flex-middle">
               <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
-              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
-                 (click)="batchAction(false)">mark_as_unread</a>
-              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
-                 (click)="batchAction(true)">mark_email_read
+              <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"
+                 title="Mark as unread" (click)="batchAction(false)">mark_as_unread</a>
+              <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"
+                 title="Mark as read" (click)="batchAction(true)">mark_email_read
               </a>
-              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Move to archive">archive
+              <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"
+                 title="Move to archive">archive
               </a>
           </th>
         </tr>
@@ -85,23 +86,15 @@
             </div>
           </td>
           <td class="uk-width-auto uk-text-right">
-            <a class="material-icons uk-margin-right">more_horiz</a>
-            <ul class="uk-card uk-card-body uk-card-default uk-list uk-padding-small" style="width: auto !important;"
-                uk-drop="mode: hover; animation: reveal-top; animate-out: true; pos: left-top; offset: 0; duration: 500">
-              <li>
-                <a class="uk-flex uk-flex-middle">Move to archive<a class="material-icons uk-margin-left">archive</a></a>
-              </li>
-              <li *ngIf="topic.unread > 0">
-                <a class="uk-flex uk-flex-middle" (click)="markAsReadUnread(topic, true)">
-                  Mark as read<a class="material-icons uk-margin-left">mark_email_read</a>
-                </a>
-              </li>
-              <li *ngIf="topic.unread === 0" (click)="markAsReadUnread(topic, false)">
-                <a class="uk-flex uk-flex-middle">
-                  Mark as unread<span class="material-icons uk-margin-left">mark_email_read</span>
-                </a>
-              </li>
-            </ul>
+            <span>
+              <a class="material-icons uk-margin-left" title="Move to archive">archive</a>
+            </span>
+            <span *ngIf="topic.unread > 0">
+              <a class="material-icons uk-margin-left" title="Mark as read" (click)="markAsReadUnread(topic, true)">mark_email_read</a>
+            </span>
+            <span *ngIf="topic.unread === 0" (click)="markAsReadUnread(topic, false)">
+              <a class="material-icons uk-margin-left" title="Mark as unread">mark_as_unread</a>
+            </span>
           </td>
         </tr>
         </tbody>
