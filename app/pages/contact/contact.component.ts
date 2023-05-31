@@ -1,15 +1,18 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {TopicThread} from "../../domain/messaging";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
+import {SurveyService} from "../../../../survey-tool/app/services/survey.service";
+import {OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service} from "ng-recaptcha";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-contact',
   templateUrl: 'contact.component.html'
 })
 
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
 
   newThread: TopicThread = new TopicThread();
 
@@ -26,22 +29,35 @@ export class ContactComponent implements OnInit {
     termsAndConditions: new FormControl(null, Validators.requiredTrue)
   });
 
-  recaptchaForm: FormGroup = new FormGroup({
-    recaptcha: new FormControl(null, Validators.required),
-  });
-
   groups: {} = null;
   sendSuccess: boolean = null;
   display: number = 0;
   timerInterval: any;
 
-  constructor(private messagingService: MessagingSystemService, private router: Router) {
+  // reCaptcha
+  recentToken = "";
+  recentError?: { error: any };
+  readonly executionLog: Array<OnExecuteData | OnExecuteErrorData> = [];
+
+  private allExecutionsSubscription: Subscription;
+  private allExecutionErrorsSubscription: Subscription;
+  private singleExecutionSubscription: Subscription;
+
+  constructor(private messagingService: MessagingSystemService, private recaptchaV3Service: ReCaptchaV3Service,
+              private surveyService: SurveyService, private router: Router) {
   }
 
   ngOnInit() {
     this.messagingService.getGroupList().subscribe(
       res=> {this.groups = res;},
       error => {console.error(error)}
+    );
+
+    this.allExecutionsSubscription = this.recaptchaV3Service.onExecute.subscribe((data) =>
+      this.executionLog.push(data),
+    );
+    this.allExecutionErrorsSubscription = this.recaptchaV3Service.onExecuteError.subscribe((data) =>
+      this.executionLog.push(data),
     );
 
     this.contactForm.get('country').disable();
@@ -71,7 +87,7 @@ export class ContactComponent implements OnInit {
       this.contactForm.markAllAsTouched();
       return;
     } else {
-      console.log('Sending message');
+      // console.log('Sending message');
       this.newThread.messages[0].body = this.contactForm.get('message').value;
       this.newThread.subject = this.contactForm.get('subject').value;
       this.newThread.from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
@@ -89,18 +105,36 @@ export class ContactComponent implements OnInit {
       this.newThread.messages[0].from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.messages[0].from.email = this.contactForm.get('email').value;
 
-      this.messagingService.postThread(this.newThread).subscribe(
+      this.messagingService.postThread(this.newThread, this.recentToken).subscribe(
         res=> {
           this.sendSuccess = true;
           this.timer(0.1);
         },
         error => {console.error(error)}
       );
+
     }
   }
 
   resolved(message: string, token: string | null) {
     console.log((`${message}: ${token}`));
+  }
+
+  executeAction(action: string): void {
+    if (this.singleExecutionSubscription) {
+      this.singleExecutionSubscription.unsubscribe();
+    }
+    this.singleExecutionSubscription = this.recaptchaV3Service.execute(action).subscribe(
+      (token) => {
+        this.recentToken = token;
+        this.recentError = undefined;
+      },
+      (error) => {
+        this.recentToken = "";
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.recentError = { error };
+      },
+    );
   }
 
   timer(minute) {
@@ -129,6 +163,18 @@ export class ContactComponent implements OnInit {
         this.router.navigate(['/home']);
       }
     }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.allExecutionsSubscription) {
+      this.allExecutionsSubscription.unsubscribe();
+    }
+    if (this.allExecutionErrorsSubscription) {
+      this.allExecutionErrorsSubscription.unsubscribe();
+    }
+    if (this.singleExecutionSubscription) {
+      this.singleExecutionSubscription.unsubscribe();
+    }
   }
 
 }

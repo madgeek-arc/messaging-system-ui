@@ -55,8 +55,12 @@ export class MessagingSystemService {
     return this.httpClient.patch<TopicThread>(this.apiEndpoint+`/threads/${threadId}/messages/${messageId}`, null, {params: params});
   }
 
-  postThread(thread: TopicThread) {
-    return this.httpClient.post<TopicThread>(this.apiEndpoint + '/threads', thread);
+  postThread(thread: TopicThread, recaptcha?: string) {
+    let headers = new HttpHeaders()
+    if (recaptcha) {
+      headers = headers.append('g-recaptcha-response', recaptcha);
+    }
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + '/threads', thread, {headers: headers});
   }
 
   postMessage(threadId: string, message: Message, anonymous: boolean) {

@@ -7,59 +7,60 @@
         <label class="uk-form-label" for="name">Name* </label>
         <div class="uk-form-controls">
           <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('name')}" id="name"
-                 type="text" formControlName="name">
+                 type="text" formControlName="name" (click)="executeAction('name')">
         </div>
       </div>
       <div class="uk-width-1-2">
         <label class="uk-form-label" for="surname">Surname* </label>
         <div class="uk-form-controls">
           <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('surname')}" id="surname"
-                 type="text" formControlName="surname">
+                 type="text" formControlName="surname" (click)="executeAction('surname')">
         </div>
       </div>
       <div class="uk-width-1-2">
         <label class="uk-form-label" for="email">Email* </label>
         <div class="uk-form-controls">
           <input class="uk-input" [ngClass]="{'uk-form-danger': formFieldInvalid('email')}" id="email"
-                 type="text" formControlName="email">
+                 type="text" formControlName="email" (click)="executeAction('email')">
         </div>
       </div>
       <div class="uk-width-1-2">
         <label class="uk-form-label" for="affiliation">Affiliation </label>
         <div class="uk-form-controls">
-          <input class="uk-input" id="affiliation" type="text" formControlName="affiliation">
+          <input class="uk-input" id="affiliation" type="text" formControlName="affiliation"
+                 (click)="executeAction('affiliation')">
         </div>
       </div>
       <div class="uk-width-1-2">
         <label class="uk-form-label" for="subject">Subject* </label>
         <div class="uk-form-controls">
           <input class="uk-input" id="subject" [ngClass]="{'uk-form-danger': formFieldInvalid('subject')}"
-                 type="text"  formControlName="subject">
+                 type="text"  formControlName="subject" (click)="executeAction('subject')">
         </div>
       </div>
       <div class="uk-width-1-2">
         <label class="uk-form-label" for="about">Contact about* </label>
         <div class="uk-form-controls">
           <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('about')}" id="about"
-                  formControlName="about">
+                  formControlName="about" (click)="executeAction('about')">
             <option *ngFor="let group of groups | keyvalue" [value]="group.key">{{group.key}}</option>
           </select>
         </div>
       </div>
       <div class="uk-width-1-2 uk-animation-scale-up" *ngIf="contactForm.get('country').enabled">
-        <label class="uk-form-label" for="about">Country* </label>
+        <label class="uk-form-label" for="country">Country* </label>
         <div class="uk-form-controls">
           <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}" id="country"
-                  formControlName="country">
+                  formControlName="country" (click)="executeAction('country')">
             <option *ngFor="let country of groups['Country Data']" [value]="country.id">{{country.name}}</option>
           </select>
         </div>
       </div>
       <div class="uk-width-1-2 uk-animation-scale-up" *ngIf="contactForm.get('coordinator').enabled">
-        <label class="uk-form-label" for="about">Coordinator* </label>
+        <label class="uk-form-label" for="coordinator">Coordinator* </label>
         <div class="uk-form-controls">
           <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}"
-                  id="coordinator" formControlName="coordinator">
+                  id="coordinator" formControlName="coordinator" (click)="executeAction('coordinator')">
             <option *ngFor="let coordinator of groups['Survey Improvements']" [value]="coordinator.id">
               {{coordinator.name}}
             </option>
@@ -70,26 +71,23 @@
         <label class="uk-form-label" for="message">Message* </label>
         <div class="uk-form-controls">
           <textarea class="uk-textarea" [ngClass]="{'uk-form-danger': formFieldInvalid('message')}"
-                    id="message" type="text" rows="4" formControlName="message"></textarea>
+                    id="message" type="text" rows="4" formControlName="message"
+                    (click)="executeAction('message')"></textarea>
         </div>
       </div>
       <div class="uk-width-1-1 uk-flex uk-flex-middle">
         <label for="termsAndConditions" [ngClass]="{'uk-form-danger': formFieldInvalid('termsAndConditions')}">
-          <input class="uk-checkbox"  id="termsAndConditions" type="checkbox" formControlName="termsAndConditions">
+          <input class="uk-checkbox"  id="termsAndConditions" type="checkbox" formControlName="termsAndConditions"
+                 (click)="executeAction('termsAndConditions')">
           I have read and agreed to the <a href="" target="_blank">Terms & conditions</a>*
         </label>
       </div>
     </form>
     <div class="uk-width-1-2">
-      <button class="uk-button uk-button-primary" [disabled]="recaptchaForm.get('recaptcha').invalid"
-              (click)="sendMessage()">Send message</button>
-    </div>
-    <div [formGroup]="recaptchaForm" class="uk-width-1-2">
-      <re-captcha formControlName="recaptcha"
-        (resolved)="resolved('Reactive form mode resolved', $event)">
-      </re-captcha>
+      <button class="uk-button uk-button-primary" (click)="sendMessage()">Send message</button>
     </div>
   </div>
+
   <ng-template #messageSent>
     <div class="uk-margin-xlarge-top" uk-grid>
       <span class="uk-width-1-1 uk-flex uk-flex-center material-icons md-48" style="color: #00B929">task_alt</span>

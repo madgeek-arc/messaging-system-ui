@@ -3,7 +3,7 @@ import {ContactComponent} from "./pages/contact/contact.component";
 import {MessagingSystemRoutingModule} from "./messaging-system-routing.module";
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings} from "ng-recaptcha";
+import {RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module} from "ng-recaptcha";
 import {MessagesComponent} from "./pages/messages/messages.component";
 import {ThreadComponent} from "./pages/thread/thread.component";
 import {RouterModule} from "@angular/router";
@@ -13,7 +13,7 @@ import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import {NgSelectModule} from "@ng-select/ng-select";
 
 
-const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+const RECAPTCHA_V3_KEY = '6Lc_SFEmAAAAAPULH3Rw_Umpa-UVJ2n1qJ0dOcJ7';
 
 @NgModule({
   declarations:[
@@ -24,10 +24,8 @@ const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
   ],
   providers: [
     {
-      provide: RECAPTCHA_SETTINGS,
-      useValue: {
-        siteKey: RECAPTCHA_V2_DUMMY_KEY
-      } as RecaptchaSettings
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: RECAPTCHA_V3_KEY
     },
     MessagingSystemService
   ],
@@ -35,8 +33,7 @@ const RECAPTCHA_V2_DUMMY_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
     CommonModule,
     MessagingSystemRoutingModule,
     ReactiveFormsModule,
-    RecaptchaModule,
-    RecaptchaFormsModule,
+    RecaptchaV3Module,
     RouterModule,
     CKEditorModule,
     FormsModule,
