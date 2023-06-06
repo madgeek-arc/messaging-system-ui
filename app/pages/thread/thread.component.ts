@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
@@ -15,6 +15,8 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 })
 
 export class ThreadComponent implements OnInit {
+
+  @ViewChild('threadHeader') targetElement: any;
 
   threadId: string = null;
   groupId: string = null;
@@ -50,7 +52,21 @@ export class ThreadComponent implements OnInit {
           error => {console.error(error)},
           ()=> {
             this.route.fragment.subscribe(fragment => {
-              setTimeout( timeout => {this.viewportScroller.scrollToAnchor(fragment);}, 0)
+
+              setTimeout( timeout => {
+
+                const threadHeaderHeight = this.targetElement.nativeElement.offsetHeight;
+
+                let x = getComputedStyle(document.documentElement) .getPropertyValue('--header-height')
+                // console.log(x);
+                x = x.split('px')[0];
+                let y: number = +x;
+                //adding uk-padding and uk-margin-bottom heights
+                y = y + threadHeaderHeight + 20 + 40;
+                this.viewportScroller.setOffset([0,y]);
+
+                this.viewportScroller.scrollToAnchor(fragment);
+                }, 0)
             });
           }
         );

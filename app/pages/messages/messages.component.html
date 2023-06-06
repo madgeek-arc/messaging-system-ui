@@ -40,7 +40,7 @@
 
   <ul id="messages" class="uk-switcher">
     <li class="uk-animation-fade">
-      <table *ngIf="inbox?.length > 0" class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
+      <table *ngIf="inbox?.length > 0" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th>
@@ -61,7 +61,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let topic of inbox">
+        <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': topic.unread > 0}">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
@@ -76,12 +76,12 @@
               {{topic.subject}}
             </div>
             <div>
-              <div class="uk-text-muted" [innerHtml]="topic.messages[topic.messages.length-1].body">
+              <div class="uk-text-muted line-clamp" [innerHtml]="topic.messages[topic.messages.length-1].body">
               </div>
             </div>
             <div class="uk-text-right">
               <span *ngFor="let tag of topic.tags" class="uk-margin-small-left">
-                <span class="uk-badge">{{tag}}</span>
+                <span class="uk-badge badge-default">{{tag}}</span>
               </span>
             </div>
           </td>
@@ -102,7 +102,7 @@
     </li>
 
     <li class="uk-animation-fade">
-      <table *ngIf="sent?.length > 0" class="uk-table uk-table-divider uk-table-hover uk-table-middle uk-background-default uk-border-rounded">
+      <table *ngIf="sent?.length > 0" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th>
@@ -122,7 +122,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let topic of sent">
+        <tr *ngFor="let topic of sent" [ngClass]="{'message-unread-background': topic.unread > 0}">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
@@ -142,7 +142,7 @@
             </div>
             <div class="uk-text-right">
               <span *ngFor="let tag of topic.tags" class="uk-margin-small-left">
-                <span class="uk-badge">{{tag}}</span>
+                <span class="uk-badge badge-default">{{tag}}</span>
               </span>
             </div>
           </td>

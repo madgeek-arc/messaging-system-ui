@@ -6,3 +6,14 @@
 .truncated-innerHTML {
   margin: 0 !important;
 }
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.message-unread-background {
+  background-color: var(--eosc-observatory-primary-color-extra-light);
+}

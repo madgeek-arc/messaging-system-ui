@@ -1,6 +1,6 @@
 <div *ngIf="thread" class="uk-section-default uk-container uk-container-large uk-padding">
 
-  <div class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
+  <div #threadHeader class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
     <h5 class="uk-margin-medium-bottom uk-flex uk-flex-middle uk-margin-remove">
       <a [routerLink]="['../']" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
         <span class="material-icons">keyboard_backspace</span>
@@ -9,7 +9,7 @@
     </h5>
     <div class="uk-flex uk-flex-middle uk-flex-right">
       <span class="">
-        <span *ngFor="let tag of thread.tags" class="uk-badge uk-margin-small-left">{{tag}}</span>
+        <span *ngFor="let tag of thread.tags" class="uk-badge badge-default uk-margin-small-left">{{tag}}</span>
       </span>
     </div>
   </div>
