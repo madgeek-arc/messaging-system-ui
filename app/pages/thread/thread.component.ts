@@ -27,6 +27,7 @@ export class ThreadComponent implements OnInit {
   newMessage: FormGroup = this.fb.group(new Message());
   anonymous: boolean = false;
   showReply: boolean = false;
+  fragment: string = null
 
   public editor = ClassicEditor;
 
@@ -35,6 +36,9 @@ export class ThreadComponent implements OnInit {
 
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
+
+    if (this.router.getCurrentNavigation()?.extras?.state?.['returnTo'])
+      this.fragment = this.router.getCurrentNavigation()?.extras.state['returnTo'];
   }
 
   ngOnInit() {
@@ -51,6 +55,8 @@ export class ThreadComponent implements OnInit {
           },
           error => {console.error(error)},
           ()=> {
+
+            // console.log(this.router.getCurrentNavigation().extras.state.returnTo);
             this.route.fragment.subscribe(fragment => {
 
               setTimeout( timeout => {

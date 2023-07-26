@@ -2,7 +2,7 @@
 
   <div #threadHeader class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
     <h5 class="uk-margin-medium-bottom uk-flex uk-flex-middle uk-margin-remove">
-      <a [routerLink]="['../']" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
+      <a [routerLink]="['../']" [fragment]="fragment" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
         <span class="material-icons">keyboard_backspace</span>
       </a>
       <span>{{thread.subject}}</span>
@@ -31,6 +31,7 @@
               <div class="uk-flex" *ngIf="message.from.name && message.from.name !== ''; else elseClause">
                 <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
                 <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>
+                <span *ngIf="message.anonymousSender" class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
               </div>
               <ng-template #elseClause>
                 <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.groupId}}</h6>

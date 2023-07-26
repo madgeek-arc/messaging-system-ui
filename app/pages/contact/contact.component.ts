@@ -9,7 +9,8 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-contact',
-  templateUrl: 'contact.component.html'
+  templateUrl: 'contact.component.html',
+  styles: ['.grecaptcha-badge { visibility: hidden !important;}']
 })
 
 export class ContactComponent implements OnInit, OnDestroy {
@@ -76,6 +77,11 @@ export class ContactComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    const badge = document.getElementsByClassName('grecaptcha-badge')[0];
+    if (badge && badge instanceof HTMLElement) {
+      badge.style.visibility = 'visible';
+    }
   }
 
   formFieldInvalid(fieldName: string) {
@@ -174,6 +180,11 @@ export class ContactComponent implements OnInit, OnDestroy {
     }
     if (this.singleExecutionSubscription) {
       this.singleExecutionSubscription.unsubscribe();
+    }
+
+    const badge = document.getElementsByClassName('grecaptcha-badge')[0];
+    if (badge && badge instanceof HTMLElement) {
+      badge.style.visibility = 'hidden';
     }
   }
 
