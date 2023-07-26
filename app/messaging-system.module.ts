@@ -12,8 +12,7 @@ import {EmailComposeComponent} from "./pages/emailCompose/email-compose.componen
 import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import {NgSelectModule} from "@ng-select/ng-select";
 
-
-const RECAPTCHA_V3_KEY = '6Lc_SFEmAAAAAPULH3Rw_Umpa-UVJ2n1qJ0dOcJ7';
+import {environment} from "../../environments/environment";
 
 @NgModule({
   declarations:[
@@ -25,7 +24,7 @@ const RECAPTCHA_V3_KEY = '6Lc_SFEmAAAAAPULH3Rw_Umpa-UVJ2n1qJ0dOcJ7';
   providers: [
     {
       provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: RECAPTCHA_V3_KEY
+      useValue: environment.RECAPTCHA_V3_KEY
     },
     MessagingSystemService
   ],
