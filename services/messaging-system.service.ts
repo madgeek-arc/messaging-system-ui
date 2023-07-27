@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Message, TopicThread} from "../app/domain/messaging";
+import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
 
@@ -47,6 +47,12 @@ export class MessagingSystemService {
 
   getThread(id: string) {
     return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`);
+  }
+
+  getUnreadCount(ids: string[]) {
+    let params = new HttpParams();
+    params = params.append('groups', ids.toString());
+    return this.httpClient.get<UnreadMessages>(this.apiEndpoint + '/inbox/unread', {params: params});
   }
 
   setMessageReadParam(threadId: string, messageId: string, read: boolean) {
