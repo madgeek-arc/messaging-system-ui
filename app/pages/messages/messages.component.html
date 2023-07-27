@@ -40,28 +40,37 @@
 
   <ul id="messages" class="uk-switcher">
     <li class="uk-animation-fade">
-      <table *ngIf="inbox?.length > 0" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
+      <table class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
-          <th>
+          <th class="">
             <input id="selectAllInbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
-                   [checked]="selectedTopics.length === inbox.length && inbox.length > 0">
+                   [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
           </th>
-          <th class="uk-flex uk-flex-middle">
-            <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
-            <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"
-               title="Mark as unread" (click)="batchAction(false)">mark_as_unread</a>
-            <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"
-               title="Mark as read" (click)="batchAction(true)">mark_email_read
-            </a>
-<!--            <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"-->
-<!--               title="Move to archive">archive-->
-<!--            </a>-->
+          <th class="uk-width-auto">
+            <div class="uk-flex uk-flex-middle">`
+              <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
+              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
+                 (click)="batchAction(false)">mark_as_unread</a>
+              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
+                 (click)="batchAction(true)">mark_email_read
+              </a>
+  <!--            <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"-->
+  <!--               title="Move to archive">archive-->
+  <!--            </a>-->
+            </div>
           </th>
+          <th class="uk-width-expand"></th>
+          <th class="uk-width-auto"></th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
+        <tr *ngIf="!inbox || inbox?.length === 0; else showInbox">
+          <td></td>
+          <td class="uk-width-expand">No messages</td>
+        </tr>
+        <ng-template #showInbox>
+          <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
@@ -94,6 +103,7 @@
             </span>
           </td>
         </tr>
+        </ng-template>
         </tbody>
       </table>
     </li>
@@ -106,20 +116,30 @@
             <input id="selectAllOutbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
                    [checked]="selectedTopics.length === inbox.length && inbox.length > 0">
           </th>
-          <th class="uk-flex uk-flex-middle">
-            <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
-               (click)="batchAction(false)">mark_as_unread</a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
-               (click)="batchAction(true)">mark_email_read
-            </a>
-            <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Move to archive">archive
-            </a>
+          <th class="uk-width-auto">
+            <div class="uk-flex uk-flex-middle">`
+              <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
+              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
+                 (click)="batchAction(false)">mark_as_unread</a>
+              <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
+                 (click)="batchAction(true)">mark_email_read
+              </a>
+              <!--            <a class="material-icons uk-margin-left" [ngClass]="{'uk-disabled': !(selectedTopics.length > 0)}"-->
+              <!--               title="Move to archive">archive-->
+              <!--            </a>-->
+            </div>
           </th>
+          <th class="uk-width-expand"></th>
+          <th class="uk-width-auto"></th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let topic of sent" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
+        <tr *ngIf="!sent || sent?.length === 0; else showSent">
+          <td></td>
+          <td class="uk-width-expand">No messages</td>
+        </tr>
+        <ng-template #showSent>
+          <tr *ngFor="let topic of sent" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
@@ -154,6 +174,7 @@
             </span>
           </td>
         </tr>
+        </ng-template>
         </tbody>
       </table>
     </li>
