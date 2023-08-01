@@ -66,7 +66,7 @@ export class MessagingSystemService {
     if (recaptcha) {
       headers = headers.append('g-recaptcha-response', recaptcha);
     }
-    return this.httpClient.post<TopicThread>(this.apiEndpoint + '/threads', thread, {headers: headers});
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + '/threads/public', thread, {headers: headers});
   }
 
   postMessage(threadId: string, message: Message, anonymous: boolean) {
