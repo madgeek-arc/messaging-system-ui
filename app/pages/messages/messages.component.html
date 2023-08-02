@@ -109,7 +109,7 @@
     </li>
 
     <li class="uk-animation-fade">
-      <table *ngIf="sent?.length > 0" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
+      <table class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th>
@@ -118,7 +118,7 @@
           </th>
           <th class="uk-width-auto">
             <div class="uk-flex uk-flex-middle">`
-              <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
+              <a class="material-icons" title="Refresh" (click)="refreshOutbox()">refresh</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
                  (click)="batchAction(false)">mark_as_unread</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"

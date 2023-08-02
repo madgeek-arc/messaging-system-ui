@@ -111,7 +111,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.newThread.messages[0].from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.messages[0].from.email = this.contactForm.get('email').value;
 
-      this.messagingService.postThread(this.newThread, this.recentToken).subscribe(
+      this.messagingService.postThreadPublic(this.newThread, this.recentToken).subscribe(
         res=> {
           this.sendSuccess = true;
           this.timer(0.1);

@@ -79,11 +79,6 @@ export class ThreadComponent implements OnInit {
       }
     );
 
-    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-    this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
-    this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
-    this.newMessage.get('from').get('groupId').setValue(this.groupId);
-
   }
 
   firstLetters(name: string) {
@@ -91,6 +86,10 @@ export class ThreadComponent implements OnInit {
   }
 
   reply(message: Message) {
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
+    this.newMessage.get('from').get('groupId').setValue(this.groupId);
     this.message = message;
     this.newMessage.controls['to'].get('0').patchValue(this.message.from);
     this.subject = this.thread.subject;
