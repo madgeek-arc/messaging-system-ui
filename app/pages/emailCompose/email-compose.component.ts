@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {Correspondent, TopicThread} from "../../domain/messaging";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
@@ -14,8 +14,10 @@ import UIkit from "uikit";
 
 export class EmailComposeComponent implements OnInit {
 
+  @Input('groupId') groupId: string = null;
+
   userInfo: UserInfo = null;
-  thread: TopicThread = new TopicThread();
+  // thread: TopicThread = new TopicThread();
   newThread: FormGroup = TopicThread.toFormGroup(this.fb);
   recipients: {id: string, name: string, type: string}[] = null;
   createSuccess: boolean = null
@@ -39,14 +41,16 @@ export class EmailComposeComponent implements OnInit {
         }
       }
     );
-
-    this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
-    this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
-    this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
-    this.newThread.get('messages').get('0').get('from').get('email').setValue(this.userInfo.user.email);
   }
 
   createTread() {
+    this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
+    if (this.groupId)
+      this.newThread.get('from').get('groupId').setValue(this.groupId);
+    this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
+    this.newThread.get('messages').get('0').get('from').get('email').setValue(this.userInfo.user.email);
+
     while ((this.newThread.get('to') as FormArray).length < this.recipients.length) {
       (this.newThread.get('to') as FormArray).push(this.fb.group(new Correspondent()));
       (this.newThread.get('messages').get('0').get('to') as FormArray).push(this.fb.group(new Correspondent()));
