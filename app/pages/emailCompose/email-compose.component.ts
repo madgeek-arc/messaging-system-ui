@@ -46,8 +46,10 @@ export class EmailComposeComponent implements OnInit {
   createTread() {
     this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
-    if (this.groupId)
+    if (this.groupId) {
       this.newThread.get('from').get('groupId').setValue(this.groupId);
+      this.newThread.get('messages').get('0').get('from').get('groupId').setValue(this.groupId);
+    }
     this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('messages').get('0').get('from').get('email').setValue(this.userInfo.user.email);
 
