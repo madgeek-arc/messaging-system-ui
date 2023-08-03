@@ -21,7 +21,7 @@ export class Message {
   date:	string;
   read: boolean;
   readDate: string;
-
+  replyToMessageId: string;
 
   constructor() {
     this.id = null;
@@ -32,6 +32,7 @@ export class Message {
     this.date = null;
     this.read = null;
     this.readDate = null;
+    this.replyToMessageId = null;
   }
 
   public static toFormGroup(fb: FormBuilder) {
@@ -45,7 +46,7 @@ export class Message {
 
 export class TopicThread {
   id:	string;
-  subject:	string;
+  subject: string;
   tags:	string[];
   from:	Correspondent;
   to:	[Correspondent];

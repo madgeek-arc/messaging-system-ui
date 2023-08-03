@@ -25,7 +25,7 @@ export class ThreadComponent implements OnInit {
   subject: string = null;
   userInfo: UserInfo = null;
   newMessage: FormGroup = this.fb.group(new Message());
-  anonymous: boolean = false;
+  anonymous: boolean = true;
   showReply: boolean = false;
   fragment: string = null
 
@@ -90,6 +90,7 @@ export class ThreadComponent implements OnInit {
     this.newMessage.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
     this.newMessage.get('from').get('groupId').setValue(this.groupId);
+    this.newMessage.get('replyToMessageId').setValue(message.id);
     this.message = message;
     this.newMessage.controls['to'].get('0').patchValue(this.message.from);
     this.subject = this.thread.subject;
