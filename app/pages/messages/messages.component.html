@@ -48,7 +48,7 @@
                    [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
           </th>
           <th class="uk-width-auto">
-            <div class="uk-flex uk-flex-middle">`
+            <div class="uk-flex uk-flex-middle">
               <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
                  (click)="batchAction(false)">mark_as_unread</a>
@@ -70,20 +70,20 @@
           <td class="uk-width-expand">No messages</td>
         </tr>
         <ng-template #showInbox>
-          <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
+          <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': !topic.read}" class="uk-visible-toggle">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
-          <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)"
+          <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages?.length-1)"
               [state]="{returnTo: fragment}" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': topic.unread > 0}">{{topic.from.name}}</div>
+            <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.from?.name}}</div>
             <div class="uk-text-muted">{{topic.updated | date}}</div>
           </td>
           <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]"
               [fragment]="'message' + (topic.messages.length-1)" [state]="{returnTo: fragment}" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': topic.unread > 0}">{{topic.subject}}</div>
+            <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.subject}}</div>
             <div>
-              <div class="uk-text-muted line-clamp" [innerHtml]="topic.messages[topic.messages.length-1].body"></div>
+              <div class="uk-text-muted line-clamp" [innerHtml]="topic.messages[topic.messages?.length-1].body"></div>
             </div>
             <div class="uk-text-right">
               <span *ngFor="let tag of topic.tags" class="uk-margin-small-left">
@@ -95,10 +95,10 @@
 <!--            <span>-->
 <!--              <a class="material-icons uk-margin-left" title="Move to archive">archive</a>-->
 <!--            </span>-->
-            <span *ngIf="topic.unread > 0">
+            <span *ngIf="!topic.read">
               <a class="material-icons uk-margin-left" title="Mark as read" (click)="markAsReadUnread(topic, true)">mark_email_read</a>
             </span>
-            <span *ngIf="topic.unread === 0" (click)="markAsReadUnread(topic, false)">
+            <span *ngIf="topic.read" (click)="markAsReadUnread(topic, false)">
               <a class="material-icons uk-margin-left" title="Mark as unread">mark_as_unread</a>
             </span>
           </td>
@@ -117,7 +117,7 @@
                    [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
           </th>
           <th class="uk-width-auto">
-            <div class="uk-flex uk-flex-middle">`
+            <div class="uk-flex uk-flex-middle">
               <a class="material-icons" title="Refresh" (click)="refreshOutbox()">refresh</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
                  (click)="batchAction(false)">mark_as_unread</a>
@@ -139,20 +139,20 @@
           <td class="uk-width-expand">No messages</td>
         </tr>
         <ng-template #showSent>
-          <tr *ngFor="let topic of sent" [ngClass]="{'message-unread-background': topic.unread > 0}" class="uk-visible-toggle">
+          <tr *ngFor="let topic of sent" [ngClass]="{'message-unread-background': !topic.read}" class="uk-visible-toggle">
           <td class="uk-width-auto">
             <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
           </td>
           <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)"
               [state]="{returnTo: fragment}" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': topic.unread > 0}">
+            <div [ngClass]="{'uk-text-bolder': !topic.read}">
               {{topic.from.name}}
             </div>
             <div class="uk-text-muted">{{topic.updated | date}}</div>
           </td>
           <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]"
               [fragment]="'message' + (topic.messages.length-1)" [state]="{returnTo: fragment}" style="cursor: pointer">
-            <div [ngClass]="{'uk-text-bolder': topic.unread > 0}">{{topic.subject}}</div>
+            <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.subject}}</div>
             <div>
               <div class="uk-text-muted line-clamp" [innerHtml]="topic.messages[topic.messages.length-1].body"></div>
             </div>
@@ -166,10 +166,10 @@
             <!--            <span>-->
             <!--              <a class="material-icons uk-margin-left" title="Move to archive">archive</a>-->
             <!--            </span>-->
-            <span *ngIf="topic.unread > 0">
+            <span *ngIf="!topic.read">
               <a class="material-icons uk-margin-left" title="Mark as read" (click)="markAsReadUnread(topic, true)">mark_email_read</a>
             </span>
-            <span *ngIf="topic.unread === 0" (click)="markAsReadUnread(topic, false)">
+            <span *ngIf="topic.read" (click)="markAsReadUnread(topic, false)">
               <a class="material-icons uk-margin-left" title="Mark as unread">mark_as_unread</a>
             </span>
           </td>

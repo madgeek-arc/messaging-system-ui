@@ -50,7 +50,8 @@ export class ThreadComponent implements OnInit {
           res => {
             this.thread = res
             this.thread.messages.forEach(message => {
-              this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
+              if (!message.read)
+                this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
             });
           },
           error => {console.error(error)},

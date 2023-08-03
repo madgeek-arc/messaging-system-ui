@@ -92,13 +92,20 @@ export class MessagesComponent implements OnInit {
 
   markAsReadUnread(thread: TopicThread, read: boolean) {
     thread.messages.forEach(message => {
+      // if (message.read == read)
+      //   return;
+
       this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
         res=> {
-          thread.unread = res.unread;
+          thread.read = res.read;
         }
       );
     });
-
+    if (this.fragment === 'sent') {
+      this.refreshOutbox(this.urlParameters)
+    } else {
+      this.refreshInbox(this.urlParameters);
+    }
   }
 
   batchAction(read: boolean) {

@@ -53,7 +53,7 @@ export class TopicThread {
   messages:	Message[];
   created:	string;
   updated:	string;
-  unread: number;
+  read: boolean;
 
   constructor() {
     this.id = null;
