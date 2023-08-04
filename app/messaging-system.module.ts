@@ -7,7 +7,7 @@ import {RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module} from "ng-recaptcha";
 import {MessagesComponent} from "./pages/messages/messages.component";
 import {ThreadComponent} from "./pages/thread/thread.component";
 import {RouterModule} from "@angular/router";
-import {MessagingSystemService} from "../services/messaging-system.service";
+import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
 import {EmailComposeComponent} from "./pages/emailCompose/email-compose.component";
 import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import {NgSelectModule} from "@ng-select/ng-select";
@@ -26,7 +26,7 @@ import {environment} from "../../environments/environment";
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.RECAPTCHA_V3_KEY
     },
-    MessagingSystemService
+    // MessagingSystemService
   ],
   imports: [
     CommonModule,

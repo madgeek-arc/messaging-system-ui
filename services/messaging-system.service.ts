@@ -4,13 +4,16 @@ import {environment} from "../../environments/environment";
 import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
+import {BehaviorSubject} from "rxjs";
 
 let headers= new HttpHeaders();
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MessagingSystemService {
 
   private apiEndpoint: string = environment.MESSAGING_ENDPOINT;
+  unreadMessages: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(new UnreadMessages());
+  // notifications = this.unreadMessages.asObservable();
 
   constructor(private httpClient: HttpClient) {}
 
@@ -51,11 +54,20 @@ export class MessagingSystemService {
     return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`, {params: params});
   }
 
-  getUnreadCount(ids: string[]) {
-    let params = new HttpParams();
-    params = params.append('groups', ids.toString());
-    return this.httpClient.get<UnreadMessages>(this.apiEndpoint + '/inbox/unread', {params: params});
+  setUnreadCount() {
+    return this.httpClient.get<UnreadMessages>(this.apiEndpoint + '/inbox/unread').subscribe(
+      res => {
+        this.unreadMessages.next(res);
+        console.log(this);
+      },
+      error => console.error(error)
+    );
   }
+
+  // public get notifications(): Observable<UnreadMessages | undefined> {
+  //   console.log(this);
+  //   return this.unreadMessages;
+  // }
 
   setMessageReadParam(threadId: string, messageId: string, read: boolean) {
     let params = new HttpParams();

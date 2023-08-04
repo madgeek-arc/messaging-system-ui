@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {MessagingSystemService} from "../../../services/messaging-system.service";
+import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
 import {TopicThread} from "../../domain/messaging";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {ActivatedRoute} from "@angular/router";
@@ -90,22 +90,34 @@ export class MessagesComponent implements OnInit {
     );
   }
 
-  async markAsReadUnread(thread: TopicThread, read: boolean) {
+  markAsReadUnread(thread: TopicThread, read: boolean) {
+    let count = 0;
     for (const message of thread.messages) {
       if (message.read == read)
         continue;
-      this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
-        res => {
-          thread.read = res.read;
-        }
-      );
+      count++;
+      setTimeout(()=> {
+        this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
+          res => {
+            thread.read = res.read;
+          }
+        );
+      }, count * 100)
 
     }
-    if (this.fragment === 'sent') {
-      this.refreshOutbox(this.urlParameters)
-    } else {
-      this.refreshInbox(this.urlParameters);
-    }
+    setTimeout(()=> {
+      if (this.fragment === 'sent') {
+        this.refreshOutbox(this.urlParameters)
+      } else {
+        this.refreshInbox(this.urlParameters);
+      }
+      console.log('Get unread messages from messages component');
+      this.messagingService.setUnreadCount();
+    }, count * 100)
+  }
+
+  updateNotifications() {
+    this.messagingService.setUnreadCount();
   }
 
   batchAction(read: boolean) {
