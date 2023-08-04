@@ -4,7 +4,7 @@ import {TopicThread} from "../../domain/messaging";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {ActivatedRoute} from "@angular/router";
 import {fromEvent} from "rxjs";
-import {debounceTime, distinctUntilChanged, map} from "rxjs/operators";
+import {debounceTime, delay, distinctUntilChanged, map} from "rxjs/operators";
 import UIkit from "uikit";
 import {URLParameter} from "../../../../survey-tool/catalogue-ui/domain/url-parameter";
 
@@ -90,17 +90,17 @@ export class MessagesComponent implements OnInit {
     );
   }
 
-  markAsReadUnread(thread: TopicThread, read: boolean) {
-    thread.messages.forEach(message => {
-      // if (message.read == read)
-      //   return;
-
+  async markAsReadUnread(thread: TopicThread, read: boolean) {
+    for (const message of thread.messages) {
+      if (message.read == read)
+        continue;
       this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
-        res=> {
+        res => {
           thread.read = res.read;
         }
       );
-    });
+
+    }
     if (this.fragment === 'sent') {
       this.refreshOutbox(this.urlParameters)
     } else {

@@ -45,8 +45,10 @@ export class MessagingSystemService {
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params, headers: headers});
   }
 
-  getThread(id: string) {
-    return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`);
+  getThread(id: string, groupId: string) {
+    let params = new HttpParams();
+    params = params.append('groupId', groupId);
+    return this.httpClient.get<TopicThread>(this.apiEndpoint+`/threads/${id}`, {params: params});
   }
 
   getUnreadCount(ids: string[]) {

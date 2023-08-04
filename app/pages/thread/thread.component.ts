@@ -46,7 +46,7 @@ export class ThreadComponent implements OnInit {
       params => {
         this.threadId = params['threadId'];
         this.groupId = params['id'];
-        this.messagingService.getThread(this.threadId).subscribe(
+        this.messagingService.getThread(this.threadId, this.groupId).subscribe(
           res => {
             this.thread = res
             this.thread.messages.forEach(message => {
