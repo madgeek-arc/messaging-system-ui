@@ -66,7 +66,7 @@ export class MessagingSystemService {
   newEventSource(email: string): EventSource {
     let source = this.eventSource;
     if (source == null) {
-      source = new EventSource(this.apiEndpoint + `/stream/inbox/unread?email=${email}`);
+      source = new EventSource(this.apiEndpoint + `/stream/inbox/unread?email=${email}`, {withCredentials: true});
       this.eventSource = source;
       this.eventSource.addEventListener('unread-threads', event => {
         // console.log(event);
