@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
+import {Injectable, NgZone} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 let headers= new HttpHeaders();
 
@@ -13,9 +13,9 @@ export class MessagingSystemService {
 
   private apiEndpoint: string = environment.MESSAGING_ENDPOINT;
   unreadMessages: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(new UnreadMessages());
-  // notifications = this.unreadMessages.asObservable();
+  eventSource : EventSource | undefined;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private zone: NgZone) {}
 
   getThreads() {
     return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/threads');
@@ -58,16 +58,23 @@ export class MessagingSystemService {
     return this.httpClient.get<UnreadMessages>(this.apiEndpoint + '/inbox/unread').subscribe(
       res => {
         this.unreadMessages.next(res);
-        console.log(this);
       },
       error => console.error(error)
     );
   }
 
-  // public get notifications(): Observable<UnreadMessages | undefined> {
-  //   console.log(this);
-  //   return this.unreadMessages;
-  // }
+  newEventSource(email: string): EventSource {
+    let source = this.eventSource;
+    if (source == null) {
+      source = new EventSource(this.apiEndpoint + `/stream/inbox/unread?email=${email}`);
+      this.eventSource = source;
+      this.eventSource.addEventListener('unread-threads', event => {
+        // console.log(event);
+        this.unreadMessages.next(JSON.parse(event['data']));
+      });
+    }
+    return source;
+  }
 
   setMessageReadParam(threadId: string, messageId: string, read: boolean) {
     let params = new HttpParams();
@@ -100,5 +107,9 @@ export class MessagingSystemService {
 
   setAuthorizationHeaders() {
     headers = headers.set('Authorization', 'Bearer ' + getCookie('AccessToken'));
+  }
+
+  getEventSource(url: string): EventSource {
+    return new EventSource(url);
   }
 }
