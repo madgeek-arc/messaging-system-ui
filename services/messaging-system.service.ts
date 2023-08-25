@@ -4,7 +4,7 @@ import {environment} from "../../environments/environment";
 import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 let headers= new HttpHeaders();
 
@@ -63,18 +63,14 @@ export class MessagingSystemService {
     );
   }
 
-  newEventSource(email: string): EventSource {
-    let source = this.eventSource;
-    if (source == null) {
-      source = new EventSource(this.apiEndpoint + `/stream/inbox/unread?email=${email}`, {withCredentials: true});
-      this.eventSource = source;
-      this.eventSource.addEventListener('unread-threads', event => {
-        // console.log(event);
-        this.unreadMessages.next(JSON.parse(event['data']));
-      });
-    }
-    return source;
-  }
+  // newEventSource(email: string) {
+  //   if (this.eventSource == null) {
+  //     this.eventSource = new EventSource(this.apiEndpoint + `/stream-2/inbox/unread?email=${email}`, {withCredentials: true});
+  //     this.eventSource.addEventListener('unread-threads', event => {
+  //       this.unreadMessages.next(JSON.parse(event['data']));
+  //     });
+  //   }
+  // }
 
   setMessageReadParam(threadId: string, messageId: string, read: boolean) {
     let params = new HttpParams();

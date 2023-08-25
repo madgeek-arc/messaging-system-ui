@@ -13,6 +13,7 @@ import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import {NgSelectModule} from "@ng-select/ng-select";
 
 import {environment} from "../../environments/environment";
+import {MessagingWebsocketService} from "../services/messaging-websocket.service";
 
 @NgModule({
   declarations:[
@@ -26,7 +27,8 @@ import {environment} from "../../environments/environment";
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.RECAPTCHA_V3_KEY
     },
-    // MessagingSystemService
+    // MessagingSystemService,
+    MessagingWebsocketService
   ],
   imports: [
     CommonModule,

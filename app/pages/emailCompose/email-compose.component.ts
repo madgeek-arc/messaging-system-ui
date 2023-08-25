@@ -20,7 +20,7 @@ export class EmailComposeComponent implements OnInit {
   // thread: TopicThread = new TopicThread();
   newThread: FormGroup = TopicThread.toFormGroup(this.fb);
   recipients: {id: string, name: string, type: string}[] = null;
-  createSuccess: boolean = null
+  createSuccess: boolean = true
 
   flatGroups: {id: string, name: string, type: string}[] = []
   loading = false;
@@ -31,6 +31,7 @@ export class EmailComposeComponent implements OnInit {
 
   ngOnInit() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.newThread = TopicThread.toFormGroup(this.fb);
 
     this.messagingService.getGroupList().subscribe(
       res=> {
@@ -44,6 +45,7 @@ export class EmailComposeComponent implements OnInit {
   }
 
   createTread() {
+    this.newThread = TopicThread.toFormGroup(this.fb);
     this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
     if (this.groupId) {
@@ -76,6 +78,7 @@ export class EmailComposeComponent implements OnInit {
       },
       error => {
         this.createSuccess = false;
+        this.closeAlert();
         console.error(error);
       }
     );
@@ -83,6 +86,15 @@ export class EmailComposeComponent implements OnInit {
 
   messageBody() {
     return this.newThread.get('messages').get('0') as FormGroup;
+  }
+
+  closeAlert() {
+    setTimeout(() => {
+      UIkit.alert('#errorAlert').close();
+    }, 5000);
+    setTimeout(() => {
+      this.createSuccess = true;
+    }, 4550);
   }
 
   addTagPromise(name) {

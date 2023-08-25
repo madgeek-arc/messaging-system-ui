@@ -3,6 +3,10 @@
   <div class="uk-modal-header">
     <h6 class="uk-modal-title uk-margin-remove">New message</h6>
     <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div *ngIf="!createSuccess" id="errorAlert" class="uk-alert-danger" uk-alert="duration: 500">
+      <a class="uk-alert-close" uk-close></a>
+      <p>Something went wrong please try again later.</p>
+    </div>
   </div>
 
   <div class="uk-modal-body">
