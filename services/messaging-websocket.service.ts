@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {BehaviorSubject} from "rxjs";
 import {UnreadMessages} from "../app/domain/messaging";
+import {MessagingSystemService} from "./messaging-system.service";
 
 declare var SockJS;
 declare var Stomp;
@@ -12,9 +13,9 @@ const URL = environment.WS_ENDPOINT;
 export class MessagingWebsocketService {
 
   stompClient: Promise<typeof Stomp>;
-  msg: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(null);
+  // msg: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(null);
 
-  constructor() {}
+  constructor(private messagingService: MessagingSystemService) {}
 
   initializeWebSocketConnection(topic: string) {
     const ws = new SockJS(URL);
@@ -29,7 +30,8 @@ export class MessagingWebsocketService {
             clearInterval(timer);
             stomp.subscribe(`${topic}`, (message) => {
               if (message.body) {
-                that.msg.next(JSON.parse(message.body));
+                that.messagingService.unreadMessages.next(JSON.parse(message.body))
+                // that.msg.next(JSON.parse(message.body));
               }
             });
             // that.WsJoin(id, resourceType, action);
@@ -43,7 +45,7 @@ export class MessagingWebsocketService {
     });
 
     this.stompClient.then(client => client.ws.onclose = (event) => {
-      this.msg.next(null);
+      // this.msg.next(null);
       this.initializeWebSocketConnection(topic);
     });
   };
