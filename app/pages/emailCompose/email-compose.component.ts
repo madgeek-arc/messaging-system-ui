@@ -45,7 +45,6 @@ export class EmailComposeComponent implements OnInit {
   }
 
   createTread() {
-    this.newThread = TopicThread.toFormGroup(this.fb);
     this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
     if (this.groupId) {
@@ -74,7 +73,7 @@ export class EmailComposeComponent implements OnInit {
       res=> {
         this.createSuccess = true;
         UIkit.modal('#emailCompose').hide();
-        // this.timer(0.1);
+        this.newThread.reset();
       },
       error => {
         this.createSuccess = false;
