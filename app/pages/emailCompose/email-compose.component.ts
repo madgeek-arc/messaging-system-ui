@@ -103,7 +103,7 @@ export class EmailComposeComponent implements OnInit {
       setTimeout(() => {
         resolve({ id: name, name: name, type: 'email', valid: true });
         this.loading = false;
-      }, 1000);
+      }, 500);
     })
   }
 
