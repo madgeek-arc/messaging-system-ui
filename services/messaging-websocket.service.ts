@@ -1,8 +1,7 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
-import {BehaviorSubject} from "rxjs";
-import {UnreadMessages} from "../app/domain/messaging";
 import {MessagingSystemService} from "./messaging-system.service";
+import {BehaviorSubject} from "rxjs";
 
 declare var SockJS;
 declare var Stomp;
@@ -24,6 +23,7 @@ export class MessagingWebsocketService {
     this.stompClient = new Promise((resolve, reject) => {
       let stomp = Stomp.over(ws);
 
+      stomp.debug = null; // removes debug logs
       stomp.connect({}, function(frame) {
         const timer = setInterval(() => {
           if (stomp.connected) {
@@ -34,7 +34,6 @@ export class MessagingWebsocketService {
                 // that.msg.next(JSON.parse(message.body));
               }
             });
-            // that.WsJoin(id, resourceType, action);
             resolve(stomp);
           }
         }, 500);
