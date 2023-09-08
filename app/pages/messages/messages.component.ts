@@ -28,6 +28,11 @@ export class MessagesComponent implements OnInit {
   order: string = null;
   urlParameters: URLParameter[] = [];
 
+  //pagination
+  from: number;
+  to: number;
+  size: number;
+
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
 
@@ -114,10 +119,6 @@ export class MessagesComponent implements OnInit {
       console.log('Get unread messages from messages component');
       this.messagingService.setUnreadCount();
     }, count * 100)
-  }
-
-  updateNotifications() {
-    this.messagingService.setUnreadCount();
   }
 
   batchAction(read: boolean) {
