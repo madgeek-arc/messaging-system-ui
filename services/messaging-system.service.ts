@@ -5,6 +5,7 @@ import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
 import {BehaviorSubject} from "rxjs";
+import {NewPaging} from "../app/domain/paging";
 
 let headers= new HttpHeaders();
 
@@ -31,7 +32,7 @@ export class MessagingSystemService {
           params = params.append(urlParam.key, value);
       }
     }
-    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/inbox/threads/search', {params: params, headers: headers});
+    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/inbox/threads', {params: params, headers: headers});
   }
 
   getOutbox(groupId: string, email: string, urlParams?: URLParameter[]) {
@@ -45,7 +46,7 @@ export class MessagingSystemService {
           params = params.append(urlParam.key, value);
       }
     }
-    return this.httpClient.get<TopicThread[]>(this.apiEndpoint+'/outbox/threads/search', {params: params, headers: headers});
+    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/outbox/threads', {params: params, headers: headers});
   }
 
   getThread(id: string, groupId: string) {

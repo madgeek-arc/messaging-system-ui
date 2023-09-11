@@ -8,10 +8,10 @@
   </div>
 
   <ul id="tab" uk-tab>
-    <li class="uk-active" (click)="selectedTopics = []; searchTerm = null; order = null">
+    <li class="uk-active" (click)="selectedTopics = []; clearFilters()">
       <a href="#" [routerLink]='"."' [fragment]="'inbox'"><span class="material-icons md-18">inbox</span>Inbox</a>
     </li>
-    <li (click)="selectedTopics = []; searchTerm = null; order = null">
+    <li (click)="selectedTopics = []; clearFilters()">
       <a href="#" [routerLink]='"."' [fragment]="'sent'"><span class="material-icons md-18">send</span>Sent</a>
     </li>
   </ul>
@@ -40,16 +40,16 @@
 
   <ul id="messages" class="uk-switcher">
     <li class="uk-animation-fade">
-      <table class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
+      <table id="inboxTable" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
-          <th class="">
-            <input id="selectAllInbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
+          <th class="" >
+            <input id="selectAllInbox" name="inbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
                    [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
           </th>
           <th class="uk-width-auto">
             <div class="uk-flex uk-flex-middle">
-              <a class="material-icons" title="Refresh" (click)="refreshInbox()">refresh</a>
+              <a class="material-icons" title="Refresh" (click)="refreshInbox(); clearFilters()">refresh</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
                  (click)="batchAction(false)">mark_as_unread</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
@@ -62,11 +62,11 @@
             </div>
           </th>
           <th class="uk-width-auto"></th>
-          <th class="uk-width-auto">
+          <th class="">
             <div class="uk-flex uk-flex-middle">
-              <span> 1 - 10 of 30</span>
-              <a class="material-icons">keyboard_arrow_left</a>
-              <a class="material-icons">keyboard_arrow_right</a>
+              <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
+              <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
+              <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
             </div>
           </th>
         </tr>
@@ -74,7 +74,7 @@
         <tbody>
         <tr *ngIf="!inbox || inbox?.length === 0; else showInbox">
           <td></td>
-          <td class="uk-width-expand">No messages</td>
+          <td class="">No messages</td>
         </tr>
         <ng-template #showInbox>
           <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': !topic.read}"
@@ -117,16 +117,16 @@
     </li>
 
     <li class="uk-animation-fade">
-      <table class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
+      <table id="outboxTable" class="uk-table uk-table-divider uk-table-middle uk-background-default uk-border-rounded">
         <thead>
         <tr>
           <th>
-            <input id="selectAllOutbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
-                   [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
+            <input id="selectAllOutbox" name="sent" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
+                   [checked]="selectedTopics.length === sent?.length && sent?.length > 0">
           </th>
           <th class="uk-width-auto">
             <div class="uk-flex uk-flex-middle">
-              <a class="material-icons" title="Refresh" (click)="refreshOutbox()">refresh</a>
+              <a class="material-icons" title="Refresh" (click)="refreshOutbox(); clearFilters()">refresh</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as unread"
                  (click)="batchAction(false)">mark_as_unread</a>
               <a *ngIf="selectedTopics.length > 0" class="material-icons uk-margin-left" title="Mark as read"
@@ -137,8 +137,14 @@
               <!--            </a>-->
             </div>
           </th>
-          <th class="uk-width-expand"></th>
           <th class="uk-width-auto"></th>
+          <th class="uk-width-auto">
+            <div class="uk-flex uk-flex-middle">
+              <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
+              <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
+              <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
+            </div>
+          </th>
         </tr>
         </thead>
         <tbody>

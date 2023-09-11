@@ -7,6 +7,7 @@ import {fromEvent} from "rxjs";
 import {debounceTime, delay, distinctUntilChanged, map} from "rxjs/operators";
 import UIkit from "uikit";
 import {URLParameter} from "../../../../survey-tool/catalogue-ui/domain/url-parameter";
+import {NewPaging} from "../../domain/paging";
 
 @Component({
   selector: 'app-messages',
@@ -27,11 +28,14 @@ export class MessagesComponent implements OnInit {
   searchTerm: string = null;
   order: string = null;
   urlParameters: URLParameter[] = [];
+  page: NewPaging<TopicThread> = null;
 
   //pagination
-  from: number;
-  to: number;
-  size: number;
+  from: number = 0;
+  paging: number = 0;
+  size: number = 10;
+  total: number = 0;
+  to: number = 0;
 
   constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
   }
@@ -65,10 +69,14 @@ export class MessagesComponent implements OnInit {
     ).subscribe((text: string) => {
         if (this.inbox.length > 0) {
           this.updateUrlParams('regex', text);
+          this.updateUrlParams('page', '0');
+          this.from = 0;
           this.refreshInbox(this.urlParameters);
         }
         else if (this.sent.length > 0) {
           this.updateUrlParams('regex', text);
+          this.updateUrlParams('page', '0');
+          this.from = 0;
           this.refreshOutbox(this.urlParameters)
         }
       }
@@ -78,8 +86,10 @@ export class MessagesComponent implements OnInit {
   refreshInbox(urlParams?: URLParameter[]) {
     this.messagingService.getInbox(this.groupId, urlParams).subscribe(
       res => {
-        this.inbox = res;
+        this.page = res
+        this.inbox = res.content;
         this.sent = [];
+        this.to = this.from + this.inbox?.length;
       },
       error => {console.error(error)}
     );
@@ -88,8 +98,9 @@ export class MessagesComponent implements OnInit {
   refreshOutbox(urlParams?: URLParameter[]) {
     this.messagingService.getOutbox(this.groupId, this.user.user.email, urlParams).subscribe(
       res => {
-        this.sent = res;
+        this.sent = res.content;
         this.inbox = [];
+        this.to = this.from + this.sent.length;
       },
       error => {console.error(error)}
     );
@@ -194,6 +205,35 @@ export class MessagesComponent implements OnInit {
       this.refreshOutbox(this.urlParameters);
     else
       this.refreshInbox(this.urlParameters);
+  }
+
+  next() {
+    if (this.page.pageable.pageNumber + 1 === this.page.totalPages)
+      return
+
+    this.updateUrlParams('page', (this.page.pageable.pageNumber+1).toString());
+    if (this.fragment === 'sent')
+      this.refreshOutbox(this.urlParameters);
+    else
+      this.refreshInbox(this.urlParameters);
+  }
+
+  previous() {
+    if (this.page.pageable.pageNumber === 0)
+      return
+
+    this.updateUrlParams('page', (this.page.pageable.pageNumber-1).toString());
+    if (this.fragment === 'sent')
+      this.refreshOutbox(this.urlParameters);
+    else
+      this.refreshInbox(this.urlParameters);
+  }
+
+  clearFilters() {
+    this.from = 0;
+    this.paging = 0;
+    this.searchTerm = null;
+    this.order = null;
   }
 
 }
