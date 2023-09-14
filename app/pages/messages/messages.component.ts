@@ -98,6 +98,7 @@ export class MessagesComponent implements OnInit {
   refreshOutbox(urlParams?: URLParameter[]) {
     this.messagingService.getOutbox(this.groupId, this.user.user.email, urlParams).subscribe(
       res => {
+        this.page = res
         this.sent = res.content;
         this.inbox = [];
         this.to = this.from + this.sent.length;

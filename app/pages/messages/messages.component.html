@@ -62,8 +62,8 @@
             </div>
           </th>
           <th class="uk-width-auto"></th>
-          <th class="">
-            <div class="uk-flex uk-flex-middle">
+          <th  class="">
+            <div *ngIf="page?.totalElements" class="uk-flex uk-flex-middle">
               <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
               <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
               <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
@@ -74,7 +74,7 @@
         <tbody>
         <tr *ngIf="!inbox || inbox?.length === 0; else showInbox">
           <td></td>
-          <td class="">No messages</td>
+          <td class="uk-width-expand">No messages</td>
         </tr>
         <ng-template #showInbox>
           <tr *ngFor="let topic of inbox" [ngClass]="{'message-unread-background': !topic.read}"
@@ -139,7 +139,7 @@
           </th>
           <th class="uk-width-auto"></th>
           <th class="uk-width-auto">
-            <div class="uk-flex uk-flex-middle">
+            <div *ngIf="page?.totalElements" class="uk-flex uk-flex-middle">
               <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
               <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
               <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
