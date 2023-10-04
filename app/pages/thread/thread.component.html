@@ -30,7 +30,7 @@
             <div class="uk-flex">
               <div class="uk-flex" *ngIf="message.from.name && message.from.name !== ''; else elseClause">
                 <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
-                <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>
+<!--                <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>-->
                 <span *ngIf="message.anonymousSender" class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
               </div>
               <ng-template #elseClause>
