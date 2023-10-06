@@ -65,7 +65,7 @@
             <div class="uk-flex uk-flex-middle"><span class="material-icons">reply</span>To:</div>
             <div class="uk-form-controls uk-margin-left uk-width-expand">
               <span class="uk-text-bold">{{message?.from.name ? ' (' + message.from.name +')':''}}</span>
-              <span class="uk-margin-small-left uk-text-muted">
+              <span *ngIf="message?.from.email || message?.from.groupId" class="uk-margin-small-left uk-text-muted">
                 ({{message?.from.email ? message?.from.email : message?.from.groupId}})
               </span>
             </div>
