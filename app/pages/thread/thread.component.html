@@ -48,7 +48,38 @@
       </div>
       <div *ngIf="thread.messages.length === 1" style="border-top: 1px solid #e5e5e5"></div>
       <div class="uk-card-body">
-        <p class="uk-text-break" [innerHtml]="message.body"></p>
+        <div>
+          <p class="uk-text-break" [innerHtml]="message.body"></p>
+        </div>
+        <div *ngIf="message.replyToMessageId" class="uk-text-small">
+<!--          I am a reply to message with ID {{message.replyToMessageId}}-->
+          <a [href]="'#toggle-animation-' + i" [attr.uk-toggle]="'target: #toggle-animation-'+i+'; animation: uk-animation-fade; cls: uk-hidden'">
+            <span class="uk-text-bold">See more</span> from {{getMessageById(message.replyToMessageId).from.name}}
+          </a>
+          <div id="toggle-animation-{{i}}" class="uk-hidden">
+            <div class="uk-margin-top">
+              <hr>
+              <div class="uk-margin-left">
+                <div class="uk-flex">
+                  <span class="uk-text-bold">From: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
+                  <span *ngIf="getMessageById(message.replyToMessageId).anonymousSender" class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
+                </div>
+                <div>
+                  <span class="uk-text-bold">Date: </span><span>{{getMessageById(message.replyToMessageId).date | date: 'medium'}}</span>
+                </div>
+                <div>
+                  <span class="uk-text-bold">To: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
+                </div>
+                <div>
+                  <span class="uk-text-bold">Subject: </span><span>{{thread.subject}}</span>
+                </div>
+                <div class="uk-margin-top">
+                  <p class="uk-text-break" [innerHtml]="getMessageById(message.replyToMessageId).body"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

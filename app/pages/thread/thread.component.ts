@@ -110,4 +110,8 @@ export class ThreadComponent implements OnInit {
     );
   }
 
+  getMessageById(messageId: string) {
+    return this.thread.messages.filter(m => m.id === messageId)[0];
+  }
+
 }
