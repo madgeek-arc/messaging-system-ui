@@ -1,13 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
-import {TopicThread} from "../../domain/messaging";
+import {TopicThread, UnreadMessages} from "../../domain/messaging";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {ActivatedRoute} from "@angular/router";
 import {fromEvent} from "rxjs";
-import {debounceTime, delay, distinctUntilChanged, map} from "rxjs/operators";
-import UIkit from "uikit";
+import {debounceTime,  distinctUntilChanged, map} from "rxjs/operators";
 import {URLParameter} from "../../../../survey-tool/catalogue-ui/domain/url-parameter";
 import {NewPaging} from "../../domain/paging";
+import UIkit from "uikit";
 
 @Component({
   selector: 'app-messages',
@@ -29,6 +29,7 @@ export class MessagesComponent implements OnInit {
   order: string = null;
   urlParameters: URLParameter[] = [];
   page: NewPaging<TopicThread> = null;
+  unreadMessages: UnreadMessages = new UnreadMessages();
 
   //pagination
   from: number = 0;
@@ -58,6 +59,13 @@ export class MessagesComponent implements OnInit {
         });
       }
     );
+
+    this.messagingService.unreadMessages.subscribe(next => {
+      if (!this.deepEqual(this.unreadMessages, next)) {
+        this.unreadMessages = next;
+        this.refreshInbox();
+      }
+    });
 
     fromEvent(this.searchInput.nativeElement, 'keyup').pipe(
       map((event: any) => { // get value
@@ -235,6 +243,33 @@ export class MessagesComponent implements OnInit {
     this.paging = 0;
     this.searchTerm = null;
     this.order = null;
+  }
+
+  deepEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = this.isObject(val1) && this.isObject(val2);
+      if (
+        areObjects && !this.deepEqual(val1, val2) ||
+        !areObjects && val1 !== val2
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  isObject(object) {
+    return object != null && typeof object === 'object';
   }
 
 }

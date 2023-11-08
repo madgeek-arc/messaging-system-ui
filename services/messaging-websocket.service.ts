@@ -39,7 +39,7 @@ export class MessagingWebsocketService {
           }
         }, 500);
       }, function (error) {
-        setTimeout( () => {that.initializeWebSocketConnectionUnread(topic)}, 1000);
+        setTimeout( () => {that.initializeWebSocketConnectionUnread(topic)}, 2000);
         console.log('STOMP: Reconnecting...');
       });
     });
@@ -63,7 +63,6 @@ export class MessagingWebsocketService {
           if (stomp.connected) {
             clearInterval(timer);
             stomp.subscribe(`${topic}`, (message) => {
-              console.log('stomp subscribe');
               if (message.body) {
                 // that.messagingService.unreadMessages.next(JSON.parse(message.body))
                 // console.log(message);
@@ -79,14 +78,14 @@ export class MessagingWebsocketService {
           }
         }, 500);
       }, function (error) {
-        setTimeout( () => {that.initializeWebSocketConnectionNotification(topic)}, 1000);
+        setTimeout( () => {that.initializeWebSocketConnectionNotification(topic)}, 2000);
         console.log('STOMP: Reconnecting...');
       });
     });
 
     this.stompClientNotification.then(client => client.ws.onclose = (event) => {
       // this.msg.next(null);
-      this.initializeWebSocketConnectionUnread(topic);
+      this.initializeWebSocketConnectionNotification(topic);
     });
   };
 
