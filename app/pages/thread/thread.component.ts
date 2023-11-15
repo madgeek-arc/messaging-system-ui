@@ -6,6 +6,7 @@ import {ViewportScroller} from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {MessagingWebsocketService} from "../../../services/messaging-websocket.service";
 
 
 @Component({
@@ -32,7 +33,8 @@ export class ThreadComponent implements OnInit {
   public editor = ClassicEditor;
 
   constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
-              private viewportScroller: ViewportScroller, private fb: FormBuilder) {
+              private viewportScroller: ViewportScroller, private fb: FormBuilder,
+              private messagingWebsocket: MessagingWebsocketService) {
 
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
@@ -73,12 +75,20 @@ export class ThreadComponent implements OnInit {
                 this.viewportScroller.setOffset([0,y]);
 
                 this.viewportScroller.scrollToAnchor(fragment);
-                }, 0)
+              }, 0);
             });
           }
         );
       }
     );
+
+    this.messagingWebsocket.thread.subscribe(next => {
+      console.log(this.threadId);
+      console.log(next);
+      if (this.threadId && this.threadId === next?.id) {
+        this.thread = next;
+      }
+    });
 
   }
 
