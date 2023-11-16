@@ -4,7 +4,7 @@ import {environment} from "../../environments/environment";
 import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
 import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {NewPaging} from "../app/domain/paging";
 
 let headers= new HttpHeaders();
@@ -14,7 +14,8 @@ export class MessagingSystemService {
 
   private apiEndpoint: string = environment.MESSAGING_ENDPOINT;
   unreadMessages: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(new UnreadMessages());
-  eventSource : EventSource | undefined;
+  threadChangeSubject = new Subject<TopicThread>();
+  thread: TopicThread;
 
   constructor(private httpClient: HttpClient, private zone: NgZone) {}
 
@@ -106,7 +107,19 @@ export class MessagingSystemService {
     headers = headers.set('Authorization', 'Bearer ' + getCookie('AccessToken'));
   }
 
-  getEventSource(url: string): EventSource {
-    return new EventSource(url);
+  /** Setters Getters **/
+
+  threadHasChanges(thread: TopicThread) {
+    this.thread = thread;
+    this.threadChangeSubject.next(thread);
+    console.log(this.thread);
+  }
+
+  getThreadAsObservable() {
+    return this.threadChangeSubject.asObservable();
+  }
+
+  getCurrentThread() {
+    return this.thread;
   }
 }

@@ -2,8 +2,6 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {MessagingSystemService} from "./messaging-system.service";
 import UIkit from "uikit";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {TopicThread} from "../app/domain/messaging";
 
 declare var SockJS;
 declare var Stomp;
@@ -15,8 +13,6 @@ export class MessagingWebsocketService {
 
   stompClientUnread: Promise<typeof Stomp> = null;
   stompClientNotification: Promise<typeof Stomp> = null;
-  thread: BehaviorSubject<TopicThread> = new BehaviorSubject<TopicThread>(null);
-  // msg: BehaviorSubject<UnreadMessages> = new BehaviorSubject<UnreadMessages>(null);
 
   constructor(private messagingService: MessagingSystemService) {}
 
@@ -67,10 +63,7 @@ export class MessagingWebsocketService {
             clearInterval(timer);
             stomp.subscribe(`${topic}`, (message) => {
               if (message.body) {
-                // that.messagingService.unreadMessages.next(JSON.parse(message.body))
-                console.log(message);
-                that.thread.next(JSON.parse(message.body));
-                console.log(that.thread);
+                that.messagingService.threadHasChanges(JSON.parse(message.body));
                 UIkit.notification({
                   message: 'You have a new message <span uk-icon=\'icon: mail\'></span>',
                   // status: 'primary',
@@ -94,8 +87,8 @@ export class MessagingWebsocketService {
     });
   };
 
-
   WsJoin(path: string, action: string) {
     this.stompClientUnread.then(client => client.send(`${path}`, {}, action));
   }
+
 }
