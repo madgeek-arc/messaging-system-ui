@@ -112,7 +112,6 @@ export class MessagingSystemService {
   threadHasChanges(thread: TopicThread) {
     this.thread = thread;
     this.threadChangeSubject.next(thread);
-    console.log(this.thread);
   }
 
   getThreadAsObservable() {

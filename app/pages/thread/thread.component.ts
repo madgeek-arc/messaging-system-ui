@@ -86,8 +86,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
     );
 
     this.messagingService.getThreadAsObservable().pipe(takeUntil(this._destroyed)).subscribe(next => {
-      console.log(this.threadId);
-      console.log(next);
       if (this.threadId && this.threadId === next?.id) {
         this.thread = next;
       }
