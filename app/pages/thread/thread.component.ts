@@ -37,7 +37,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
   public editor = ClassicEditor;
 
   constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
-              private viewportScroller: ViewportScroller, private fb: FormBuilder) {
+              private viewportScroller: ViewportScroller, private fb: FormBuilder,
+              private messagingWebsocket: MessagingWebsocketService) {
 
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
