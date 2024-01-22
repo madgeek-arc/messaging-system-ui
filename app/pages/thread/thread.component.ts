@@ -4,7 +4,7 @@ import {MessagingSystemService} from "../../../services/messaging-system.service
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
 import {ViewportScroller} from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {MessagingWebsocketService} from "../../../services/messaging-websocket.service";
 import {takeUntil} from "rxjs/operators";
@@ -29,7 +29,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   message: Message = null;
   subject: string = null;
   userInfo: UserInfo = null;
-  newMessage: FormGroup = this.fb.group(new Message());
+  newMessage: UntypedFormGroup = this.fb.group(new Message());
   anonymous: boolean = true;
   showReply: boolean = false;
   fragment: string = null
@@ -37,7 +37,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   public editor = ClassicEditor;
 
   constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
-              private viewportScroller: ViewportScroller, private fb: FormBuilder,
+              private viewportScroller: ViewportScroller, private fb: UntypedFormBuilder,
               private messagingWebsocket: MessagingWebsocketService) {
 
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));

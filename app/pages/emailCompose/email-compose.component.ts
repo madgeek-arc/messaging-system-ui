@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Correspondent, TopicThread} from "../../domain/messaging";
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -18,7 +18,7 @@ export class EmailComposeComponent implements OnInit {
 
   userInfo: UserInfo = null;
   // thread: TopicThread = new TopicThread();
-  newThread: FormGroup = TopicThread.toFormGroup(this.fb);
+  newThread: UntypedFormGroup = TopicThread.toFormGroup(this.fb);
   recipients: {id: string, name: string, type: string}[] = null;
   createSuccess: boolean = true
 
@@ -27,7 +27,7 @@ export class EmailComposeComponent implements OnInit {
 
   public editor = ClassicEditor;
 
-  constructor(private fb: FormBuilder, private messagingService: MessagingSystemService) {}
+  constructor(private fb: UntypedFormBuilder, private messagingService: MessagingSystemService) {}
 
   ngOnInit() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
@@ -54,9 +54,9 @@ export class EmailComposeComponent implements OnInit {
     this.newThread.get('messages').get('0').get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('messages').get('0').get('from').get('email').setValue(this.userInfo.user.email);
 
-    while ((this.newThread.get('to') as FormArray).length < this.recipients.length) {
-      (this.newThread.get('to') as FormArray).push(this.fb.group(new Correspondent()));
-      (this.newThread.get('messages').get('0').get('to') as FormArray).push(this.fb.group(new Correspondent()));
+    while ((this.newThread.get('to') as UntypedFormArray).length < this.recipients.length) {
+      (this.newThread.get('to') as UntypedFormArray).push(this.fb.group(new Correspondent()));
+      (this.newThread.get('messages').get('0').get('to') as UntypedFormArray).push(this.fb.group(new Correspondent()));
     }
     for (let i = 0; i < this.recipients.length; i++) {
       if (this.recipients[i].type !== 'email') {
@@ -84,7 +84,7 @@ export class EmailComposeComponent implements OnInit {
   }
 
   messageBody() {
-    return this.newThread.get('messages').get('0') as FormGroup;
+    return this.newThread.get('messages').get('0') as UntypedFormGroup;
   }
 
   closeAlert() {

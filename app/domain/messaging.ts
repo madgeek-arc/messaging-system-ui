@@ -1,4 +1,4 @@
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 
 export class Correspondent {
   name:	string;
@@ -35,8 +35,8 @@ export class Message {
     this.replyToMessageId = null;
   }
 
-  public static toFormGroup(fb: FormBuilder) {
-    const message: FormGroup = fb.group(new Message())
+  public static toFormGroup(fb: UntypedFormBuilder) {
+    const message: UntypedFormGroup = fb.group(new Message())
     message.setControl('from', fb.group(new Correspondent()));
     message.setControl('to', fb.array([fb.group(new Correspondent())]));
 
@@ -68,8 +68,8 @@ export class TopicThread {
     this.updated = null;
   }
 
-  public static toFormGroup(fb: FormBuilder) {
-    const thread: FormGroup = fb.group(new TopicThread());
+  public static toFormGroup(fb: UntypedFormBuilder) {
+    const thread: UntypedFormGroup = fb.group(new TopicThread());
     thread.setControl('from', fb.group(new Correspondent()));
     thread.setControl('to', fb.array([fb.group(new Correspondent())]));
     thread.setControl('messages', fb.array([Message.toFormGroup(fb)]));

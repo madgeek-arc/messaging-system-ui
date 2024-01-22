@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {TopicThread} from "../../domain/messaging";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
@@ -17,17 +17,17 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   newThread: TopicThread = new TopicThread();
 
-  contactForm: FormGroup = new FormGroup({
-    name: new FormControl(null, Validators.required),
-    surname: new FormControl(null, Validators.required),
-    email: new FormControl(null, Validators.compose([Validators.required, Validators.email])),
-    affiliation: new FormControl(null),
-    subject: new FormControl(null, Validators.required),
-    about: new FormControl(null, Validators.required),
-    country: new FormControl(null, Validators.required),
-    coordinator: new FormControl(null, Validators.required),
-    message: new FormControl(null, Validators.required),
-    termsAndConditions: new FormControl(null, Validators.requiredTrue)
+  contactForm: UntypedFormGroup = new UntypedFormGroup({
+    name: new UntypedFormControl(null, Validators.required),
+    surname: new UntypedFormControl(null, Validators.required),
+    email: new UntypedFormControl(null, Validators.compose([Validators.required, Validators.email])),
+    affiliation: new UntypedFormControl(null),
+    subject: new UntypedFormControl(null, Validators.required),
+    about: new UntypedFormControl(null, Validators.required),
+    country: new UntypedFormControl(null, Validators.required),
+    coordinator: new UntypedFormControl(null, Validators.required),
+    message: new UntypedFormControl(null, Validators.required),
+    termsAndConditions: new UntypedFormControl(null, Validators.requiredTrue)
   });
 
   groups: {} = null;
