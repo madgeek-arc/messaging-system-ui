@@ -5,7 +5,7 @@ import {Correspondent, Message, TopicThread} from "../../domain/messaging";
 import {ViewportScroller} from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {MessagingWebsocketService} from "../../../services/messaging-websocket.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";

@@ -3,7 +3,7 @@ import {Correspondent, TopicThread} from "../../domain/messaging";
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import UIkit from "uikit";
 
 @Component({
