@@ -146,6 +146,7 @@ export class MessagesComponent implements OnInit {
     this.selectedTopics.forEach(thread => {
       this.markAsReadUnread(thread, read);
     });
+    this.selectedTopics = [];
   }
 
   toggleCheck(event, topic: TopicThread) {
