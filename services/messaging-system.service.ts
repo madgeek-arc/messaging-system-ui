@@ -1,11 +1,11 @@
-import {Injectable, NgZone} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {Message, TopicThread, UnreadMessages} from "../app/domain/messaging";
-import {getCookie} from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
-import {URLParameter} from "../../survey-tool/catalogue-ui/domain/url-parameter";
-import {BehaviorSubject, Subject} from "rxjs";
-import {NewPaging} from "../app/domain/paging";
+import { Injectable, NgZone } from "@angular/core";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { Message, TopicThread, UnreadMessages } from "../app/domain/messaging";
+import { getCookie } from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
+import { URLParameter } from "../../survey-tool/app/domain/url-parameter";
+import { BehaviorSubject, Subject } from "rxjs";
+import { NewPaging } from "../app/domain/paging";
 
 let headers= new HttpHeaders();
 
