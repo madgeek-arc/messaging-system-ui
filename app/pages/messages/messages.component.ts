@@ -1,12 +1,12 @@
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
-import {TopicThread, UnreadMessages} from "../../domain/messaging";
-import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
-import {ActivatedRoute} from "@angular/router";
-import {fromEvent} from "rxjs";
-import {debounceTime,  distinctUntilChanged, map} from "rxjs/operators";
-import {URLParameter} from "../../../../survey-tool/catalogue-ui/domain/url-parameter";
-import {NewPaging} from "../../domain/paging";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { MessagingSystemService } from "src/messaging-system-ui/services/messaging-system.service";
+import { TopicThread, UnreadMessages } from "../../domain/messaging";
+import { UserInfo } from "../../../../survey-tool/app/domain/userInfo";
+import { ActivatedRoute } from "@angular/router";
+import { fromEvent } from "rxjs";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
+import { URLParameter } from "../../../../survey-tool/app/domain/url-parameter";
+import { NewPaging } from "../../domain/paging";
 import UIkit from "uikit";
 
 @Component({
