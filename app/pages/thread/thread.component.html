@@ -84,7 +84,7 @@
     </div>
   </div>
 
-  <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-display-none': !showReply}">
+  <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply}">
     <div class="uk-card uk-card-default">
       <div class="uk-card-body">
         <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset()"
