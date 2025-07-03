@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {MessagingSystemService} from "./messaging-system.service";
-import UIkit from "uikit";
+import * as UIkit from 'uikit';
 
 declare var SockJS;
 declare var Stomp;

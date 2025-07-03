@@ -4,7 +4,7 @@ import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/f
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import UIkit from "uikit";
+import * as UIkit from 'uikit';
 
 @Component({
   selector: 'app-email-compose',

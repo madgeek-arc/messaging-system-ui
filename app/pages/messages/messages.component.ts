@@ -7,7 +7,7 @@ import { fromEvent } from "rxjs";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { URLParameter } from "../../../../survey-tool/app/domain/url-parameter";
 import { NewPaging } from "../../domain/paging";
-import UIkit from "uikit";
+import * as UIkit from 'uikit';
 
 @Component({
   selector: 'app-messages',
