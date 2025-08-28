@@ -7,9 +7,10 @@ import { OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service } from "ng-recapt
 import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-contact',
-  templateUrl: 'contact.component.html',
-  styles: ['.grecaptcha-badge { visibility: hidden !important;}']
+    selector: 'app-contact',
+    templateUrl: 'contact.component.html',
+    styles: ['.grecaptcha-badge { visibility: hidden !important;}'],
+    standalone: false
 })
 
 export class ContactComponent implements OnInit, OnDestroy {

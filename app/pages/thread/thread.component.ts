@@ -12,9 +12,10 @@ import {Subject} from "rxjs";
 
 
 @Component({
-  selector: 'app-thread',
-  templateUrl: 'thread.component.html',
-  styleUrls: ['thread.component.scss']
+    selector: 'app-thread',
+    templateUrl: 'thread.component.html',
+    styleUrls: ['thread.component.scss'],
+    standalone: false
 })
 
 export class ThreadComponent implements OnInit, OnDestroy {

@@ -7,9 +7,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as UIkit from 'uikit';
 
 @Component({
-  selector: 'app-email-compose',
-  templateUrl: 'email-compose.component.html',
-  styleUrls: ['email-compose.component.scss']
+    selector: 'app-email-compose',
+    templateUrl: 'email-compose.component.html',
+    styleUrls: ['email-compose.component.scss'],
+    standalone: false
 })
 
 export class EmailComposeComponent implements OnInit {

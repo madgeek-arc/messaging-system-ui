@@ -10,9 +10,10 @@ import { NewPaging } from "../../domain/paging";
 import * as UIkit from 'uikit';
 
 @Component({
-  selector: 'app-messages',
-  templateUrl: 'messages.component.html',
-  styleUrls: ['messages.component.scss']
+    selector: 'app-messages',
+    templateUrl: 'messages.component.html',
+    styleUrls: ['messages.component.scss'],
+    standalone: false
 })
 
 export class MessagesComponent implements OnInit {
