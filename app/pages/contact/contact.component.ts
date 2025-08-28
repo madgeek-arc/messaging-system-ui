@@ -1,11 +1,10 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {TopicThread} from "../../domain/messaging";
-import {MessagingSystemService} from "../../../services/messaging-system.service";
-import {SurveyService} from "../../../../survey-tool/app/services/survey.service";
-import {OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service} from "ng-recaptcha";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { TopicThread } from "../../domain/messaging";
+import { MessagingSystemService } from "../../../services/messaging-system.service";
+import { OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service } from "ng-recaptcha-2";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-contact',
@@ -45,12 +44,11 @@ export class ContactComponent implements OnInit, OnDestroy {
   private singleExecutionSubscription: Subscription;
 
   constructor(private messagingService: MessagingSystemService, private recaptchaV3Service: ReCaptchaV3Service,
-              private surveyService: SurveyService, private router: Router) {
-  }
+              private router: Router) {}
 
   ngOnInit() {
     this.messagingService.getGroupList().subscribe(
-      res=> {this.groups = res;},
+      res => {this.groups = res;},
       error => {console.error(error)}
     );
 
@@ -112,7 +110,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.newThread.messages[0].from.email = this.contactForm.get('email').value;
 
       this.messagingService.postThreadPublic(this.newThread, this.recentToken).subscribe(
-        res=> {
+        res => {
           this.sendSuccess = true;
           this.timer(0.1);
         },
@@ -138,7 +136,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       (error) => {
         this.recentToken = "";
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.recentError = { error };
+        this.recentError = {error};
       },
     );
   }
