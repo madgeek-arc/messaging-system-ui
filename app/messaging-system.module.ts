@@ -14,6 +14,10 @@ import {NgSelectModule} from "@ng-select/ng-select";
 
 import {environment} from "../../environments/environment";
 import {MessagingWebsocketService} from "../services/messaging-websocket.service";
+import {PageContentComponent} from "../../survey-tool/app/shared/page-content/page-content.component";
+import {
+  SidebarMobileToggleComponent
+} from "../../survey-tool/app/shared/dashboard-side-menu/mobile-toggle/sidebar-mobile-toggle.component";
 
 @NgModule({
   declarations:[
@@ -38,7 +42,9 @@ import {MessagingWebsocketService} from "../services/messaging-websocket.service
     RouterModule,
     CKEditorModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    PageContentComponent,
+    SidebarMobileToggleComponent
   ],
   exports: []
 })
