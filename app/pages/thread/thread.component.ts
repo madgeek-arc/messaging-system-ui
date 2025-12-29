@@ -44,8 +44,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
 
-    if (this.router.getCurrentNavigation()?.extras?.state?.['returnTo'])
-      this.fragment = this.router.getCurrentNavigation()?.extras.state['returnTo'];
+    if (this.router.currentNavigation()?.extras?.state?.['returnTo'])
+      this.fragment = this.router.currentNavigation()?.extras.state['returnTo'];
   }
 
   ngOnInit() {

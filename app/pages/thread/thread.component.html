@@ -1,123 +1,133 @@
-<div *ngIf="thread" class="uk-section-default uk-container uk-container-large uk-padding">
-
-  <div #threadHeader class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
-    <h5 class="uk-margin-medium-bottom uk-flex uk-flex-middle uk-margin-remove">
-      <a [routerLink]="['../']" [fragment]="fragment" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
-        <span class="material-icons">keyboard_backspace</span>
-      </a>
-      <span>{{thread.subject}}</span>
-    </h5>
-    <div class="uk-flex uk-flex-middle uk-flex-right">
-      <span class="">
-        <span *ngFor="let tag of thread.tags" class="uk-badge badge-default uk-margin-small-left">{{tag}}</span>
-      </span>
-    </div>
-  </div>
-
-  <div *ngFor="let message of thread?.messages; let i=index" [attr.id]="'message'+i">
-    <div [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}" class="uk-animation-slide-top">
-      <div class="uk-card-header">
-        <div class="uk-grid-small uk-flex-middle" uk-grid>
-          <div class="uk-width-auto user_actions">
-            <svg height="60" width="60">
-              <circle cx="30" cy="30" r="20" stroke-width="1" fill="#008792"></circle>
-              <text dy=".4em" font-size="16" text-anchor="middle" x="50%" y="50%" class="">
-                {{(message.from.name && message.from.name !== '') ? firstLetters(message.from.name) : firstLetters(message.from.groupId)}}
-              </text>
-            </svg>
-          </div>
-          <div class="uk-width-expand">
-            <div class="uk-flex">
-              <div class="uk-flex" *ngIf="message.from.name && message.from.name !== ''; else elseClause">
-                <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
-<!--                <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>-->
-                <span *ngIf="message.anonymousSender" class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
-              </div>
-              <ng-template #elseClause>
-                <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.groupId}}</h6>
-              </ng-template>
-              <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-                <a class="material-icons" title="Reply" (click)="reply(message)">reply</a>
-              </span>
-            </div>
-            <span class="uk-text-muted">
-              <span>{{message.date | date: 'medium'}}</span>
-            </span>
-          </div>
-        </div>
+@if (thread) {
+  <div class="uk-section-default uk-container uk-container-large uk-padding">
+    <div #threadHeader class="uk-child-width-1-2 uk-margin-bottom" uk-grid>
+      <h5 class="uk-margin-medium-bottom uk-flex uk-flex-middle uk-margin-remove">
+        <a [routerLink]="['../']" [fragment]="fragment" class="uk-margin-small-right uk-flex uk-flex-middle" title="Back">
+          <span class="material-icons">keyboard_backspace</span>
+        </a>
+        <span>{{thread.subject}}</span>
+      </h5>
+      <div class="uk-flex uk-flex-middle uk-flex-right">
+        <span class="">
+          @for (tag of thread.tags; track tag) {
+            <span class="uk-badge badge-default uk-margin-small-left">{{tag}}</span>
+          }
+        </span>
       </div>
-      <div *ngIf="thread.messages.length === 1" style="border-top: 1px solid #e5e5e5"></div>
-      <div class="uk-card-body">
-        <div>
-          <p class="uk-text-break" [innerHtml]="message.body"></p>
-        </div>
-        <div *ngIf="message.replyToMessageId" class="uk-text-small">
-<!--          I am a reply to message with ID {{message.replyToMessageId}}-->
-          <a [href]="'#toggle-animation-' + i" [attr.uk-toggle]="'target: #toggle-animation-'+i+'; animation: uk-animation-fade; cls: uk-hidden'">
-            <span class="uk-text-bold">See more</span> from {{getMessageById(message.replyToMessageId).from.name}}
-          </a>
-          <div id="toggle-animation-{{i}}" class="uk-hidden">
-            <div class="uk-margin-top">
-              <hr>
-              <div class="uk-margin-left">
+    </div>
+    @for (message of thread?.messages; track message; let i = $index) {
+      <div [attr.id]="'message'+i">
+        <div [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}" class="uk-animation-slide-top">
+          <div class="uk-card-header">
+            <div class="uk-grid-small uk-flex-middle" uk-grid>
+              <div class="uk-width-auto user_actions">
+                <svg height="60" width="60">
+                  <circle cx="30" cy="30" r="20" stroke-width="1" fill="#008792"></circle>
+                  <text dy=".4em" font-size="16" text-anchor="middle" x="50%" y="50%" class="">
+                    {{(message.from.name && message.from.name !== '') ? firstLetters(message.from.name) : firstLetters(message.from.groupId)}}
+                  </text>
+                </svg>
+              </div>
+              <div class="uk-width-expand">
                 <div class="uk-flex">
-                  <span class="uk-text-bold">From: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
-                  <span *ngIf="getMessageById(message.replyToMessageId).anonymousSender" class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
+                  @if (message.from.name && message.from.name !== '') {
+                    <div class="uk-flex">
+                      <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.name}}</h6>
+                      <!--                <span class="uk-text-meta uk-flex uk-flex-middle uk-margin-small-left">({{message.from.email}})</span>-->
+                      @if (message.anonymousSender) {
+                        <span class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
+                      }
+                    </div>
+                  } @else {
+                    <h6 class="uk-card-title uk-margin-remove-bottom">{{message.from.groupId}}</h6>
+                  }
+                  <span class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+                    <a class="material-icons" title="Reply" (click)="reply(message)">reply</a>
+                  </span>
                 </div>
-                <div>
-                  <span class="uk-text-bold">Date: </span><span>{{getMessageById(message.replyToMessageId).date | date: 'medium'}}</span>
+                <span class="uk-text-muted">
+                  <span>{{message.date | date: 'medium'}}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          @if (thread.messages.length === 1) {
+            <div style="border-top: 1px solid #e5e5e5"></div>
+          }
+          <div class="uk-card-body">
+            <div>
+              <p class="uk-text-break" [innerHtml]="message.body"></p>
+            </div>
+            @if (message.replyToMessageId) {
+              <div class="uk-text-small">
+                <!--          I am a reply to message with ID {{message.replyToMessageId}}-->
+                <a [href]="'#toggle-animation-' + i" [attr.uk-toggle]="'target: #toggle-animation-'+i+'; animation: uk-animation-fade; cls: uk-hidden'">
+                  <span class="uk-text-bold">See more</span> from {{getMessageById(message.replyToMessageId).from.name}}
+                </a>
+                <div id="toggle-animation-{{i}}" class="uk-hidden">
+                  <div class="uk-margin-top">
+                    <hr>
+                      <div class="uk-margin-left">
+                        <div class="uk-flex">
+                          <span class="uk-text-bold">From: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
+                          @if (getMessageById(message.replyToMessageId).anonymousSender) {
+                            <span class="uk-flex uk-flex-middle uk-margin-small-left">(as anonymous)</span>
+                          }
+                        </div>
+                        <div>
+                          <span class="uk-text-bold">Date: </span><span>{{getMessageById(message.replyToMessageId).date | date: 'medium'}}</span>
+                        </div>
+                        <div>
+                          <span class="uk-text-bold">To: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
+                        </div>
+                        <div>
+                          <span class="uk-text-bold">Subject: </span><span>{{thread.subject}}</span>
+                        </div>
+                        <div class="uk-margin-top">
+                          <p class="uk-text-break" [innerHtml]="getMessageById(message.replyToMessageId).body"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span class="uk-text-bold">To: </span><span>{{getMessageById(message.replyToMessageId).from.name}}</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply}">
+        <div class="uk-card uk-card-default">
+          <div class="uk-card-body">
+            <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset()"
+              type="button" uk-close>
+            </button>
+            <form [formGroup]="newMessage" class="">
+              <div class="uk-flex uk-flex-middle uk-margin-bottom" formArrayName="to">
+                <div class="uk-flex uk-flex-middle"><span class="material-icons">reply</span>To:</div>
+                <div class="uk-form-controls uk-margin-left uk-width-expand">
+                  <span class="uk-text-bold">{{message?.from.name ? ' (' + message.from.name +')':''}}</span>
+                  @if (message?.from.email || message?.from.groupId) {
+                    <span class="uk-margin-small-left uk-text-muted">
+                      ({{message?.from.email ? message?.from.email : message?.from.groupId}})
+                    </span>
+                  }
                 </div>
-                <div>
-                  <span class="uk-text-bold">Subject: </span><span>{{thread.subject}}</span>
-                </div>
-                <div class="uk-margin-top">
-                  <p class="uk-text-break" [innerHtml]="getMessageById(message.replyToMessageId).body"></p>
-                </div>
+              </div>
+              <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+            </form>
+            <div class="uk-margin-top uk-flex uk-flex-middle">
+              <button class="uk-button uk-button-secondary uk-flex uk-flex-middle" (click)="sendMessage()">
+                <span class="material-icons uk-margin-small-right">send</span>Send
+              </button>
+              <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
+                <label class="uk-checkbox-label">
+                  <input class="uk-checkbox" type="checkbox" [(ngModel)]="anonymous"> Don't show my name as sender
+                </label>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <!--  <pre>{{newMessage.value | json}}</pre>-->
     </div>
-  </div>
-
-  <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply}">
-    <div class="uk-card uk-card-default">
-      <div class="uk-card-body">
-        <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset()"
-                type="button" uk-close>
-        </button>
-        <form [formGroup]="newMessage" class="">
-
-          <div class="uk-flex uk-flex-middle uk-margin-bottom" formArrayName="to">
-            <div class="uk-flex uk-flex-middle"><span class="material-icons">reply</span>To:</div>
-            <div class="uk-form-controls uk-margin-left uk-width-expand">
-              <span class="uk-text-bold">{{message?.from.name ? ' (' + message.from.name +')':''}}</span>
-              <span *ngIf="message?.from.email || message?.from.groupId" class="uk-margin-small-left uk-text-muted">
-                ({{message?.from.email ? message?.from.email : message?.from.groupId}})
-              </span>
-            </div>
-          </div>
-
-          <ckeditor [editor]="editor" formControlName="body"></ckeditor>
-        </form>
-
-        <div class="uk-margin-top uk-flex uk-flex-middle">
-          <button class="uk-button uk-button-secondary uk-flex uk-flex-middle" (click)="sendMessage()">
-            <span class="material-icons uk-margin-small-right">send</span>Send
-          </button>
-          <div class="uk-width-expand uk-flex uk-flex-right uk-flex-middle">
-            <label class="uk-checkbox-label">
-              <input class="uk-checkbox" type="checkbox" [(ngModel)]="anonymous"> Don't show my name as sender
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!--  <pre>{{newMessage.value | json}}</pre>-->
-</div>
+  }

@@ -3,39 +3,42 @@
   <div class="uk-modal-header">
     <h6 class="uk-modal-title uk-margin-remove">New message</h6>
     <button class="uk-modal-close-default" type="button" uk-close></button>
-    <div *ngIf="!createSuccess" id="errorAlert" class="uk-alert-danger" uk-alert="duration: 500">
-      <a class="uk-alert-close" uk-close></a>
-      <p>Something went wrong please try again later.</p>
-    </div>
+    @if (!createSuccess) {
+      <div id="errorAlert" class="uk-alert-danger" uk-alert="duration: 500">
+        <a class="uk-alert-close" uk-close></a>
+        <p>Something went wrong please try again later.</p>
+      </div>
+    }
   </div>
 
   <div class="uk-modal-body">
     <div class="">To:</div>
-    <ng-select *ngIf="flatGroups.length > 0" [items]="flatGroups"
-               [addTag]="addTagPromise"
-               bindLabel="name"
-               [multiple]="true"
-               [loading]="loading"
-               [(ngModel)]="recipients">
+    @if (flatGroups.length > 0) {
+      <ng-select [items]="flatGroups"
+        [addTag]="addTagPromise"
+        bindLabel="name"
+        [multiple]="true"
+        [loading]="loading"
+        [(ngModel)]="recipients">
+        <ng-template ng-tag-tmp let-search="searchTerm">
+          <b>Add recipient</b>: {{search}}
+        </ng-template>
+      </ng-select>
+    }
 
-      <ng-template ng-tag-tmp let-search="searchTerm">
-        <b>Add recipient</b>: {{search}}
-      </ng-template>
-    </ng-select>
-
-    <form *ngIf="newThread" [formGroup]="newThread">
-      <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
-        <div class="">Subject:</div>
-        <div class="uk-form-controls uk-margin-left uk-width-expand">
-          <input class="uk-input uk-form-blank" type="text" formControlName="subject">
+    @if (newThread) {
+      <form [formGroup]="newThread">
+        <div class="uk-margin-top uk-flex uk-flex-middle" style="border-bottom: 1px solid #ddd">
+          <div class="">Subject:</div>
+          <div class="uk-form-controls uk-margin-left uk-width-expand">
+            <input class="uk-input uk-form-blank" type="text" formControlName="subject">
+          </div>
         </div>
-      </div>
-
-      <div class="uk-margin-medium-top" [formGroup]="messageBody()">
-        <ckeditor [editor]="editor" formControlName="body"></ckeditor>
-      </div>
-
-    </form>
+        <div class="uk-margin-medium-top" [formGroup]="messageBody()">
+          <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+        </div>
+      </form>
+    }
 
     <div class="uk-margin-top uk-flex uk-flex-middle">
       <button class="uk-button uk-button-secondary uk-flex uk-flex-middle" (click)="createTread()">
@@ -45,7 +48,7 @@
 
   </div>
 
-<!--  <pre>{{recipients}}</pre>-->
-<!--  <pre>{{newThread.value | json}}</pre>-->
+  <!--  <pre>{{recipients}}</pre>-->
+  <!--  <pre>{{newThread.value | json}}</pre>-->
 </div>
 
