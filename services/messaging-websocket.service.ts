@@ -1,9 +1,8 @@
-import {Injectable} from "@angular/core";
+import {inject, Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {MessagingSystemService} from "./messaging-system.service";
 import * as UIkit from 'uikit';
-import {HttpClient} from "@angular/common/http";
-import {XsrfTokenExtractor} from "../../survey-tool/catalogue-ui/services/xsrf-token-extractor.service";
+import {HttpClient, HttpXsrfTokenExtractor} from "@angular/common/http";
 
 declare var SockJS;
 declare var Stomp;
@@ -12,14 +11,19 @@ const URL = environment.WS_ENDPOINT;
 
 @Injectable()
 export class MessagingWebsocketService {
+  private xsrf = inject(HttpXsrfTokenExtractor);
+  private messagingService = inject(MessagingSystemService);
+  public http = inject(HttpClient);
 
   stompClientUnread: Promise<typeof Stomp> = null;
   stompClientNotification: Promise<typeof Stomp> = null;
 
   count = 0;
-  topic
+  topic: string;
 
-  constructor(private messagingService: MessagingSystemService, public http: HttpClient, private xsrf: XsrfTokenExtractor) {
+  private getHeader(): Record<string, string> | {} {
+    const t = this.xsrf.getToken();
+    return t ? {'X-XSRF-TOKEN': t} : {};
   }
 
   initializeWebSocketConnectionUnread(topic: string) {
@@ -31,7 +35,7 @@ export class MessagingWebsocketService {
       let stomp = Stomp.over(ws);
 
       stomp.debug = null; // removes debug logs
-      stomp.connect(this.xsrf.getHeader(), function (frame) {
+      stomp.connect(this.getHeader(), function (frame) {
         const timer = setInterval(() => {
           if (stomp.connected) {
             clearInterval(timer);
@@ -47,8 +51,8 @@ export class MessagingWebsocketService {
         }, 1000);
       }, function (error) {
         let timeout = 1000;
-        that.count > 20 ? timeout = 10000 : that.count++ ;
-        setTimeout( () => {
+        that.count > 20 ? timeout = 10000 : that.count++;
+        setTimeout(() => {
           // stomp.close();
           that.initializeWebSocketConnectionUnread(that.topic);
         }, timeout);
@@ -70,7 +74,7 @@ export class MessagingWebsocketService {
       let stomp = Stomp.over(ws);
 
       stomp.debug = null; // removes debug logs
-      stomp.connect(this.xsrf.getHeader(), function (frame) {
+      stomp.connect(this.getHeader(), function (frame) {
         const timer = setInterval(() => {
           if (stomp.connected) {
             clearInterval(timer);
@@ -90,8 +94,8 @@ export class MessagingWebsocketService {
         }, 500);
       }, function (error) {
         let timeout = 1000;
-        that.count > 20 ? timeout = 10000 : that.count++ ;
-        setTimeout( () => {
+        that.count > 20 ? timeout = 10000 : that.count++;
+        setTimeout(() => {
           // stomp.close();
           that.initializeWebSocketConnectionNotification(that.topic);
         }, timeout);
