@@ -1,8 +1,8 @@
-import {inject, Injectable} from "@angular/core";
-import {environment} from "../../environments/environment";
-import {MessagingSystemService} from "./messaging-system.service";
+import { inject, Injectable } from "@angular/core";
+import { environment } from "../../environments/environment";
+import { MessagingSystemService } from "./messaging-system.service";
+import { HttpXsrfTokenExtractor } from "@angular/common/http";
 import * as UIkit from 'uikit';
-import {HttpClient, HttpXsrfTokenExtractor} from "@angular/common/http";
 
 declare var SockJS;
 declare var Stomp;
@@ -13,7 +13,6 @@ const URL = environment.WS_ENDPOINT;
 export class MessagingWebsocketService {
   private xsrf = inject(HttpXsrfTokenExtractor);
   private messagingService = inject(MessagingSystemService);
-  public http = inject(HttpClient);
 
   stompClientUnread: Promise<typeof Stomp> = null;
   stompClientNotification: Promise<typeof Stomp> = null;
