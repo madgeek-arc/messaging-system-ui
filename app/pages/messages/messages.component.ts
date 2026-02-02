@@ -50,7 +50,7 @@ export class MessagesComponent implements OnInit {
     if (this.user) {
       this.subscribeToRouteParams();
     } else {
-      this.userService.getUserInfo().subscribe(user => {
+      this.userService.getUserObservable().subscribe(user => {
         this.user = user;
         if (this.user) {
           this.subscribeToRouteParams();
