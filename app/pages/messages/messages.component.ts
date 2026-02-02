@@ -1,24 +1,27 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { MessagingSystemService } from "src/messaging-system-ui/services/messaging-system.service";
-import { TopicThread, UnreadMessages } from "../../domain/messaging";
-import { UserInfo } from "../../../../survey-tool/app/domain/userInfo";
-import { ActivatedRoute } from "@angular/router";
-import { fromEvent } from "rxjs";
-import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
-import { URLParameter } from "../../../../survey-tool/app/domain/url-parameter";
-import { NewPaging } from "../../domain/paging";
+import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
+import {TopicThread, UnreadMessages} from "../../domain/messaging";
+import {UserInfo, Coordinator, Stakeholder, Administrator} from "../../../../survey-tool/app/domain/userInfo";
+import {ActivatedRoute} from "@angular/router";
+import {fromEvent} from "rxjs";
+import {debounceTime, distinctUntilChanged, map} from "rxjs/operators";
+import {URLParameter} from "../../../../survey-tool/app/domain/url-parameter";
+import {NewPaging} from "../../domain/paging";
 import * as UIkit from 'uikit';
+import {UserService} from "../../../../survey-tool/app/services/user.service";
+import {StakeholdersService} from "../../../../survey-tool/app/services/stakeholders.service";
 
 @Component({
-    selector: 'app-messages',
-    templateUrl: 'messages.component.html',
-    styleUrls: ['messages.component.scss'],
-    standalone: false
+  selector: 'app-messages',
+  templateUrl: 'messages.component.html',
+  styleUrls: ['messages.component.scss'],
+  standalone: false,
+  providers: [StakeholdersService],
 })
 
 export class MessagesComponent implements OnInit {
 
-  @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
+  @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
 
   inbox: TopicThread[] = null;
   sent: TopicThread[] = null;
@@ -39,50 +42,60 @@ export class MessagesComponent implements OnInit {
   total: number = 0;
   to: number = 0;
 
-  constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService) {
+  constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService, private userService: UserService, private stakeholdersService: StakeholdersService) {
   }
 
   ngOnInit() {
     this.user = JSON.parse(sessionStorage.getItem('userInfo'));
-    this.route.params.subscribe(
-      params=> {
-        this.groupId = params['id'];
-        this.route.fragment.subscribe(fragment=> {
-          this.fragment = fragment;
+    if (this.user) {
+      this.subscribeToRouteParams();
+    } else {
+      this.userService.getUserInfo().subscribe(user => {
+        this.user = user;
+        if (this.user) {
+          this.subscribeToRouteParams();
+        }
+      })
+    }
+
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment;
+      setTimeout(() => {
+        if (this.groupId) {
           if (fragment === 'sent') {
             this.refreshOutbox();
             UIkit.tab('#tab').show(1);
-          }
-          else {
+          } else {
             this.refreshInbox();
             UIkit.tab('#tab').show(0);
           }
-        });
-      }
-    );
+        }
+      }, 50);
+    });
 
     this.messagingService.unreadMessages.subscribe(next => {
       if (!this.deepEqual(this.unreadMessages, next)) {
         this.unreadMessages = next;
-        this.refreshInbox();
+        if (this.groupId) {
+          this.refreshInbox();
+        }
       }
     });
 
     fromEvent(this.searchInput.nativeElement, 'keyup').pipe(
-      map((event: any) => { // get value
+      map((event: any) => {
         return event.target.value;
       })
       // , filter(res => res.length > 2) // if character length greater then 2
       , debounceTime(500) // Time in milliseconds between key events
       , distinctUntilChanged() // If previous query is different from current
     ).subscribe((text: string) => {
-        if (this.inbox.length > 0) {
+        if (this.inbox && this.inbox.length > 0) {
           this.updateUrlParams('regex', text);
           this.updateUrlParams('page', '0');
           this.from = 0;
           this.refreshInbox(this.urlParameters);
-        }
-        else if (this.sent.length > 0) {
+        } else if (this.sent && this.sent.length > 0) {
           this.updateUrlParams('regex', text);
           this.updateUrlParams('page', '0');
           this.from = 0;
@@ -90,6 +103,58 @@ export class MessagesComponent implements OnInit {
         }
       }
     );
+  }
+
+  subscribeToRouteParams() {
+    this.route.params.subscribe(params => {
+      let id = params['id'];
+      if (id) {
+        this.groupId = id;
+        this.resolveGroupInit(id);
+      } else if (this.route.parent) {
+        this.route.parent.params.subscribe(parentParams => {
+          id = parentParams['id'];
+          this.groupId = id;
+          this.resolveGroupInit(id);
+        })
+      }
+    })
+  }
+
+  resolveGroupInit(id: string) {
+    if (!this.user) return;
+
+    if (this.user.coordinators && this.user.coordinators.some(c => c.id === id)) {
+      this.initCoordinatorGroup(id);
+      return;
+    }
+
+    if (this.user.stakeholders && this.user.stakeholders.some(s => s.id === id)) {
+      this.initStakeholdersGroup(id);
+      return;
+    }
+  }
+
+  initCoordinatorGroup(id: string) {
+    const sessionItem = JSON.parse(sessionStorage.getItem('currentCoordinator'));
+    if (sessionItem && sessionItem.id === id && sessionItem.type && sessionItem.members) {
+      this.userService.changeCurrentCoordinator(sessionItem);
+    } else {
+      this.stakeholdersService.getCoordinatorById(id).subscribe(res => {
+        this.userService.changeCurrentCoordinator(res as Coordinator);
+      });
+    }
+  }
+
+  initStakeholdersGroup(id: string) {
+    const sessionItem = JSON.parse(sessionStorage.getItem('currentStakeholder'));
+    if (sessionItem && sessionItem.id === id && sessionItem.type && sessionItem.admins) {
+      this.userService.changeCurrentStakeholder(sessionItem);
+    } else {
+      this.stakeholdersService.getStakeholder(id).subscribe(res => {
+        this.userService.changeCurrentStakeholder(res as Stakeholder);
+      });
+    }
   }
 
   refreshInbox(urlParams?: URLParameter[]) {
@@ -100,7 +165,9 @@ export class MessagesComponent implements OnInit {
         this.sent = [];
         this.to = this.from + this.inbox?.length;
       },
-      error => {console.error(error)}
+      error => {
+        console.error(error)
+      }
     );
   }
 
@@ -112,7 +179,9 @@ export class MessagesComponent implements OnInit {
         this.inbox = [];
         this.to = this.from + this.sent.length;
       },
-      error => {console.error(error)}
+      error => {
+        console.error(error)
+      }
     );
   }
 
@@ -122,7 +191,7 @@ export class MessagesComponent implements OnInit {
       if (message.read == read)
         continue;
       count++;
-      setTimeout(()=> {
+      setTimeout(() => {
         this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
           res => {
             thread.read = res.read;
@@ -131,7 +200,7 @@ export class MessagesComponent implements OnInit {
       }, count * 100)
 
     }
-    setTimeout(()=> {
+    setTimeout(() => {
       if (this.fragment === 'sent') {
         this.refreshOutbox(this.urlParameters)
       } else {
@@ -222,7 +291,7 @@ export class MessagesComponent implements OnInit {
     if (this.page.pageable.pageNumber + 1 === this.page.totalPages)
       return
 
-    this.updateUrlParams('page', (this.page.pageable.pageNumber+1).toString());
+    this.updateUrlParams('page', (this.page.pageable.pageNumber + 1).toString());
     if (this.fragment === 'sent')
       this.refreshOutbox(this.urlParameters);
     else
@@ -233,7 +302,7 @@ export class MessagesComponent implements OnInit {
     if (this.page.pageable.pageNumber === 0)
       return
 
-    this.updateUrlParams('page', (this.page.pageable.pageNumber-1).toString());
+    this.updateUrlParams('page', (this.page.pageable.pageNumber - 1).toString());
     if (this.fragment === 'sent')
       this.refreshOutbox(this.urlParameters);
     else
