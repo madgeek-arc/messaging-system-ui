@@ -104,8 +104,9 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.newThread.to[0].groupId = this.contactForm.get('coordinator').value;
         this.newThread.messages[0].to[0].groupId = this.contactForm.get('coordinator').value;
       } else {
-        this.newThread.to[0].groupId = this.contactForm.get('about').value;
-        this.newThread.messages[0].to[0].groupId = this.contactForm.get('about').value;
+        const groupId = this.groups[this.contactForm.get('about').value]?.[0]?.id;
+        this.newThread.to[0].groupId = groupId;
+        this.newThread.messages[0].to[0].groupId = groupId;
       }
       this.newThread.messages[0].from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.messages[0].from.email = this.contactForm.get('email').value;
