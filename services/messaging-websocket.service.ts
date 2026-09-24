@@ -35,33 +35,35 @@ export class MessagingWebsocketService {
 
       stomp.debug = null; // removes debug logs
       stomp.connect(this.getHeader(), function (frame) {
-        const timer = setInterval(() => {
-          if (stomp.connected) {
-            clearInterval(timer);
-            that.count = 0;
-            stomp.subscribe(`${topic}`, (message) => {
-              if (message.body) {
-                that.messagingService.unreadMessages.next(JSON.parse(message.body))
-                // that.msg.next(JSON.parse(message.body));
-              }
-            });
-            resolve(stomp);
+        that.count = 0;
+        stomp.subscribe(`${topic}`, (message) => {
+          if (message.body) {
+            that.messagingService.unreadMessages.next(JSON.parse(message.body))
+            // that.msg.next(JSON.parse(message.body));
           }
-        }, 1000);
+        });
+        resolve(stomp);
       }, function (error) {
         let timeout = 1000;
-        that.count > 20 ? timeout = 10000 : that.count++;
+        // Retry every second for ~2 minutes before backing off to a 10s cadence.
+        that.count > 120 ? timeout = 10000 : that.count++;
         setTimeout(() => {
           // stomp.close();
           that.initializeWebSocketConnectionUnread(that.topic);
         }, timeout);
-        console.log('STOMP: Reconnecting...');
+        console.log('[inbox-unread] STOMP: Reconnecting...' + that.count);
       });
     });
 
     this.stompClientUnread.then(client => client.ws.onclose = (event) => {
       // this.msg.next(null);
-      this.initializeWebSocketConnectionUnread(topic);
+      let timeout = 1000;
+      // Retry every second for ~2 minutes before backing off to a 10s cadence.
+      that.count > 120 ? timeout = 10000 : that.count++;
+      setTimeout(() => {
+        that.initializeWebSocketConnectionUnread(topic);
+      }, timeout);
+      console.log('[inbox-unread] STOMP: Reconnecting...' + that.count);
     });
   };
 
@@ -74,37 +76,40 @@ export class MessagingWebsocketService {
 
       stomp.debug = null; // removes debug logs
       stomp.connect(this.getHeader(), function (frame) {
-        const timer = setInterval(() => {
-          if (stomp.connected) {
-            clearInterval(timer);
-            stomp.subscribe(`${topic}`, (message) => {
-              if (message.body) {
-                that.messagingService.threadHasChanges(JSON.parse(message.body));
-                UIkit.notification({
-                  message: 'You have a new message <span uk-icon=\'icon: mail\'></span>',
-                  // status: 'primary',
-                  pos: 'top-center',
-                  timeout: 5000
-                });
-              }
+        that.count = 0;
+        stomp.subscribe(`${topic}`, (message) => {
+          if (message.body) {
+            that.messagingService.threadHasChanges(JSON.parse(message.body));
+            UIkit.notification({
+              message: 'You have a new message <span uk-icon=\'icon: mail\'></span>',
+              // status: 'primary',
+              pos: 'top-center',
+              timeout: 5000
             });
-            resolve(stomp);
           }
-        }, 500);
+        });
+        resolve(stomp);
       }, function (error) {
         let timeout = 1000;
-        that.count > 20 ? timeout = 10000 : that.count++;
+        // Retry every second for ~2 minutes before backing off to a 10s cadence.
+        that.count > 120 ? timeout = 10000 : that.count++;
         setTimeout(() => {
           // stomp.close();
-          that.initializeWebSocketConnectionNotification(that.topic);
+          that.initializeWebSocketConnectionNotification(topic);
         }, timeout);
-        console.log('STOMP: Reconnecting...');
+        console.log('[inbox-notification] STOMP: Reconnecting...' + that.count);
       });
     });
 
     this.stompClientNotification.then(client => client.ws.onclose = (event) => {
       // this.msg.next(null);
-      this.initializeWebSocketConnectionNotification(topic);
+      let timeout = 1000;
+      // Retry every second for ~2 minutes before backing off to a 10s cadence.
+      that.count > 120 ? timeout = 10000 : that.count++;
+      setTimeout(() => {
+        that.initializeWebSocketConnectionNotification(topic);
+      }, timeout);
+      console.log('[inbox-notification] STOMP: Reconnecting...' + that.count);
     });
   };
 
