@@ -3,7 +3,6 @@ import {Correspondent, TopicThread} from "../../domain/messaging";
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as UIkit from 'uikit';
 
 @Component({
@@ -25,8 +24,6 @@ export class EmailComposeComponent implements OnInit {
 
   flatGroups: {id: string, name: string, type: string}[] = []
   loading = false;
-
-  public editor = ClassicEditor;
 
   constructor(private fb: UntypedFormBuilder, private messagingService: MessagingSystemService) {}
 

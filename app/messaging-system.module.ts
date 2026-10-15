@@ -8,7 +8,7 @@ import { MessagesComponent } from "./pages/messages/messages.component";
 import { ThreadComponent } from "./pages/thread/thread.component";
 import { RouterModule } from "@angular/router";
 import { EmailComposeComponent } from "./pages/emailCompose/email-compose.component";
-import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
+import { RichTextEditorComponent } from "../../survey-tool/catalogue-ui/shared/reusable-components/rich-text-editor/rich-text-editor.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { environment } from "../../environments/environment";
 import { MessagingWebsocketService } from "../services/messaging-websocket.service";
@@ -37,7 +37,7 @@ import {
     ReactiveFormsModule,
     RecaptchaV3Module,
     RouterModule,
-    CKEditorModule,
+    RichTextEditorComponent,
     FormsModule,
     NgSelectModule,
     PageContentComponent,

@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="uk-margin-medium-top" [formGroup]="messageBody()">
-          <ckeditor [editor]="editor" formControlName="body"></ckeditor>
+          <app-rich-text-editor formControlName="body"></app-rich-text-editor>
         </div>
       </form>
     }
