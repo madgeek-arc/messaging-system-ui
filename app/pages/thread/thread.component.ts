@@ -5,7 +5,6 @@ import {Correspondent, Message, TopicThread} from "../../domain/messaging";
 import {ViewportScroller} from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {MessagingWebsocketService} from "../../../services/messaging-websocket.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
@@ -35,7 +34,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
   showReply: boolean = false;
   fragment: string = null
 
-  public editor = ClassicEditor;
 
   constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
               private viewportScroller: ViewportScroller, private fb: UntypedFormBuilder,
