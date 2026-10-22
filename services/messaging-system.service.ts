@@ -2,12 +2,9 @@ import { Injectable, NgZone } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Message, TopicThread, UnreadMessages } from "../app/domain/messaging";
-import { getCookie } from "../../survey-tool/catalogue-ui/shared/reusable-components/cookie-management";
 import { URLParameter } from "../../survey-tool/app/domain/url-parameter";
 import { BehaviorSubject, Subject } from "rxjs";
 import { NewPaging } from "../app/domain/paging";
-
-let headers= new HttpHeaders();
 
 @Injectable({ providedIn: 'root' })
 export class MessagingSystemService {
@@ -24,7 +21,6 @@ export class MessagingSystemService {
   }
 
   getInbox(groupId: string, urlParams?: URLParameter[]){
-    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
     if (urlParams){
@@ -33,11 +29,10 @@ export class MessagingSystemService {
           params = params.append(urlParam.key, value);
       }
     }
-    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/inbox/threads', {params: params, headers: headers});
+    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/inbox/threads', {params: params});
   }
 
   getOutbox(groupId: string, email: string, urlParams?: URLParameter[]) {
-    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('groupId', groupId);
     params = params.append('email', email);
@@ -47,7 +42,7 @@ export class MessagingSystemService {
           params = params.append(urlParam.key, value);
       }
     }
-    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/outbox/threads', {params: params, headers: headers});
+    return this.httpClient.get<NewPaging<TopicThread>>(this.apiEndpoint+'/outbox/threads', {params: params});
   }
 
   getThread(id: string, groupId: string) {
@@ -64,15 +59,6 @@ export class MessagingSystemService {
       error => console.error(error)
     );
   }
-
-  // newEventSource(email: string) {
-  //   if (this.eventSource == null) {
-  //     this.eventSource = new EventSource(this.apiEndpoint + `/stream-2/inbox/unread?email=${email}`, {withCredentials: true});
-  //     this.eventSource.addEventListener('unread-threads', event => {
-  //       this.unreadMessages.next(JSON.parse(event['data']));
-  //     });
-  //   }
-  // }
 
   setMessageReadParam(threadId: string, messageId: string, read: boolean) {
     let params = new HttpParams();
@@ -93,18 +79,13 @@ export class MessagingSystemService {
   }
 
   postMessage(threadId: string, message: Message, anonymous: boolean) {
-    this.setAuthorizationHeaders();
     let params = new HttpParams();
     params = params.append('anonymous', anonymous);
-    return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params, headers: headers});
+    return this.httpClient.post<TopicThread>(this.apiEndpoint + `/threads/${threadId}/messages`, message, {params: params});
   }
 
   getGroupList() {
     return this.httpClient.get(this.apiEndpoint + '/groups');
-  }
-
-  setAuthorizationHeaders() {
-    headers = headers.set('Authorization', 'Bearer ' + getCookie('AccessToken'));
   }
 
   /** Setters Getters **/
