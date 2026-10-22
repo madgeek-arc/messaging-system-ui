@@ -29,17 +29,18 @@ The post to `/threads/public` failed; the error is also in the Console.
 ## The "Contact about" selector, or the compose "To:" field, is empty or missing
 
 Both are filled from `GET /groups`. If that call fails, the contact selector stays empty and the compose dialog does not show
-the "To:" field at all. Check the request in the Network tab (and the Console for the logged error).
+the "To:" field at all; Send then answers "Choose at least one recipient." and nothing can be sent until the list has loaded
+(reload the page). Check the request in the Network tab (and the Console for the logged error).
 
-## Compose: Send does nothing
+## Compose: "Choose at least one recipient."
 
-No recipient has been chosen yet. The click throws `Cannot read properties of null` in the Console and nothing is sent. Choose
-at least one recipient.
+Send was clicked with nothing in the "To:" field, so nothing was sent. Choose a group, or type an address and pick "Add
+recipient". If the "To:" field is not shown at all, see the previous section.
 
-## Reply: Send does nothing visible
+## Reply: "Something went wrong, please try again later."
 
-A failed reply is only logged to the console and the reply box stays open. Check `POST .../threads/{id}/messages` in the
-Network tab.
+The post to `/threads/{id}/messages` failed. The reply box stays open with the text, so Send can be repeated. Check
+`POST .../threads/{id}/messages` in the Network tab.
 
 ## Inbox shows "No messages" or a thread page stays empty
 
@@ -47,11 +48,6 @@ Network tab.
   there is no group id: the inbox never loads, and the thread request goes out with `groupId=undefined`. Use the dashboard's
   "Messages" entry or a `/contributions/<groupId>/messages` URL.
 - The group must belong to the signed-in user; the backend decides what is returned for a group id.
-
-## Search stops responding
-
-After a search with no results the list is empty, and the search box only starts a new search while the list has at least
-one thread, so typing again sends nothing. Clear the box and click the refresh icon in the list header to reload the list.
 
 ## The page suddenly clears the session or redirects to `/home`
 

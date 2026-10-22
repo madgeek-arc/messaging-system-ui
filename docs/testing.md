@@ -2,11 +2,15 @@
 
 ## Current state
 
-The module has **one spec file**, `services/messaging-system.service.spec.ts`. It checks that `getInbox`, `getOutbox` and
-`postMessage` send no `Authorization` header (even when an `AccessToken` cookie exists) and keep their query parameters.
+The module has **two spec files**:
 
-Everything else is untested: the page components, `MessagingWebsocketService`, the routing and the form logic. Behaviour is
-described in [architecture.md](architecture.md) and [user-flows.md](user-flows.md), not guarded by tests.
+- `services/messaging-system.service.spec.ts` checks that `getInbox`, `getOutbox` and `postMessage` send no `Authorization`
+  header (even when an `AccessToken` cookie exists) and keep their query parameters.
+- `app/pages/emailCompose/email-compose.component.spec.ts` checks that Send without a recipient posts nothing and asks for one,
+  and that Send with a recipient posts the thread.
+
+Everything else is untested: the other page components, `MessagingWebsocketService`, the routing and the remaining form
+logic. Behaviour is described in [architecture.md](architecture.md) and [user-flows.md](user-flows.md), not guarded by tests.
 
 ## Running the tests
 
@@ -23,9 +27,11 @@ Both need Chrome. A spec for this module runs together with the host's other spe
 ## Writing specs here
 
 - Put the spec next to the file it tests (`services/foo.spec.ts`).
-- For REST calls use `provideHttpClient()` with `provideHttpClientTesting()` and `HttpTestingController`, as the existing spec does.
+- For REST calls use `provideHttpClient()` with `provideHttpClientTesting()` and `HttpTestingController`, as the existing specs do.
   The service reads `environment.MESSAGING_ENDPOINT` from the host's environment file.
-- Pages read `sessionStorage.userInfo` and use survey-tool services, so a page spec has to provide stand-ins for them.
+- Pages read `sessionStorage.userInfo` and use survey-tool services, so a page spec has to provide stand-ins for them. The
+  compose spec shows a page that needs only a `sessionStorage` entry; the components are declared in `MessagingSystemModule`, so
+  a spec declares them itself (`declarations: [...]`).
 - `MessagingWebsocketService` expects `SockJS` and `Stomp` as globals on `window` (the host loads them through
   `angular.json` scripts); a spec has to define fakes.
 

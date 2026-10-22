@@ -18,6 +18,9 @@ between release tags (`feat`, `fix`, `refactor`/`perf`/`build` commits); chores,
 
 - **contact:** Send group id instead of label for Dashboard Improvement
 - **websocket:** Remove polling delay and add reconnect backoff for inbox sockets
+- **messages:** Keep the search working after a search that found nothing, on both the inbox and the sent tab
+- **compose:** Ask for a recipient instead of failing when none is chosen
+- **thread:** Show an error in the reply box when sending fails
 
 ## 0.3.0 - 2026-03-20
 

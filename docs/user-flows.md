@@ -12,9 +12,8 @@ acting as.
   Inbox lists threads addressed to the group (`GET /inbox/threads?groupId=`); Sent lists threads the user wrote
   (`GET /outbox/threads?groupId=&email=`).
 - **Order by date:** the drop-down adds `sortBy=created` and `direction=ASC` or `DESC`.
-- **Search:** typing in the search box waits 500 ms after the last key, then reloads the list from the first page with
-  `regex=<text>`. It only starts while the list on screen has at least one thread (see
-  [troubleshooting.md](troubleshooting.md)).
+- **Search:** typing in the search box waits 500 ms after the last key, then reloads the open tab (Inbox or Sent) from the
+  first page with `regex=<text>`. Clearing the box removes the filter. It also works after an earlier search found nothing.
 - **Paging:** the arrows request `page=<n>`; the label ("1 - 20 of 53") comes from the backend's page object. The page size is
   the backend's.
 - **Select and mark:** each row has a checkbox, the header checkbox selects every row. Once something is selected, icons to mark
@@ -43,7 +42,8 @@ Route: `/contributions/<groupId>/messages/<threadId>` (`GET /threads/{id}?groupI
   as anonymous unless the user clears it.
 - Send posts `POST /threads/{id}/messages?anonymous=`. On success the thread on screen is replaced by the response and the
   box closes. The close icon discards the draft.
-- A failed send is only logged to the console; the box stays open.
+- A failed send shows "Something went wrong, please try again later." inside the box, which stays open with the text so the
+  reply can be sent again. Closing the box or opening it for another message removes the message.
 
 ## Compose a new thread
 
@@ -53,8 +53,8 @@ Route: `/contributions/<groupId>/messages/<threadId>` (`GET /threads/{id}?groupI
 - **Subject** and the body in the rich text editor.
 - Send posts `POST /threads` with the user as sender and the active group as the sender's group. On success the dialog closes
   and the form is cleared. On failure the dialog shows "Something went wrong please try again later." for about five seconds.
-- Send before any recipient has been chosen does nothing: the click throws a `TypeError` because the recipient list is still
-  `null`.
+- Send without a recipient sends nothing and shows "Choose at least one recipient." under the "To:" field. The message goes
+  away when a recipient is chosen or the dialog is closed.
 
 ## Public contact form
 
