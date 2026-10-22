@@ -97,6 +97,11 @@
           </label>
         </div>
       </form>
+      @if (sendError()) {
+        <div class="uk-width-1-1 uk-alert uk-alert-danger" role="alert">
+          <p>Something went wrong, please try again later.</p>
+        </div>
+      }
       <div class="uk-width-1-2">
         <button class="uk-button uk-button-primary" (click)="sendMessage()">Send message</button>
       </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal } from "@angular/core";
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TopicThread } from "../../domain/messaging";
@@ -32,6 +32,7 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   groups: {} = null;
   sendSuccess: boolean = null;
+  sendError = signal(false);
   display: number = 0;
   timerInterval: any;
 
@@ -111,12 +112,16 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.newThread.messages[0].from.name = this.contactForm.get('name').value + ' ' + this.contactForm.get('surname').value;
       this.newThread.messages[0].from.email = this.contactForm.get('email').value;
 
+      this.sendError.set(false);
       this.messagingService.postThreadPublic(this.newThread, this.recentToken).subscribe(
         res => {
           this.sendSuccess = true;
           this.timer(0.1);
         },
-        error => {console.error(error)}
+        error => {
+          this.sendError.set(true);
+          console.error(error);
+        }
       );
 
     }
