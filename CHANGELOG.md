@@ -8,6 +8,11 @@ between release tags (`feat`, `fix`, `refactor`/`perf`/`build` commits); chores,
 ### Added
 
 - **editor:** Use the shared rich text editor instead of CKEditor
+- **contact:** Show an error message when sending the form fails
+
+### Removed
+
+- **security:** Stop sending an `Authorization: Bearer` header built from the `AccessToken` cookie (it was `Bearer null` without the cookie)
 
 ### Fixed
 

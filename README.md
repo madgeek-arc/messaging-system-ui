@@ -55,6 +55,10 @@ and follow its README (`npm ci`, `npm start`).
 | [docs/configuration.md](docs/configuration.md) | What the host must provide: environment keys, scripts, providers |
 | [docs/integration.md](docs/integration.md) | REST endpoints, STOMP topics, reCAPTCHA, host contract, failure behaviour |
 | [docs/security.md](docs/security.md) | Authentication, XSRF, reCAPTCHA, HTML rendering |
+| [docs/development.md](docs/development.md) | Running the module through the host, sockets, working with the submodule |
+| [docs/testing.md](docs/testing.md) | The one existing spec, how to run it, where tests would help |
+| [docs/user-flows.md](docs/user-flows.md) | Inbox, outbox, threads, replies, compose, public contact form |
+| [docs/troubleshooting.md](docs/troubleshooting.md) | Stale counters, rejected contact form, empty selectors, empty pages |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 Licence: Apache License 2.0, see [LICENSE](LICENSE). The npm packages used by the host application keep their own

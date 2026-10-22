@@ -7,11 +7,9 @@ security-relevant behaviour of the module itself.
 
 - Requests rely on the host's session cookie. The module reads the user from survey-tool's `UserService` /
   `sessionStorage.userInfo`.
-- `MessagingSystemService.setAuthorizationHeaders()` builds an `Authorization: Bearer <value of the AccessToken cookie>` header, which
-  `getInbox`, `getOutbox` and `postMessage` send. The header is built from a module-level variable shared by those calls.
-  If no `AccessToken` cookie exists, the literal value `Bearer null` is sent. The current login flow does not create an `AccessToken`
-  cookie (survey-tool only deletes it on logout), so the backend should not depend on this header. TODO(maintainers): confirm and
-  remove this legacy code path, or document where the cookie is set.
+- No request carries an `Authorization` header: the module relies on the session cookie alone. Earlier versions attached
+  `Authorization: Bearer <AccessToken cookie>` to the inbox, outbox and reply calls (the literal `Bearer null` when the cookie was absent); the
+  login flow never created that cookie, and the header was removed.
 - Which threads and groups a user may read or write is decided by the backend using the `groupId` and the session; changing the
   route's `:id` in the browser must not widen access.
 
@@ -28,7 +26,8 @@ security-relevant behaviour of the module itself.
   as the `g-recaptcha-response` request header to `POST /threads/public`. Verifying the token, rate limiting and spam filtering are
   the backend's responsibility.
 - The form also requires the terms-and-conditions checkbox before it can be submitted.
-- If the token is missing the request is still sent without the header; the backend must reject such requests.
+- If the token is missing the request is still sent without the header; the backend must reject such requests. A failed post
+  (including such a rejection) shows an error message on the form.
 - Google reCAPTCHA sets `_GRECAPTCHA` and loads Google scripts; it is listed among the strictly necessary cookies in the host's cookie banner.
 
 ## HTML rendering

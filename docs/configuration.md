@@ -24,7 +24,7 @@ The code imports `environment` from `../../environments/environment` (relative t
 | UIkit | `UIkit` is imported for notifications and tabs; its styles and JS must be present |
 | HTTP client with XSRF | `provideHttpClient(withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' }))`. `HttpXsrfTokenExtractor` supplies the token for STOMP |
 | Path alias | One import uses the base path `src/messaging-system-ui/...`; the host's `tsconfig.json` has `"baseUrl": "./"` |
-| Router | Import the module in `AppModule` to expose `/contact`, `/messages`, `/messages/:threadId` at the root, and/or lazy-load it under a parent route such as `contributions/:id` |
+| Router | Import the module in `AppModule` to expose `/contact` at the root, and lazy-load it under a parent route with an `id` parameter such as `contributions/:id`. The `messages` routes need that `id` (the group id); mounted at the root they have no group and do nothing useful |
 | `UserService`, `StakeholdersService` | From survey-tool; `UserService` must be provided by the host module |
 | Socket start-up | The host starts the live connections: `initializeWebSocketConnectionUnread(topic)`, `WsJoin(path, action)` and `initializeWebSocketConnectionNotification(topic)` on `MessagingWebsocketService` (observatory-ui does it in its top menu once the user is known) |
 | Rich text editor | Message bodies use catalogue-ui's `RichTextEditorComponent`, which needs the Material Icons font and UIkit form styles |

@@ -5,7 +5,7 @@
 messaging-system-ui is the user interface of the Observatory messaging system:
 
 - **Inbox and outbox** of the active group (stakeholder, coordinator or administrator) with search, sorting, paging
-  (10 per page), read/unread state and bulk selection;
+  (the page size is the backend's: the component never sends one), read/unread state and bulk selection;
 - **Threads**: view a thread, reply (optionally anonymously), mark messages read;
 - **Compose**: start a thread addressed to groups or e-mail addresses, with a rich text body;
 - **Live updates**: unread counters and "new message" notifications pushed over STOMP;
@@ -37,6 +37,11 @@ observatory-ui includes the module **twice**, which makes the routes reachable i
 2. `app-routing.module.ts` also lazy-loads it under `contributions/:id`, which is where the dashboard's "Messages" menu entry points
    (the `:id` is the active group id and becomes the `groupId` for inbox/outbox queries).
 
+Only `contact` needs the root mount. The `messages` routes read the group from the route parameter `id`, which exists only under
+`contributions/:id`. The root copies `/messages` and `/messages/:threadId` have no group id: the inbox page never requests
+anything, and the thread page requests the thread with `groupId=undefined`. Nothing in the host links to them. Likewise
+`/contributions/:id/contact` exists but is not linked.
+
 None of these routes has a route guard; the pages read the user from `UserService` and the backend refuses unauthorised requests.
 
 The live sockets are started by the host's top menu once a user is known: it connects the unread socket to
@@ -62,9 +67,8 @@ No browser persistence of its own. It reads `sessionStorage.userInfo` and `curre
 
 ## Authentication and authorisation relationship
 
-Requests use the host's session cookie. `getInbox`, `getOutbox` and `postMessage` additionally attach an
-`Authorization: Bearer <AccessToken cookie>` header (see [security.md](security.md)). The group the user acts as is chosen in the
-dashboard; the backend checks that the user belongs to the `groupId` it receives.
+Requests use the host's session cookie and send no `Authorization` header (see [security.md](security.md)). The group the user
+acts as is chosen in the dashboard; the backend checks that the user belongs to the `groupId` it receives.
 
 ## Constraints and decisions
 
