@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, signal, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
@@ -32,6 +32,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   newMessage: UntypedFormGroup = this.fb.group(new Message());
   anonymous: boolean = true;
   showReply: boolean = false;
+  sendError = signal(false);
   fragment: string = null
 
 
@@ -111,18 +112,23 @@ export class ThreadComponent implements OnInit, OnDestroy {
     this.message = message;
     this.newMessage.controls['to'].get('0').patchValue(this.message.from);
     this.subject = this.thread.subject;
+    this.sendError.set(false);
     this.showReply = true;
     setTimeout( timeout => {this.viewportScroller.scrollToAnchor('response')}, 0);
   }
 
   sendMessage() {
+    this.sendError.set(false);
     this.messagingService.postMessage(this.threadId, this.newMessage.value, this.anonymous).subscribe(
       res=> {
         this.thread = res;
         this.showReply = false;
         this.newMessage.reset();
       },
-      error => {console.error(error)}
+      error => {
+        this.sendError.set(true);
+        console.error(error);
+      }
     );
   }
 

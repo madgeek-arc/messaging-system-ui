@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit, signal} from "@angular/core";
 import {Correspondent, TopicThread} from "../../domain/messaging";
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
@@ -9,6 +9,8 @@ import * as UIkit from 'uikit';
     selector: 'app-email-compose',
     templateUrl: 'email-compose.component.html',
     styleUrls: ['email-compose.component.scss'],
+    // UIkit fires `hidden` on the modal element when the dialog closes
+    host: {'(hidden)': 'noRecipients.set(false)'},
     standalone: false
 })
 
@@ -21,6 +23,7 @@ export class EmailComposeComponent implements OnInit {
   newThread: UntypedFormGroup = TopicThread.toFormGroup(this.fb);
   recipients: {id: string, name: string, type: string}[] = null;
   createSuccess: boolean = true
+  noRecipients = signal(false);
 
   flatGroups: {id: string, name: string, type: string}[] = []
   loading = false;
@@ -43,6 +46,12 @@ export class EmailComposeComponent implements OnInit {
   }
 
   createTread() {
+    if (!this.recipients?.length) {
+      this.noRecipients.set(true);
+      return;
+    }
+    this.noRecipients.set(false);
+
     this.newThread.get('from').get('name').setValue(this.userInfo.user.fullname);
     this.newThread.get('from').get('email').setValue(this.userInfo.user.email);
     if (this.groupId) {

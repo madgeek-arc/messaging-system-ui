@@ -107,7 +107,7 @@
         <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply}">
           <div class="uk-card uk-card-default">
             <div class="uk-card-body">
-              <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset()"
+              <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset(); sendError.set(false)"
                       type="button" uk-close>
               </button>
               <form [formGroup]="newMessage" class="">
@@ -134,6 +134,11 @@
                   </label>
                 </div>
               </div>
+              @if (sendError()) {
+                <div class="uk-alert uk-alert-danger uk-margin-top" role="alert">
+                  <p>Something went wrong, please try again later.</p>
+                </div>
+              }
             </div>
           </div>
         </div>

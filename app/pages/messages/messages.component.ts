@@ -90,16 +90,16 @@ export class MessagesComponent implements OnInit {
       , debounceTime(500) // Time in milliseconds between key events
       , distinctUntilChanged() // If previous query is different from current
     ).subscribe((text: string) => {
-        if (this.inbox && this.inbox.length > 0) {
-          this.updateUrlParams('regex', text);
-          this.updateUrlParams('page', '0');
-          this.from = 0;
+        if (!this.groupId) {
+          return;
+        }
+        this.updateUrlParams('regex', text);
+        this.updateUrlParams('page', '0');
+        this.from = 0;
+        if (this.fragment === 'sent') {
+          this.refreshOutbox(this.urlParameters);
+        } else {
           this.refreshInbox(this.urlParameters);
-        } else if (this.sent && this.sent.length > 0) {
-          this.updateUrlParams('regex', text);
-          this.updateUrlParams('page', '0');
-          this.from = 0;
-          this.refreshOutbox(this.urlParameters)
         }
       }
     );

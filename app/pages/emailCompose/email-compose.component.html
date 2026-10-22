@@ -19,11 +19,15 @@
         bindLabel="name"
         [multiple]="true"
         [loading]="loading"
-        [(ngModel)]="recipients">
+        [(ngModel)]="recipients"
+        (change)="noRecipients.set(false)">
         <ng-template ng-tag-tmp let-search="searchTerm">
           <b>Add recipient</b>: {{search}}
         </ng-template>
       </ng-select>
+    }
+    @if (noRecipients()) {
+      <p class="uk-text-danger uk-margin-small-top uk-margin-remove-bottom" role="alert">Choose at least one recipient.</p>
     }
 
     @if (newThread) {
