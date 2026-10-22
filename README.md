@@ -10,7 +10,7 @@ Type:          Frontend module (Angular source, consumed as a Git submodule)
 Status:        Production (embedded in observatory-ui)
 Technology:    Angular 20 / TypeScript / RxJS, UIkit, ng-select, ng-recaptcha-2, SockJS/STOMP
 API:           Consumes the Observatory messaging API (/api); exposes none
-Swagger:       n/a (frontend). The backend's Swagger UI is linked from its own repository: TODO(backend maintainers)
+Swagger:       n/a (frontend)
 Deployment:    Not independently deployable; compiled into observatory-ui (see observatory-ui/docs/deployment.md)
 Documentation: /docs
 ```
@@ -57,5 +57,5 @@ and follow its README (`npm ci`, `npm start`).
 | [docs/security.md](docs/security.md) | Authentication, XSRF, reCAPTCHA, HTML rendering |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
-Licence: this repository has no `LICENSE` file at the time of writing. TODO(maintainers): add one (the other frontend
-repositories use Apache License 2.0). Maintainer/contact: TODO(maintainers).
+Licence: Apache License 2.0, see [LICENSE](LICENSE). The npm packages used by the host application keep their own
+licences; the host's production build lists them in `3rdpartylicenses.txt`.

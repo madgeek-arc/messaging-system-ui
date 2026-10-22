@@ -2,7 +2,7 @@
 
 messaging-system-ui talks to the Observatory messaging backend over REST and STOMP, to Google reCAPTCHA for the public
 form, and is hosted by observatory-ui. Endpoint paths, parameters and schemas are owned by the backend's Swagger/OpenAPI
-documentation (TODO(backend maintainers): link); this document lists what the module depends on.
+documentation; this document lists what the module depends on.
 
 ```mermaid
 flowchart LR
