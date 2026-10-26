@@ -95,7 +95,7 @@
                 <td class="uk-width-auto">
                   <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
                 </td>
-                <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages?.length-1)"
+                <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + ($safeNavigationMigration(topic.messages?.length)-1)"
                   [state]="{returnTo: fragment}" style="cursor: pointer">
                   <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.from?.name}}</div>
                   <div class="uk-text-muted">{{topic.updated | date}}</div>

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { environment } from '../../../../environments/environment';
@@ -22,7 +22,7 @@ describe('EmailComposeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EmailComposeComponent],
       imports: [FormsModule, ReactiveFormsModule, NgSelectModule, RichTextEditorComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting()]
     });
     http = TestBed.inject(HttpTestingController);
   });

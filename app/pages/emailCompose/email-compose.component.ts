@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, signal} from "@angular/core";
+import {Component, Input, OnInit, signal, ChangeDetectionStrategy} from "@angular/core";
 import {Correspondent, TopicThread} from "../../domain/messaging";
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
@@ -11,6 +11,7 @@ import * as UIkit from 'uikit';
     styleUrls: ['email-compose.component.scss'],
     // UIkit fires `hidden` on the modal element when the dialog closes
     host: {'(hidden)': 'noRecipients.set(false)'},
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 
