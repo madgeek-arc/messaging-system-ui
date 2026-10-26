@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TopicThread } from "../../domain/messaging";
@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
     selector: 'app-contact',
     templateUrl: 'contact.component.html',
     styles: ['.grecaptcha-badge { visibility: hidden !important;}'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy} from "@angular/core";
 import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
 import {TopicThread, UnreadMessages} from "../../domain/messaging";
 import {UserInfo, Coordinator, Stakeholder, Administrator} from "../../../../survey-tool/app/domain/userInfo";
@@ -16,6 +16,7 @@ import {StakeholdersService} from "../../../../survey-tool/app/services/stakehol
   templateUrl: 'messages.component.html',
   styleUrls: ['messages.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StakeholdersService],
 })
 

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, signal, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
@@ -14,6 +14,7 @@ import {Subject} from "rxjs";
     selector: 'app-thread',
     templateUrl: 'thread.component.html',
     styleUrls: ['thread.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 
