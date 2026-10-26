@@ -8,7 +8,7 @@ public contact form.
 Component:     messaging-system-ui
 Type:          Frontend module (Angular source, consumed as a Git submodule)
 Status:        Production (embedded in observatory-ui)
-Technology:    Angular 20 / TypeScript / RxJS, UIkit, ng-select, ng-recaptcha-2, SockJS/STOMP
+Technology:    Angular 22 / TypeScript / RxJS, UIkit, ng-select, ng-recaptcha-2, SockJS/STOMP
 API:           Consumes the Observatory messaging API (/api); exposes none
 Swagger:       n/a (frontend)
 Deployment:    Not independently deployable; compiled into observatory-ui (see observatory-ui/docs/deployment.md)
