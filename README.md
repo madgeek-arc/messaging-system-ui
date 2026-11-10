@@ -23,7 +23,7 @@ sockets from its top menu. It reuses the session services of
 [survey-tool](https://github.com/madgeek-arc/survey-tool) and the rich text editor of
 [catalogue-ui](https://github.com/madgeek-arc/catalogue-ui).
 
-Pages (`MessagingSystemModule`):
+Pages (`app/messaging-system.routes.ts`):
 
 | Route | Component | Purpose |
 |---|---|---|

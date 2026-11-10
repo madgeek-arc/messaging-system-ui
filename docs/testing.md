@@ -30,8 +30,8 @@ Both need Chrome. A spec for this module runs together with the host's other spe
 - For REST calls use `provideHttpClient()` with `provideHttpClientTesting()` and `HttpTestingController`, as the existing specs do.
   The service reads `environment.MESSAGING_ENDPOINT` from the host's environment file.
 - Pages read `sessionStorage.userInfo` and use survey-tool services, so a page spec has to provide stand-ins for them. The
-  compose spec shows a page that needs only a `sessionStorage` entry; the components are declared in `MessagingSystemModule`, so
-  a spec declares them itself (`declarations: [...]`).
+  compose spec shows a page that needs only a `sessionStorage` entry; the components are standalone, so
+  a spec imports the component itself (`imports: [...]`).
 - `MessagingWebsocketService` expects `SockJS` and `Stomp` as globals on `window` (the host loads them through
   `angular.json` scripts); a spec has to define fakes.
 

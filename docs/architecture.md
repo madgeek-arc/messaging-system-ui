@@ -19,7 +19,7 @@ does not authenticate users and does not start the live sockets itself: the host
 
 | Area | Location | Notes |
 |---|---|---|
-| Module and routes | `app/messaging-system.module.ts`, `messaging-system-routing.module.ts` | `MessagingSystemModule`: routes `contact`, `messages`, `messages/:threadId`; provides the reCAPTCHA site key and `MessagingWebsocketService` |
+| Routes | `app/messaging-system.routes.ts` | `MESSAGING_SYSTEM_ROUTES` (routes `contact`, `messages`, `messages/:threadId`) and `CONTACT_ROUTES` (the contact page alone). The `contact` route provides the reCAPTCHA site key, the `messages` routes provide `MessagingWebsocketService` |
 | Pages | `app/pages/{contact,messages,thread,emailCompose}` | `ContactComponent`, `MessagesComponent`, `ThreadComponent`, `EmailComposeComponent` |
 | Domain | `app/domain/messaging.ts`, `paging.ts` | `Message`, `TopicThread`, `Correspondent`, `UnreadMessages`, `NewPaging` |
 | REST service | `services/messaging-system.service.ts` | `MessagingSystemService` (root-provided): threads, inbox/outbox, messages, groups, unread count; keeps `unreadMessages` and the current thread as subjects |
@@ -28,19 +28,18 @@ does not authenticate users and does not start the live sockets itself: the host
 Imports from the rest of the stack: `UserService`, `StakeholdersService`, `UserInfo` and `URLParameter` from survey-tool;
 `RichTextEditorComponent` from catalogue-ui; `PageContentComponent` and `SidebarMobileToggleComponent` for layout.
 
-## How the module is wired into the host
+## How the routes are wired into the host
 
-observatory-ui includes the module **twice**, which makes the routes reachable in two places:
+observatory-ui mounts the routes in two places:
 
-1. `AppModule` imports `MessagingSystemModule` directly, so `contact`, `messages` and `messages/:threadId` exist at the
-   root of the router. The public contact page is linked from the top menu as `/contact`.
-2. `app-routing.module.ts` also lazy-loads it under `contributions/:id`, which is where the dashboard's "Messages" menu entry points
+1. `CONTACT_ROUTES` is lazy-loaded at the root path `contact`. The public contact page is linked from the top menu as `/contact`.
+2. `MESSAGING_SYSTEM_ROUTES` is lazy-loaded under `contributions/:id`, which is where the dashboard's "Messages" menu entry points
    (the `:id` is the active group id and becomes the `groupId` for inbox/outbox queries).
 
-Only `contact` needs the root mount. The `messages` routes read the group from the route parameter `id`, which exists only under
-`contributions/:id`. The root copies `/messages` and `/messages/:threadId` have no group id: the inbox page never requests
-anything, and the thread page requests the thread with `groupId=undefined`. Nothing in the host links to them. Likewise
-`/contributions/:id/contact` exists but is not linked.
+The `messages` routes read the group from the route parameter `id`, which exists only under `contributions/:id`, so they are not
+mounted at the root. Earlier versions of the host also registered `/messages` and `/messages/:threadId` at the root, where there is
+no group id: the inbox page never requested anything and the thread page requested the thread with `groupId=undefined`. Nothing in
+the host linked to them. `/contributions/:id/contact` exists but is not linked.
 
 None of these routes has a route guard; the pages read the user from `UserService` and the backend refuses unauthorised requests.
 

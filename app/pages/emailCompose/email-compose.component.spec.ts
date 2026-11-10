@@ -20,8 +20,7 @@ describe('EmailComposeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EmailComposeComponent],
-      imports: [FormsModule, ReactiveFormsModule, NgSelectModule, RichTextEditorComponent],
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule, RichTextEditorComponent, EmailComposeComponent],
       providers: [provideHttpClient(withXhr()), provideHttpClientTesting()]
     });
     http = TestBed.inject(HttpTestingController);

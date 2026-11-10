@@ -1,13 +1,15 @@
 import {Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
-import {ViewportScroller} from "@angular/common";
+import { ViewportScroller, NgClass, DatePipe } from "@angular/common";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
-import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule, FormsModule } from "@angular/forms";
 import {MessagingWebsocketService} from "../../../services/messaging-websocket.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import { PageContentComponent } from "../../../../survey-tool/app/shared/page-content/page-content.component";
+import { RichTextEditorComponent } from "../../../../survey-tool/catalogue-ui/shared/reusable-components/rich-text-editor/rich-text-editor.component";
 
 
 @Component({
@@ -15,7 +17,7 @@ import {Subject} from "rxjs";
     templateUrl: 'thread.component.html',
     styleUrls: ['thread.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [PageContentComponent, RouterLink, NgClass, ReactiveFormsModule, RichTextEditorComponent, FormsModule, DatePipe]
 })
 
 export class ThreadComponent implements OnInit, OnDestroy {

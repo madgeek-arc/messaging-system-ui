@@ -1,9 +1,11 @@
 import {Component, Input, OnInit, signal, ChangeDetectionStrategy} from "@angular/core";
 import {Correspondent, TopicThread} from "../../domain/messaging";
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule, FormsModule } from "@angular/forms";
 import {UserInfo} from "../../../../survey-tool/app/domain/userInfo";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import * as UIkit from 'uikit';
+import { NgSelectComponent, NgTagTemplateDirective } from "@ng-select/ng-select";
+import { RichTextEditorComponent } from "../../../../survey-tool/catalogue-ui/shared/reusable-components/rich-text-editor/rich-text-editor.component";
 
 @Component({
     selector: 'app-email-compose',
@@ -12,7 +14,7 @@ import * as UIkit from 'uikit';
     // UIkit fires `hidden` on the modal element when the dialog closes
     host: {'(hidden)': 'noRecipients.set(false)'},
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [NgSelectComponent, ReactiveFormsModule, FormsModule, NgTagTemplateDirective, RichTextEditorComponent]
 })
 
 export class EmailComposeComponent implements OnInit {

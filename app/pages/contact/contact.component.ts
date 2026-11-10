@@ -1,17 +1,18 @@
 import { Component, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
-import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { UntypedFormControl, UntypedFormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
 import { TopicThread } from "../../domain/messaging";
 import { MessagingSystemService } from "../../../services/messaging-system.service";
-import { OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service } from "ng-recaptcha-2";
+import { OnExecuteData, OnExecuteErrorData, ReCaptchaV3Service, RecaptchaV3Module } from "ng-recaptcha-2";
 import { Subscription } from "rxjs";
+import { NgClass, KeyValuePipe } from "@angular/common";
 
 @Component({
     selector: 'app-contact',
     templateUrl: 'contact.component.html',
     styles: ['.grecaptcha-badge { visibility: hidden !important;}'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [ReactiveFormsModule, NgClass, RouterLink, KeyValuePipe, RecaptchaV3Module]
 })
 
 export class ContactComponent implements OnInit, OnDestroy {

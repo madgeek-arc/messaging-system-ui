@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy} from 
 import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
 import {TopicThread, UnreadMessages} from "../../domain/messaging";
 import {UserInfo, Coordinator, Stakeholder, Administrator} from "../../../../survey-tool/app/domain/userInfo";
-import {ActivatedRoute} from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import {fromEvent} from "rxjs";
 import {debounceTime, distinctUntilChanged, map} from "rxjs/operators";
 import {URLParameter} from "../../../../survey-tool/app/domain/url-parameter";
@@ -10,14 +10,31 @@ import {NewPaging} from "../../domain/paging";
 import * as UIkit from 'uikit';
 import {UserService} from "../../../../survey-tool/app/services/user.service";
 import {StakeholdersService} from "../../../../survey-tool/app/services/stakeholders.service";
+import { PageContentComponent } from "../../../../survey-tool/app/shared/page-content/page-content.component";
+import { SidebarMobileToggleComponent } from "../../../../survey-tool/app/shared/dashboard-side-menu/mobile-toggle/sidebar-mobile-toggle.component";
+import { NgSelectComponent, NgOptionComponent } from "@ng-select/ng-select";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { NgClass, DatePipe } from "@angular/common";
+import { EmailComposeComponent } from "../emailCompose/email-compose.component";
 
 @Component({
   selector: 'app-messages',
   templateUrl: 'messages.component.html',
   styleUrls: ['messages.component.scss'],
-  standalone: false,
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StakeholdersService],
+  imports: [
+    PageContentComponent,
+    SidebarMobileToggleComponent,
+    RouterLink,
+    NgSelectComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    NgOptionComponent,
+    NgClass,
+    EmailComposeComponent,
+    DatePipe,
+  ],
 })
 
 export class MessagesComponent implements OnInit {

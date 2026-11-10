@@ -14,7 +14,7 @@ The code imports `environment` from `../../environments/environment` (relative t
 |---|---|---|---|
 | `MESSAGING_ENDPOINT` | Yes | `MessagingSystemService` | Base URL of the messaging REST API, no trailing slash (the host uses `/api`) |
 | `WS_ENDPOINT` | Yes | `MessagingWebsocketService` | SockJS endpoint for the unread and notification sockets (the host uses `/api/websocket`) |
-| `RECAPTCHA_V3_KEY` | Yes for the contact form | `MessagingSystemModule` (provides `RECAPTCHA_V3_SITE_KEY`) | reCAPTCHA v3 **site** key (public). In the production and beta builds of the host it is a placeholder substituted at container start from `RECAPTCHA_V3_SITE_KEY` |
+| `RECAPTCHA_V3_KEY` | Yes for the contact form | the `contact` route in `messaging-system.routes.ts` (provides `RECAPTCHA_V3_SITE_KEY`) | reCAPTCHA v3 **site** key (public). In the production and beta builds of the host it is a placeholder substituted at container start from `RECAPTCHA_V3_SITE_KEY` |
 
 ## 2. Host build and providers
 
