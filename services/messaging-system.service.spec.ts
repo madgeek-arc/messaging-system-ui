@@ -30,7 +30,7 @@ describe('MessagingSystemService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('groupId')).toBe('g1');
     expect(req.request.params.get('page')).toBe('2');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
   });
 
   it('reads the outbox without an Authorization header', () => {
@@ -40,7 +40,7 @@ describe('MessagingSystemService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('groupId')).toBe('g1');
     expect(req.request.params.get('email')).toBe('user@example.org');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
   });
 
   it('posts a reply without an Authorization header', () => {
@@ -49,6 +49,6 @@ describe('MessagingSystemService', () => {
     const req = http.expectOne(r => r.url === `${api}/threads/t1/messages`);
     expect(req.request.method).toBe('POST');
     expect(req.request.params.get('anonymous')).toBe('true');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
   });
 });

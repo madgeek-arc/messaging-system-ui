@@ -37,11 +37,11 @@ describe('EmailComposeComponent', () => {
 
     component.recipients = null;
     component.createTread();
-    expect(component.noRecipients()).toBeTrue();
+    expect(component.noRecipients()).toBe(true);
 
     component.recipients = [];
     component.createTread();
-    expect(component.noRecipients()).toBeTrue();
+    expect(component.noRecipients()).toBe(true);
 
     http.expectNone(`${environment.MESSAGING_ENDPOINT}/threads`);
   });
@@ -52,7 +52,7 @@ describe('EmailComposeComponent', () => {
     component.recipients = [{id: 'g1', name: 'Group One', type: 'groupId'}];
     component.createTread();
 
-    expect(component.noRecipients()).toBeFalse();
+    expect(component.noRecipients()).toBe(false);
     const req = http.expectOne(`${environment.MESSAGING_ENDPOINT}/threads`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body.to[0].groupId).toBe('g1');
