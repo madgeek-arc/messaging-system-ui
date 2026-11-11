@@ -51,7 +51,7 @@ flowchart LR
   While disconnected, unread counters and notifications are stale; the REST-based pages still work.
 - **REST errors:** no retries and no client-side timeouts. Errors are handled by the calling component. They are logged with
   `console.error`, and the contact form, the reply box and the compose dialog also show a message; the other pages (inbox, outbox,
-  opening a thread) only log. The host's HTTP interceptor handles `401` (clears the user) and `403` (notification and redirect to `/home`).
+  opening a thread) only log. observatory-ui registers no HTTP interceptor, so `401` and `403` are handled like any other error by the calling component.
 - **Contact form:** if the reCAPTCHA token cannot be obtained, the form is still posted without the header and the backend decides;
   a failed post shows the error message "Something went wrong, please try again later." above the Send button (the error is also
   logged to the console) and the form keeps its values.

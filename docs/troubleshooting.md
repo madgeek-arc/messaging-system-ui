@@ -51,5 +51,7 @@ The post to `/threads/{id}/messages` failed. The reply box stays open with the t
 
 ## The page suddenly clears the session or redirects to `/home`
 
-The host's HTTP interceptor clears the user on a `401` and shows a notification and redirects to `/home` on a `403`. Look at
-the failing request in the Network tab to see which call the backend refused.
+observatory-ui has no global handler for `401` or `403`, so a refused request alone does not clear the session or redirect.
+The user is cleared when the `/user/info` call fails, and the route guards send the visitor to `/home` (for example the
+stakeholder-manager guard, when the user info is missing or its call fails). Look at the failing request in the Network tab to
+see which call the backend refused.
