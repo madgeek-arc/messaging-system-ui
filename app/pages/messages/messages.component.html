@@ -50,7 +50,7 @@
             <tr>
               <th class="" >
                 <input id="selectAllInbox" name="inbox" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
-                  [checked]="selectedTopics.length === inbox?.length && inbox?.length > 0">
+                  [checked]="selectedTopics.length === inbox()?.length && inbox()?.length > 0">
               </th>
               <th class="uk-width-auto">
                 <div class="uk-flex uk-flex-middle">
@@ -72,9 +72,9 @@
             </th>
             <th class="uk-width-auto"></th>
             <th  class="">
-              @if (page?.totalElements) {
+              @if (page()?.totalElements) {
                 <div class="uk-flex uk-flex-middle">
-                  <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
+                  <span> {{page()?.pageable.offset + 1}} - {{page()?.pageable.offset + page()?.numberOfElements}} of {{page()?.totalElements}}</span>
                   <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
                   <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
                 </div>
@@ -83,24 +83,24 @@
           </tr>
         </thead>
         <tbody>
-          @if (!inbox || inbox?.length === 0) {
+          @if (!inbox() || inbox()?.length === 0) {
             <tr>
               <td></td>
               <td class="uk-width-expand">No messages</td>
             </tr>
           } @else {
-            @for (topic of inbox; track topic) {
+            @for (topic of inbox(); track topic) {
               <tr [ngClass]="{'message-unread-background': !topic.read}"
                 class="uk-visible-toggle">
                 <td class="uk-width-auto">
                   <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
                 </td>
                 <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + ($safeNavigationMigration(topic.messages?.length)-1)"
-                  [state]="{returnTo: fragment}" style="cursor: pointer">
+                  [state]="{returnTo: fragment()}" style="cursor: pointer">
                   <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.from?.name}}</div>
                   <div class="uk-text-muted">{{topic.updated | date}}</div>
                 </td>
-                <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [state]="{returnTo: fragment}"
+                <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [state]="{returnTo: fragment()}"
                   [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
                   <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.subject}}</div>
                   <div>
@@ -142,7 +142,7 @@
         <tr>
           <th>
             <input id="selectAllOutbox" name="sent" class="uk-checkbox" type="checkbox" (click)="toggle($event)"
-              [checked]="selectedTopics.length === sent?.length && sent?.length > 0">
+              [checked]="selectedTopics.length === sent()?.length && sent()?.length > 0">
           </th>
           <th class="uk-width-auto">
             <div class="uk-flex uk-flex-middle">
@@ -163,9 +163,9 @@
         </th>
         <th class="uk-width-auto"></th>
         <th class="uk-width-auto">
-          @if (page?.totalElements) {
+          @if (page()?.totalElements) {
             <div class="uk-flex uk-flex-middle">
-              <span> {{page?.pageable.offset + 1}} - {{page?.pageable.offset + page?.numberOfElements}} of {{page?.totalElements}}</span>
+              <span> {{page()?.pageable.offset + 1}} - {{page()?.pageable.offset + page()?.numberOfElements}} of {{page()?.totalElements}}</span>
               <a class="material-icons" (click)="previous()">keyboard_arrow_left</a>
               <a class="material-icons" (click)="next()">keyboard_arrow_right</a>
             </div>
@@ -174,26 +174,26 @@
       </tr>
     </thead>
     <tbody>
-      @if (!sent || sent?.length === 0) {
+      @if (!sent() || sent()?.length === 0) {
         <tr>
           <td></td>
           <td class="uk-width-expand">No messages</td>
         </tr>
       } @else {
-        @for (topic of sent; track topic) {
+        @for (topic of sent(); track topic) {
           <tr [ngClass]="{'message-unread-background': !topic.read}"
             class="uk-visible-toggle">
             <td class="uk-width-auto">
               <input class="uk-checkbox" type="checkbox" aria-label="Checkbox" (change)="toggleCheck($event, topic)">
             </td>
             <td class="uk-width-1-6" [routerLink]="[topic.id]" [fragment]="'message' + (topic.messages.length-1)"
-              [state]="{returnTo: fragment}" style="cursor: pointer">
+              [state]="{returnTo: fragment()}" style="cursor: pointer">
               <div [ngClass]="{'uk-text-bolder': !topic.read}">
                 {{topic.from.name}}
               </div>
               <div class="uk-text-muted">{{topic.updated | date}}</div>
             </td>
-            <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [state]="{returnTo: fragment}"
+            <td class="uk-text-truncate uk-width-2-3" [routerLink]="[topic.id]" [state]="{returnTo: fragment()}"
               [fragment]="'message' + (topic.messages.length-1)" style="cursor: pointer">
               <div [ngClass]="{'uk-text-bolder': !topic.read}">{{topic.subject}}</div>
               <div>
@@ -233,6 +233,6 @@
 
 </div>
 
-<app-email-compose id="emailCompose" class="uk-modal-container" [groupId]="groupId" uk-modal></app-email-compose>
+<app-email-compose id="emailCompose" class="uk-modal-container" [groupId]="groupId()" uk-modal></app-email-compose>
 </div>
 </div>

@@ -3,7 +3,7 @@
   <div class="uk-modal-header">
     <h6 class="uk-modal-title uk-margin-remove">New message</h6>
     <button class="uk-modal-close-default" type="button" uk-close></button>
-    @if (!createSuccess) {
+    @if (!createSuccess()) {
       <div id="errorAlert" class="uk-alert-danger" uk-alert="duration: 500">
         <a class="uk-alert-close" uk-close></a>
         <p>Something went wrong please try again later.</p>
@@ -13,12 +13,12 @@
 
   <div class="uk-modal-body">
     <div class="">To:</div>
-    @if (flatGroups.length > 0) {
-      <ng-select [items]="flatGroups"
+    @if (flatGroups().length > 0) {
+      <ng-select [items]="flatGroups()"
         [addTag]="addTagPromise"
         bindLabel="name"
         [multiple]="true"
-        [loading]="loading"
+        [loading]="loading()"
         [(ngModel)]="recipients"
         (change)="noRecipients.set(false)">
         <ng-template ng-tag-tmp let-search="searchTerm">

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy} from "@angular/core";
+import {Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, inject, signal} from "@angular/core";
 import {MessagingSystemService} from "src/messaging-system-ui/services/messaging-system.service";
 import {TopicThread, UnreadMessages} from "../../domain/messaging";
 import {UserInfo, Coordinator, Stakeholder, Administrator} from "../../../../survey-tool/app/domain/userInfo";
@@ -21,7 +21,7 @@ import { EmailComposeComponent } from "../emailCompose/email-compose.component";
   selector: 'app-messages',
   templateUrl: 'messages.component.html',
   styleUrls: ['messages.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [StakeholdersService],
   imports: [
     PageContentComponent,
@@ -38,19 +38,24 @@ import { EmailComposeComponent } from "../emailCompose/email-compose.component";
 })
 
 export class MessagesComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private messagingService = inject(MessagingSystemService);
+  private userService = inject(UserService);
+  private stakeholdersService = inject(StakeholdersService);
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
 
-  inbox: TopicThread[] = null;
-  sent: TopicThread[] = null;
-  groupId: string = null;
-  fragment: string = null;
+  inbox = signal<TopicThread[]>(null);
+  sent = signal<TopicThread[]>(null);
+  groupId = signal<string>(null);
+  fragment = signal<string>(null);
   user: UserInfo = null;
   selectedTopics: TopicThread[] = [];
   searchTerm: string = null;
   order: string = null;
   urlParameters: URLParameter[] = [];
-  page: NewPaging<TopicThread> = null;
+  page = signal<NewPaging<TopicThread>>(null);
   unreadMessages: UnreadMessages = new UnreadMessages();
 
   //pagination
@@ -59,9 +64,6 @@ export class MessagesComponent implements OnInit {
   size: number = 10;
   total: number = 0;
   to: number = 0;
-
-  constructor(private route: ActivatedRoute, private messagingService: MessagingSystemService, private userService: UserService, private stakeholdersService: StakeholdersService) {
-  }
 
   ngOnInit() {
     this.user = JSON.parse(sessionStorage.getItem('userInfo'));
@@ -77,9 +79,9 @@ export class MessagesComponent implements OnInit {
     }
 
     this.route.fragment.subscribe(fragment => {
-      this.fragment = fragment;
+      this.fragment.set(fragment);
       setTimeout(() => {
-        if (this.groupId) {
+        if (this.groupId()) {
           if (fragment === 'sent') {
             this.refreshOutbox();
             UIkit.tab('#tab').show(1);
@@ -94,7 +96,7 @@ export class MessagesComponent implements OnInit {
     this.messagingService.unreadMessages.subscribe(next => {
       if (!this.deepEqual(this.unreadMessages, next)) {
         this.unreadMessages = next;
-        if (this.groupId) {
+        if (this.groupId()) {
           this.refreshInbox();
         }
       }
@@ -108,13 +110,13 @@ export class MessagesComponent implements OnInit {
       , debounceTime(500) // Time in milliseconds between key events
       , distinctUntilChanged() // If previous query is different from current
     ).subscribe((text: string) => {
-        if (!this.groupId) {
+        if (!this.groupId()) {
           return;
         }
         this.updateUrlParams('regex', text);
         this.updateUrlParams('page', '0');
         this.from = 0;
-        if (this.fragment === 'sent') {
+        if (this.fragment() === 'sent') {
           this.refreshOutbox(this.urlParameters);
         } else {
           this.refreshInbox(this.urlParameters);
@@ -127,12 +129,12 @@ export class MessagesComponent implements OnInit {
     this.route.params.subscribe(params => {
       let id = params['id'];
       if (id) {
-        this.groupId = id;
+        this.groupId.set(id);
         this.resolveGroupInit(id);
       } else if (this.route.parent) {
         this.route.parent.params.subscribe(parentParams => {
           id = parentParams['id'];
-          this.groupId = id;
+          this.groupId.set(id);
           this.resolveGroupInit(id);
         })
       }
@@ -176,12 +178,12 @@ export class MessagesComponent implements OnInit {
   }
 
   refreshInbox(urlParams?: URLParameter[]) {
-    this.messagingService.getInbox(this.groupId, urlParams).subscribe(
+    this.messagingService.getInbox(this.groupId(), urlParams).subscribe(
       res => {
-        this.page = res
-        this.inbox = res.content;
-        this.sent = [];
-        this.to = this.from + this.inbox?.length;
+        this.page.set(res);
+        this.inbox.set(res.content);
+        this.sent.set([]);
+        this.to = this.from + res.content?.length;
       },
       error => {
         console.error(error)
@@ -190,12 +192,12 @@ export class MessagesComponent implements OnInit {
   }
 
   refreshOutbox(urlParams?: URLParameter[]) {
-    this.messagingService.getOutbox(this.groupId, this.user.user.email, urlParams).subscribe(
+    this.messagingService.getOutbox(this.groupId(), this.user.user.email, urlParams).subscribe(
       res => {
-        this.page = res
-        this.sent = res.content;
-        this.inbox = [];
-        this.to = this.from + this.sent.length;
+        this.page.set(res);
+        this.sent.set(res.content);
+        this.inbox.set([]);
+        this.to = this.from + res.content.length;
       },
       error => {
         console.error(error)
@@ -213,13 +215,15 @@ export class MessagesComponent implements OnInit {
         this.messagingService.setMessageReadParam(thread.id, message.id, read).subscribe(
           res => {
             thread.read = res.read;
+            // The flag is changed on the row's own object, which no signal sees.
+            this.cdr.markForCheck();
           }
         );
       }, count * 100)
 
     }
     setTimeout(() => {
-      if (this.fragment === 'sent') {
+      if (this.fragment() === 'sent') {
         this.refreshOutbox(this.urlParameters)
       } else {
         this.refreshInbox(this.urlParameters);
@@ -254,10 +258,10 @@ export class MessagesComponent implements OnInit {
         checkboxes[i]['checked'] = source.target.checked;
     }
     if (source.target.checked) {
-      if (this.inbox.length > 0) {
-        this.selectedTopics = [...this.inbox];
+      if (this.inbox().length > 0) {
+        this.selectedTopics = [...this.inbox()];
       } else {
-        this.selectedTopics = [...this.sent];
+        this.selectedTopics = [...this.sent()];
       }
     } else
       this.selectedTopics = [];
@@ -299,29 +303,31 @@ export class MessagesComponent implements OnInit {
   changeOrder(order: string) {
     this.updateUrlParams('sortBy', 'created');
     this.updateUrlParams('direction', order);
-    if (this.fragment === 'sent')
+    if (this.fragment() === 'sent')
       this.refreshOutbox(this.urlParameters);
     else
       this.refreshInbox(this.urlParameters);
   }
 
   next() {
-    if (this.page.pageable.pageNumber + 1 === this.page.totalPages)
+    const page = this.page();
+    if (page.pageable.pageNumber + 1 === page.totalPages)
       return
 
-    this.updateUrlParams('page', (this.page.pageable.pageNumber + 1).toString());
-    if (this.fragment === 'sent')
+    this.updateUrlParams('page', (page.pageable.pageNumber + 1).toString());
+    if (this.fragment() === 'sent')
       this.refreshOutbox(this.urlParameters);
     else
       this.refreshInbox(this.urlParameters);
   }
 
   previous() {
-    if (this.page.pageable.pageNumber === 0)
+    const page = this.page();
+    if (page.pageable.pageNumber === 0)
       return
 
-    this.updateUrlParams('page', (this.page.pageable.pageNumber - 1).toString());
-    if (this.fragment === 'sent')
+    this.updateUrlParams('page', (page.pageable.pageNumber - 1).toString());
+    if (this.fragment() === 'sent')
       this.refreshOutbox(this.urlParameters);
     else
       this.refreshInbox(this.urlParameters);

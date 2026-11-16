@@ -1,5 +1,5 @@
 <div class="uk-container uk-container-xsmall uk-section uk-section-default uk-section-small">
-  @if (!sendSuccess) {
+  @if (!sendSuccess()) {
     <div uk-grid>
       <h1 class="uk-align-center uk-padding-remove">Contact</h1>
       <h6 class="uk-text-center">Please use this contact form if you have any comments or questions regarding improving
@@ -47,7 +47,7 @@
           <div class="uk-form-controls">
             <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('about')}" id="about"
               formControlName="about" (click)="executeAction('about')">
-              @for (group of groups | keyvalue; track group) {
+              @for (group of groups() | keyvalue; track group) {
                 <option [value]="group.key">{{group.key}}</option>
               }
             </select>
@@ -59,7 +59,7 @@
             <div class="uk-form-controls">
               <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}" id="country"
                 formControlName="country" (click)="executeAction('country')">
-                @for (country of groups['Country Data']; track country) {
+                @for (country of groups()['Country Data']; track country) {
                   <option [value]="country.id">{{country.name}}</option>
                 }
               </select>
@@ -72,7 +72,7 @@
             <div class="uk-form-controls">
               <select class="uk-select" [ngClass]="{'uk-form-danger': formFieldInvalid('country')}"
                 id="coordinator" formControlName="coordinator" (click)="executeAction('coordinator')">
-                @for (coordinator of groups['Survey Improvements']; track coordinator) {
+                @for (coordinator of groups()['Survey Improvements']; track coordinator) {
                   <option [value]="coordinator.id">
                     {{coordinator.name}}
                   </option>
@@ -111,7 +111,7 @@
       <span class="uk-width-1-1 uk-flex uk-flex-center material-icons md-48" style="color: #00B929">task_alt</span>
       <h4 class="uk-width-1-1 uk-flex uk-flex-center">Your message has been sent successfully!</h4>
       <span class="uk-width-1-1 uk-flex uk-flex-center uk-text-muted">
-        You will be redirected in &nbsp;<span style="color: var(--primary-color)">{{display + ' seconds'}}</span>
+        You will be redirected in &nbsp;<span style="color: var(--primary-color)">{{display() + ' seconds'}}</span>
       </span>
       <div class="uk-width-1-1 uk-flex uk-flex-center">
         <button class="uk-button uk-button-primary" type="button" [routerLink]="['/home']">Back to home</button>

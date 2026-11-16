@@ -34,11 +34,11 @@ describe('EmailComposeComponent', () => {
   it('asks for a recipient instead of sending when none was chosen', () => {
     const component = create().componentInstance;
 
-    component.recipients = null;
+    component.recipients.set(null);
     component.createTread();
     expect(component.noRecipients()).toBe(true);
 
-    component.recipients = [];
+    component.recipients.set([]);
     component.createTread();
     expect(component.noRecipients()).toBe(true);
 
@@ -48,7 +48,7 @@ describe('EmailComposeComponent', () => {
   it('sends the thread once a recipient is chosen', () => {
     const component = create().componentInstance;
 
-    component.recipients = [{id: 'g1', name: 'Group One', type: 'groupId'}];
+    component.recipients.set([{id: 'g1', name: 'Group One', type: 'groupId'}]);
     component.createTread();
 
     expect(component.noRecipients()).toBe(false);

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal, ChangeDetectionStrategy, inject } from "@angular/core";
 import { UntypedFormControl, UntypedFormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { TopicThread } from "../../domain/messaging";
@@ -11,11 +11,14 @@ import { NgClass, KeyValuePipe } from "@angular/common";
     selector: 'app-contact',
     templateUrl: 'contact.component.html',
     styles: ['.grecaptcha-badge { visibility: hidden !important;}'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ReactiveFormsModule, NgClass, RouterLink, KeyValuePipe, RecaptchaV3Module]
 })
 
 export class ContactComponent implements OnInit, OnDestroy {
+  private messagingService = inject(MessagingSystemService);
+  private recaptchaV3Service = inject(ReCaptchaV3Service);
+  private router = inject(Router);
 
   newThread: TopicThread = new TopicThread();
 
@@ -32,10 +35,10 @@ export class ContactComponent implements OnInit, OnDestroy {
     termsAndConditions: new UntypedFormControl(null, Validators.requiredTrue)
   });
 
-  groups: {} = null;
-  sendSuccess: boolean = null;
+  groups = signal<{}>(null);
+  sendSuccess = signal<boolean>(null);
   sendError = signal(false);
-  display: number = 0;
+  display = signal(0);
   timerInterval: any;
 
   // reCaptcha
@@ -47,12 +50,9 @@ export class ContactComponent implements OnInit, OnDestroy {
   private allExecutionErrorsSubscription: Subscription;
   private singleExecutionSubscription: Subscription;
 
-  constructor(private messagingService: MessagingSystemService, private recaptchaV3Service: ReCaptchaV3Service,
-              private router: Router) {}
-
   ngOnInit() {
     this.messagingService.getGroupList().subscribe(
-      res => {this.groups = res;},
+      res => {this.groups.set(res);},
       error => {console.error(error)}
     );
 
@@ -107,7 +107,7 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.newThread.to[0].groupId = this.contactForm.get('coordinator').value;
         this.newThread.messages[0].to[0].groupId = this.contactForm.get('coordinator').value;
       } else {
-        const groupId = this.groups[this.contactForm.get('about').value]?.[0]?.id;
+        const groupId = this.groups()[this.contactForm.get('about').value]?.[0]?.id;
         this.newThread.to[0].groupId = groupId;
         this.newThread.messages[0].to[0].groupId = groupId;
       }
@@ -117,7 +117,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.sendError.set(false);
       this.messagingService.postThreadPublic(this.newThread, this.recentToken).subscribe(
         res => {
-          this.sendSuccess = true;
+          this.sendSuccess.set(true);
           this.timer(0.1);
         },
         error => {
@@ -168,7 +168,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       // } else textSec = statSec;
 
       // this.display = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
-      this.display = seconds;
+      this.display.set(seconds);
 
       if (seconds == -1) {
         // console.log('finished');

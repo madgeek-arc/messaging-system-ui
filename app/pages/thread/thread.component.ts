@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy} from "@angular/core";
+import {Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy, inject} from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {MessagingSystemService} from "../../../services/messaging-system.service";
 import {Correspondent, Message, TopicThread} from "../../domain/messaging";
@@ -16,11 +16,17 @@ import { RichTextEditorComponent } from "../../../../survey-tool/catalogue-ui/sh
     selector: 'app-thread',
     templateUrl: 'thread.component.html',
     styleUrls: ['thread.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [PageContentComponent, RouterLink, NgClass, ReactiveFormsModule, RichTextEditorComponent, FormsModule, DatePipe]
 })
 
 export class ThreadComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private messagingService = inject(MessagingSystemService);
+  private viewportScroller = inject(ViewportScroller);
+  private fb = inject(UntypedFormBuilder);
+  private messagingWebsocket = inject(MessagingWebsocketService);
 
   @ViewChild('threadHeader') targetElement: any;
 
@@ -28,20 +34,18 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   threadId: string = null;
   groupId: string = null;
-  thread: TopicThread = null;
-  message: Message = null;
+  thread = signal<TopicThread>(null);
+  message = signal<Message>(null);
   subject: string = null;
   userInfo: UserInfo = null;
   newMessage: UntypedFormGroup = this.fb.group(new Message());
   anonymous: boolean = true;
-  showReply: boolean = false;
+  showReply = signal(false);
   sendError = signal(false);
   fragment: string = null
 
 
-  constructor(private route: ActivatedRoute, private router: Router, private messagingService: MessagingSystemService,
-              private viewportScroller: ViewportScroller, private fb: UntypedFormBuilder,
-              private messagingWebsocket: MessagingWebsocketService) {
+  constructor() {
 
     this.newMessage.setControl('to', this.fb.array([new Correspondent()]));
     this.newMessage.setControl('from', this.fb.group(new Correspondent()));
@@ -57,8 +61,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
         this.groupId = params['id'];
         this.messagingService.getThread(this.threadId, this.groupId).subscribe(
           res => {
-            this.thread = res
-            this.thread.messages.forEach(message => {
+            this.thread.set(res);
+            res.messages.forEach(message => {
               if (!message.read)
                 this.messagingService.setMessageReadParam(this.threadId, message.id, true).subscribe();
             });
@@ -91,7 +95,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
     this.messagingService.getThreadAsObservable().pipe(takeUntil(this._destroyed)).subscribe(next => {
       if (this.threadId && this.threadId === next?.id) {
-        this.thread = next;
+        this.thread.set(next);
       }
     });
 
@@ -112,11 +116,11 @@ export class ThreadComponent implements OnInit, OnDestroy {
     this.newMessage.get('from').get('email').setValue(this.userInfo.user.email);
     this.newMessage.get('from').get('groupId').setValue(this.groupId);
     this.newMessage.get('replyToMessageId').setValue(message.id);
-    this.message = message;
-    this.newMessage.controls['to'].get('0').patchValue(this.message.from);
-    this.subject = this.thread.subject;
+    this.message.set(message);
+    this.newMessage.controls['to'].get('0').patchValue(message.from);
+    this.subject = this.thread().subject;
     this.sendError.set(false);
-    this.showReply = true;
+    this.showReply.set(true);
     setTimeout( timeout => {this.viewportScroller.scrollToAnchor('response')}, 0);
   }
 
@@ -124,8 +128,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     this.sendError.set(false);
     this.messagingService.postMessage(this.threadId, this.newMessage.value, this.anonymous).subscribe(
       res=> {
-        this.thread = res;
-        this.showReply = false;
+        this.thread.set(res);
+        this.showReply.set(false);
         this.newMessage.reset();
       },
       error => {
@@ -136,7 +140,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
   getMessageById(messageId: string) {
-    return this.thread.messages.filter(m => m.id === messageId)[0];
+    return this.thread().messages.filter(m => m.id === messageId)[0];
   }
 
 }

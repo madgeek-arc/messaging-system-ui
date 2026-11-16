@@ -1,4 +1,4 @@
-@if (thread) {
+@if (thread()) {
   <div page-content [fullWidth]="true">
     <div inner>
       <div class="uk-section-default uk-container uk-container-large uk-padding">
@@ -8,19 +8,19 @@
                title="Back">
               <span class="material-icons">keyboard_backspace</span>
             </a>
-            <span>{{ thread.subject }}</span>
+            <span>{{ thread().subject }}</span>
           </h5>
           <div class="uk-flex uk-flex-middle uk-flex-right">
         <span class="">
-          @for (tag of thread.tags; track tag) {
+          @for (tag of thread().tags; track tag) {
             <span class="uk-badge badge-default uk-margin-small-left">{{ tag }}</span>
           }
         </span>
           </div>
         </div>
-        @for (message of thread?.messages; track message; let i = $index) {
+        @for (message of thread()?.messages; track message; let i = $index) {
           <div [attr.id]="'message'+i">
-            <div [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread.messages.length > 1}"
+            <div [ngClass]="{'uk-card uk-card-default uk-margin-bottom': thread().messages.length > 1}"
                  class="uk-animation-slide-top">
               <div class="uk-card-header">
                 <div class="uk-grid-small uk-flex-middle" uk-grid>
@@ -55,7 +55,7 @@
                   </div>
                 </div>
               </div>
-              @if (thread.messages.length === 1) {
+              @if (thread().messages.length === 1) {
                 <div style="border-top: 1px solid #e5e5e5"></div>
               }
               <div class="uk-card-body">
@@ -90,7 +90,7 @@
                               class="uk-text-bold">To: </span><span>{{ getMessageById(message.replyToMessageId).from.name }}</span>
                           </div>
                           <div>
-                            <span class="uk-text-bold">Subject: </span><span>{{ thread.subject }}</span>
+                            <span class="uk-text-bold">Subject: </span><span>{{ thread().subject }}</span>
                           </div>
                           <div class="uk-margin-top">
                             <p class="uk-text-break" [innerHtml]="getMessageById(message.replyToMessageId).body"></p>
@@ -104,20 +104,20 @@
             </div>
           </div>
         }
-        <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply}">
+        <div id="response" class="uk-animation-slide-bottom uk-margin-xlarge-top" [ngClass]="{'uk-hidden': !showReply()}">
           <div class="uk-card uk-card-default">
             <div class="uk-card-body">
-              <button class="uk-modal-close-default" (click)="showReply = false; this.newMessage.reset(); sendError.set(false)"
+              <button class="uk-modal-close-default" (click)="showReply.set(false); newMessage.reset(); sendError.set(false)"
                       type="button" uk-close>
               </button>
               <form [formGroup]="newMessage" class="">
                 <div class="uk-flex uk-flex-middle uk-margin-bottom" formArrayName="to">
                   <div class="uk-flex uk-flex-middle"><span class="material-icons">reply</span>To:</div>
                   <div class="uk-form-controls uk-margin-left uk-width-expand">
-                    <span class="uk-text-bold">{{ message?.from.name ? ' (' + message.from.name + ')' : '' }}</span>
-                    @if (message?.from.email || message?.from.groupId) {
+                    <span class="uk-text-bold">{{ message()?.from.name ? ' (' + message().from.name + ')' : '' }}</span>
+                    @if (message()?.from.email || message()?.from.groupId) {
                       <span class="uk-margin-small-left uk-text-muted">
-                      ({{ message?.from.email ? message?.from.email : message?.from.groupId }})
+                      ({{ message()?.from.email ? message()?.from.email : message()?.from.groupId }})
                     </span>
                     }
                   </div>
