@@ -110,7 +110,8 @@ export class EmailComposeComponent implements OnInit {
     }, 4550);
   }
 
-  addTagPromise(name) {
+  // ng-select calls this without a `this`, so it has to be an arrow function.
+  addTagPromise = (name: string) => {
     return new Promise((resolve) => {
       this.loading.set(true);
       // Simulate backend call.
